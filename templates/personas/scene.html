@@ -1,0 +1,97 @@
+{% extends "personas/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    <header>
+        <h1>{{ scene_title }}</h1>
+    </header>
+{% endblock %}
+
+{% block l_content %}
+<div class="col-md-2 col-sm-0 col-lg-2" id="col1">
+</div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-4 col-sm-4 col-lg-3" id="col1">
+
+    <div class="row">
+        <h3>Story:</h3>
+        <a href="/personas/story/{{ story.slug }}">{{ story }}</a>
+    </div>
+    <div class="row">
+        <h3>Chapter:</h3>
+        <a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a>
+    </div>
+    <div class="row">
+        <h3>Location:</h3>
+        <a href="/personas/location/{{ location.slug }}">{{ location }}</a>
+    </div>
+    <div class="row">
+        <h3>Time:</h3>
+        {{ time }}
+    </div>
+    </div>
+{% endblock %}
+
+{% block column2 %}
+    <div class="col-md-2 col-sm-4 col-lg-2" id="col2">
+    <div class="row">
+        <h3>Characters:</h3>
+        {% if characters %}
+                {% for character in characters %}
+                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:black" href="/personas/character/{{ character.slug }}"><img src="{{ character.image.url }}" style="max-height:40px; float:left">  {{ character.name }}</a><br><br>
+                {% endfor %}
+        {% else %}
+            <strong>{{ scene_title }} has no characters.</strong>
+            <br />
+        {% endif %}
+    </div>
+    <div class="row">
+        <h3>Description:</h3>
+        {{ description }}
+    </div>
+    <div class="row">
+    <h3>Add Story Elements</h3>
+    <div container>
+    <a role="button" class="btn btn-primary" href="/personas/add_character/{{ story_slug }}">Add a Character</a><br><br>
+    <a role="button" class="btn btn-primary" href="/personas/add_location/{{ story_slug }}">Add a Location</a><br><br>
+    <a role="button" class="btn btn-primary" href="/personas/add_artifact/{{ story_slug }}">Add an Artifact</a><br><br>
+    </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block column3 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="cole">
+    <div id="BBoard">
+    <h3>Notes:</h3>
+    {% if notes %}
+        
+        {% for note in notes %}
+            <div class="note">{{ note }} -- {{ note.date }}</div><br>
+        {% endfor %}
+        
+    {% else %}
+        <strong>{{ scene_title }} has no notes.</strong><br />
+        <br />
+    {% endif %}
+    <div>
+        <label>Add a new note:</label>
+            {% crispy form %}
+            <br><br><br>
+    </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block r_content %}
+<div class="col-md-3 col-sm-0 col-lg-2 col-lg-3" id="col1">
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <a href="/personas/">Main Page</a>
+    </footer>
+{% endblock %}

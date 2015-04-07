@@ -1,0 +1,60 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <header>
+        <h1>Add Artifact</h1>
+    </header>
+{% endblock %}
+
+    {% block l_content %}
+        <div class="col-md-2 col-sm-1 col-lg-2">
+        </div>
+    {% endblock %}
+
+    {% block column1 %}
+        <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
+            <h3>Artifacts</h3>
+            <p>Artifacts are items or equipment that are important to either a character or the setting as a whole.</p>
+            {% if artifact.image %}
+            <img src="{{ artifact.image.url }}" alt="Artifact Image" width="100%" height="100%">
+            {% else %}
+            <img src="{% static 'images/229.jpg' %}" alt="Warrior" width="100%" height="100%">
+            {% endif %}
+        </div>
+    {% endblock %}
+
+    {% block column2 %}
+        <div class="col-md-3 col-sm-3 col-lg-3" id="col2">
+            <h3>Artifacts</h3>
+            {% if artifacts %}
+            <ul>
+            {% for artifact in artifacts %}
+                <li>{{ artifact }}</li>
+            {% endfor %}
+                        </ul>
+            {% endif %}
+        </div>
+    {% endblock %}
+    
+    {% block column3 %}
+        <div class="col-md-3 col-sm-4 col-lg-3" id="col3">
+            <h3>Add Artifact</h3>
+            {% crispy artifact_form %}
+    {% if character %}
+    <h4>Finished adding artifacts?</h4>
+            <div tyle="padding-left:50px">
+                <a role="button" class="btn btn-primary" href="/personas/add_combat_info/{{ character.slug }}">I'm done. Next Step!</a>
+            </div>
+            <hr>
+            <div tyle="padding-left:50px">
+                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}/#details">Take me straight<br>to my character.</a>
+            </div>
+            </div>
+    {% endif %}
+    {% endblock %}
+
+    {% block r_content %}
+        <div class="col-md-2 col-sm-1 col-lg-2">
+        </div>
+    {% endblock %}

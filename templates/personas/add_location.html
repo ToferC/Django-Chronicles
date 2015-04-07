@@ -1,0 +1,48 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<header>
+    <h1>Add Location to "{{ story.title }}"</h1>
+</header>
+{% endblock %}
+
+<div class="row">
+
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-3 col-sm-4 col-lg-3">
+    <h3>Adding a Location</h3>
+    <p>Add text here</p>
+
+        <img src="{% static 'images/035.jpg' %}" alt="Cthulhu" width="100%" height="100%">
+    </div>
+{% endblock %}
+
+{% block column2 %}
+    <div class="col-md-3 col-sm-6 col-lg-3">
+    <h3>Add a Locataion</h3>
+    {% crispy location_form %}
+    <br><br><br>
+    </div>
+{% endblock %}
+{% block column3 %}
+    <div class="col-md-2 col-sm-2 col-lg-2">
+
+    <a role="button" class="btn btn-primary" href="personas/add_character/{{ story_slug }}">Add a Character</a>
+    <a role="button" class="btn btn-primary" href="personas/add_location/{{ story_slug }}">Add a Location</a>
+    <a role="button" class="btn btn-primary" href="personas/add_artifact/{{ story_slug }}">Add an Artifact</a>
+</div>
+{% endblock %}
+
+{% block r_content %}
+<div class="col-md-2 col-sm-0 col-lg-2">
+</div>
+{% endblock %}
+
+</div>

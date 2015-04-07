@@ -1,0 +1,60 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <header>
+        <h1>{{ character }} - Adding Abilities</h1>
+    </header>
+{% endblock %}
+<div class="row">
+    {% block l_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+    {% endblock %}
+    {% block column1 %}
+        <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
+            <h3>Abilities</h3>
+            <p>Abilities are special ways that your character can break the rules of a game system or do things beyond what can be captured by simple skills.</p>
+            <p>Different systems capture this differently, and you could call abilities by an array of different names: powers, advantages, talents, stunts, etc.  Just use what works for you and your story.</p>
+            {% if character.image %}
+            <img src="{{ character.image.url }}" alt="Character Image" width="100%" height="100%">
+            {% else %}
+            <img src="{% static 'images/229.jpg' %}" alt="Warrior" width="100%" height="100%">
+            {% endif %}
+        </div>
+    {% endblock %}
+    {% block column2 %}
+        <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+            <h3>Abilities:</h3>
+                                {% if abilities %}
+                                
+                                {% for ability in abilities %}
+                                    <h4>{{ ability.name }}</h4>
+                                    <li>{{ ability.description }}</li>
+                                    {% endfor %}
+                                {% else %}
+                                        <strong>No Abilities.</strong>
+                                {% endif %}
+                                <br><br>
+                        </div>
+    {% endblock %}
+    {% block column3 %}
+        <div class="col-md-3 col-sm-4 col-lg-3" id="col3">
+            <h3>Add Ability</h3>
+            {% crispy ability_form %}
+            <h4>Finished adding abilities?</h4>
+            <div tyle="padding-left:50px">
+                <a role="button" class="btn btn-primary" href="/personas/add_artifact/{{ character.slug }}">I'm done. Next Step!</a>
+                <br>
+            </div>
+            <hr>
+            <div tyle="padding-left:50px">
+                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}/#abilities">Take me straight<br>to my character.</a>
+            </div>
+        </div>
+    {% endblock %}
+    {% block r_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+    {% endblock %}
+</div>

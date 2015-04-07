@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% extends "personas/base.html" %}
+
+        {% block title %}
+        <header>
+            <h1>PERSONA: Collections</h1>
+        </header>
+        {% endblock %}
+
+        {% block l_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+        {% endblock %}
+
+        {% block column1 %}
+            <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+                    <h3>Characters</h3>
+                    {% if characters %}
+                            {% for character in characters %}
+                            <div class="btn-group-vertical">
+                                
+                                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:gray" href="/personas/character/{{ character.slug }}"><img src="{{ character.image.url }}" style="max-height:40px; float:left">  {{ character.name }}</a><br>
+
+                            </div>
+                            
+                            {% endfor %}
+                        <br>
+                        <a href="/personas/add_character/">Create a New Character</a>
+                    {% else %}
+                        <strong>There are no characters present.</strong>
+                        <br />
+                    {% endif %}
+            </div>
+        {% endblock %}
+        {% block column2 %}
+            <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+                    <h3>Locations</h3>
+                    {% if locations %}
+                        <ul>
+                            {% for location in locations %}
+                                <div class="btn-group-vertical">
+                                
+                                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:gray; white-space:normal" href="/personas/location/{{ location.slug }}"><img src="{{ location.image.url }}" style="max-height:40px; float:left">  {{ location.name }}</a><br>
+                                    
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <strong>There are no locations present.</strong>
+                        <br /><br />
+                    {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block column3 %}
+            <div class="col-md-2 col-sm-4 col-lg-2" id="col3">
+                    <h2>Organizations</h2>
+                    {% if organizations %}
+                        <ul>
+                            {% for organization in organizations %}
+                                <div class="btn-group-vertical">
+                                
+                                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:gray; white-space:normal" href="/personas/organization/{{ organization.slug }}"><img src="{{ organization.image.url }}" style="max-height:40px; float:left">  {{ organization.name }}</a><br>
+                                    
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <strong>There are no organizations present.</strong>
+                        <br /><br />
+                    {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block r_content %}
+            <div class="col-md-2 col-sm-0 col-lg-2">
+            </div>
+        {% endblock %}
+
+        {% block footer %}
+        <footer>
+                <a href="/personas/about/">About Persona</a><br />
+        </footer>
+        {% endblock %}

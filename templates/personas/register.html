@@ -1,0 +1,22 @@
+{% extends 'personas/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<header>
+    <h1>Register with Personas</h1>
+</header>
+{% endblock %}
+
+{% block column1 %}
+    {% if registered %}
+    <strong>Thank you for registering!</strong>
+    <a href="/personas/">Return to the Homepage</a>
+    {% else %}
+    <strong>Register Here!</strong>
+
+    {% crispy user_form %}
+
+    {% crispy profile_form %}
+
+{% endif %}
+{% endblock %}

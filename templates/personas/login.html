@@ -1,0 +1,21 @@
+{% extends "personas/base.html" %}
+
+{% block title %}
+    <h1>Login to Personas</h1>
+{% endblock %}
+
+{% block column1 %}
+    <fieldset>
+        <h3 style="color:white">Login</h3>
+    <form id="login_form" method="post" action="/personas/login/">
+            {% csrf_token %}
+            <label>Username: </label>  <input type="text" name="username" value="" size="50" />
+            <br />
+            <label>Password: </label>   <input type="password" name="password" value="" size="50" />
+            <br />
+
+            <input class="btn btn-inverse" type="submit" value="login"/>
+    </form>
+    </fieldset>
+
+{% endblock %}

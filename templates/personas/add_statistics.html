@@ -1,0 +1,105 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <header>
+        <h1>{{ character }} - Adding Statistics</h1>
+    </header>
+{% endblock %}
+<div class="row">
+    {% block l_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+    {% endblock %}
+    {% block column1 %}
+        <div class="col-md-2 col-sm-3 col-lg-2" id="col1">
+            <h3>Statistics</h3>
+            <p>Stats natural or inborn abilities that your character possesses.</p>
+            
+            <img src="{% static 'images/alette.png' %}" alt="Alette" width="100%" height="100%">
+        </div>
+    {% endblock %}
+    {% block column2 %}
+        <div class="col-md-2 col-sm-3 col-lg-2" id="col2">
+        <h3>Current Statistics</h3>
+                                {% if type_1_statistics %}
+                                <h3>{{ story.statistic_type_name_1 }}:</h3>
+                            <table class="table table-condensed table-hover table-responsive">
+                                    {% for stat in type_1_statistics %}
+                                        <tr>
+                                            <td> {{ stat.name }}</td>
+                                            <td> {{ stat.value }}</td>
+                                            <td><a href="{% url 'delete_statistic' pk=stat.pk %}">Delete</a></td>
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}">Edit</a></td>
+                                        </tr>
+                                    {% endfor %}
+                               
+                                {% endif %}
+                            </table>
+        {% if type_2_statistics %}
+                                <h3>{{ story.statistic_type_name_2 }}:</h3>
+                            <table class="table table-condensed table-hover table-responsive">
+                                    {% for stat in type_2_statistics %}
+                                        <tr>
+                                            <td> {{ stat.name }}</td>
+                                            <td> {{ stat.value }}</td>
+                                            <td><a href="{% url 'delete_statistic' pk=stat.pk %}">Delete</a></td>
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}">Edit</a></td>
+                                        </tr>
+                                    {% endfor %}
+                               
+                                {% endif %}
+                            </table>
+                        </div>
+      {% endblock %}
+    {% block column3 %}
+    <div class="col-md-2 col-sm-3 col-lg-2" id="col3">
+                            {% if type_3_statistics %}
+                                <h3>{{ story.statistic_type_name_3 }}:</h3>
+                            <table class="table table-condensed table-hover table-responsive">
+                                    {% for stat in type_3_statistics %}
+                                        <tr>
+                                            <td> {{ stat.name }}</td>
+                                            <td> {{ stat.value }}</td>
+                                            <td><a href="{% url 'delete_statistic' pk=stat.pk %}">Delete</a></td>
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}">Edit</a></td>
+                                        </tr>
+                                    {% endfor %}
+                               
+                                {% endif %}
+                            </table>
+                            {% if type_4_statistics %}
+                                <h3>{{ story.statistic_type_name_4 }}:</h3>
+                            <table class="table table-condensed table-hover table-responsive">
+                                    {% for stat in type_4_statistics %}
+                                        <tr>
+                                            <td> {{ stat.name }}</td>
+                                            <td> {{ stat.value }}</td>
+                                            <td><a href="{% url 'delete_statistic' pk=stat.pk %}">Delete</a></td>
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}">Edit</a></td>
+                                        </tr>
+                                    {% endfor %}
+                               
+                                {% endif %}
+                            </table>
+                        </div>
+    {% endblock %}
+    {% block column4 %}
+        <div class="col-md-2 col-sm-3 col-lg-2" id="col4">
+            <h3>Add Stat</h3>
+            {% crispy form %}
+            <br><br><br>
+            <h4>Finished adding stats?</h4>
+            <div tyle="padding-left:50px">
+                <a role="button" class="btn btn-primary" href="/personas/add_skills/{{ character.slug }}">I'm done. Next Step!</a>
+            </div><br>
+            <div tyle="padding-left:50px">
+                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}/#abilities">Take me straight<br>to my character.</a>
+            </div>
+        </div>
+    {% endblock %}
+    {% block r_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+    {% endblock %}
+</div>

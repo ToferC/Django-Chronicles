@@ -1,0 +1,42 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<header>
+    <h1>Add Chapter to "{{ story.title }}"</h1>
+</header>
+{% endblock %}
+
+<div class="row">
+
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-4 col-sm-4 col-lg-4">
+    <h3>Adding a Chapter</h3>
+    <p>A chapter is a distinct part of your story that could include the adventures of a specific group of characters, several inter-related scenes or a series of related adventures.</p>
+    <p>Exactly how you break it down is up to you, but in general, Chapters make it easier for the author and the reader (or players) to focus on specific story elements and characters.</p>
+    <p>Your Chapters will be entered in chronological order and will serve as a jumping off point for Scenes and Locations.</p>
+
+        <img src="{% static 'images/035.jpg' %}" alt="Cthulhu" width="100%" height="100%">
+    </div>
+{% endblock %}
+
+{% block column2 %}
+    <div class="col-md-4 col-sm-8 col-lg-4">
+    <h3>Add a Chapter</h3>
+    {% crispy chapter_form %}
+    <br><br><br>
+    </div>
+{% endblock %}
+
+{% block r_content %}
+<div class="col-md-2 col-sm-0 col-lg-2">
+</div>
+{% endblock %}
+
+</div>

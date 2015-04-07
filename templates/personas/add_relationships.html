@@ -1,0 +1,62 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <header>
+        <h1>{{ character }} - Adding Relationships</h1>
+    </header>
+{% endblock %}
+<div class="row">
+    {% block l_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+    {% endblock %}
+    {% block column1 %}
+        <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
+            <h3>Relationships</h3>
+            <p>Relationships are how your character relates to the other characters in the story.  Each relationship shows a single side of the interaction - your side.  You define what your character thinks or feels about other antagonists, progatonists or supporting characters, while they define what they think about your character.  For example, you might think someone is rather dull, while they might find you a scintillating conversationalist.</p>
+            <p>Each relationship requires an object character, a category for the relationship, a weight (which measures how strongly your character feels) and a description.</p>
+            <p>The weight of the relationship is a percentage between 0% and 100%.</p>
+            <p> <strong>Note: </strong> You can only create relationships between characters in the same story.  If you are the first character in the story, you'll need to come back and add your relationships later.</p>
+            {% if character.image %}
+            <img src="{{ character.image.url }}" alt="Character Image" width="100%" height="100%">
+            {% else %}
+            <img src="{% static 'images/229.jpg' %}" alt="Warrior" width="100%" height="100%">
+            {% endif %}
+        </div>
+    {% endblock %}
+    {% block column2 %}
+        <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+            <h3>Relationships:</h3>
+                                {% if relationships %}
+                                <ul>
+                                {% for relationship in relationships %}
+                                    <li>
+                                <a href="/personas/character/{{ relationship.to_character.slug }}">{{ relationship.to_character }}</a> - {{ relationship.relationship_class }} of <a href="/personas/character/{{ relationship.from_character.slug }}">{{ relationship.from_character }}</a> ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
+                                    <a href="{% url 'edit_relationship' pk=relationship.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                </li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                        <strong>No relationships.</strong>
+                                {% endif %}
+                                <br><br>
+                        </div>
+    {% endblock %}
+    {% block column3 %}
+        <div class="col-md-3 col-sm-4 col-lg-3" id="col3">
+            <h3>Add Relationship</h3>
+            {% crispy relationship_form %}
+            <h4>Finished adding relationships?</h4>
+            <p>Go on to Memberships!</p>
+            <div tyle="padding-left:50px">
+                <a role="button" class="btn btn-primary" href="/personas/add_membership/{{ character.slug }}">I'm done! Next Step!</a>
+                <br><br><br>
+            </div>
+        </div>
+    {% endblock %}
+    {% block r_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+    {% endblock %}
+</div>

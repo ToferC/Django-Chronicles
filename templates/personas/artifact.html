@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+{% extends "personas/base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block title %}
+    <header>
+        <h1>Artifact - {{ artifact.name }}</h1>
+    </header>
+{% endblock %}
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2" id="col1">
+    </div>
+{% endblock %}
+{% block column1 %}
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+        {% if image %}
+            <div class="image">
+                <img src="{{ image.url }}" class="img-responsive" alt="Artifact Image" />
+                <p>
+                    Created by {{ creator }}
+                </p>
+            </div>
+        {% else %}
+            <div class="image">
+                <img src="{% static 'images/229.jpg' %}" alt="Warrior" width="100%" height="100%">
+                <p>
+                    Created by {{ creator }}
+                </p>
+            </div>
+        {% endif %}
+        <div class="row">
+            <h3>Description:</h3>
+            {{ artifact.description }}
+        </div>
+    </div>
+{% endblock %}
+{% block column2 %}
+    <div class="col-md-2 col-sm-4 col-lg-2" id="col2">
+        <div class="row">
+            <h3>Abilities:</h3>
+            {% if abilities %}
+                <ul>
+                    {% for ability in abilities %}
+                        <li>{{ ability.name }} - {{ ability.description }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block column3 %}
+    <div class="col-md-2 col-sm-4 col-lg-2" id="col3">
+        <div class="row">
+            <h3>Characters:</h3>
+            {% if character %}
+                <div class="btn-group-vertical">
+                    
+                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:black" href="/personas/character/{{ character.slug }}"><img src="{{ character.image.url }}" style="max-height:40px; float:left">  {{ character.name }}</a>
+                </div>
+            {% else %}
+                <strong>{{ location_name }} has no characters.</strong>
+                <br />
+            {% endif %}
+        </div>
+{% endblock %}
+        {% block r_content %}
+            <div class="col-md-2 col-sm-0 col-lg-2">
+            </div>
+        {% endblock %}
+    {% block footer %}
+        <footer>
+            <a href="/personas/">Main Page</a>
+        </footer>
+    {% endblock %}

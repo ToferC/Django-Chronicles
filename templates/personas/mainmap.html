@@ -1,0 +1,67 @@
+{% extends "personas/base.html" %}
+{% load leaflet_tags %}
+
+{% block title %}
+<header>
+<h1>Map of {{ map_name }}</h1>
+</header>
+{% endblock %}
+
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-6 col-sm-9 col-lg-6" id="col1">
+            <script type="text/javascript">
+
+                function map_init_basic (map, options) {
+                    L.tileLayer("{{ tile }}", {
+                        attribution: "Pliedes Roman Empire Map",
+                        maxZoom: 18
+                    }).addTo(map);
+
+                    {% for location in locations %}
+                    L.marker([{{ location.latitude|add:"0" }}, {{ location.longitude|add:"0" }}], 13).addTo(map)
+                    .bindPopup( "{{location}}" );
+                    {% endfor %}
+
+                }
+
+                var popup = L.popup();
+                
+                function onMapClick(e) {
+                    popup
+                    .setLatLng(e.latlng)
+                    .setContent("You clicked the map at " + e.latlng.toString())
+                    .openOn(map);
+                }
+
+                map.on('click', onMapClick);
+            </script>
+
+            <h3 style="color:white">Map Location:</h3><br>
+            <div class="container large-leaflet-container">
+            {% leaflet_map "Britannia" callback="window.map_init_basic"%}
+            </div>
+    </div>
+{% endblock %}
+
+{% block column2 %}
+
+    <div class="col-md-2 col-sm-3 col-lg-2" id="col2">
+    <h3>Locations: </h3>
+    {% for location in locations %}
+        <ul>
+            <li><a href="/personas/location/{{ location.slug }}">{{ location }}</a></li>
+        </ul>
+    {% endfor %}
+
+    </div>
+{% endblock %}
+
+{% block r_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}

@@ -1,0 +1,388 @@
+{% extends 'personas/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load django_markdown %}
+{% load thumbnail %}
+{% block title %}
+    <header>
+        <h1 style="text-justify:centre">{{ character_name }} <span style="color: gray">({{ c_type }})</span></h1>
+    </header>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        
+        <!-- Nav tabs -->
+        <ul class="nav nav-pills nav-inverse" role="tablist" id="char_tabs">
+            <li class="active">
+                <a href="#details" role="tab" data-toggle="tab">
+                    <icon class="fa fa-home"></icon> Details
+                </a>
+            </li>
+            <li><a href="#abilities" role="tab" data-toggle="tab">
+                <i class="fa fa-user"></i> Stats & Abilities
+            </a>
+        </li>
+        <li>
+            <a href="#skills" role="tab" data-toggle="tab">
+                <i class="fa fa-envelope"></i> Skills
+            </a>
+        </li>
+        <li>
+            <a href="#notes" role="tab" data-toggle="tab">
+                <i class="fa fa-cog"></i> Notes
+            </a>
+        </li>
+        <li>
+            <a href="#images" role="tab" data-toggle="tab">
+                <i class="fa fa-cog"></i> Images
+            </a>
+        </li>
+        <li>
+            <a href="#social" role="tab" data-toggle="tab">
+                <i class="fa fa-cog"></i> Social
+            </a>
+        </li>
+    </ul>
+    
+    {% block column1 %}
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade active in" id="details">
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                    {% if character_name %}
+                        <br>
+                        <div class="img-responsive">
+                            {% thumbnail image "175" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
+                            <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
+                        {% endthumbnail %}
+                        <p>
+                            Created by {{ creator }}
+                        </p>
+                    </div>
+                    <div class="row">
+                        <h3>Description</h3>
+                        <p>{{ description }}</p>
+                    </div>
+                    <div class="row">
+                        <h3>Details:</h3>
+                        <ul>
+                            <li>Nationality/Tribe: <a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a></li>
+                            <li>Birthplace: <a href="/personas/location/{{ birthplace.slug }}">{{ birthplace }}</a></li>
+                            <li>Home: <a href="/personas/location/{{ base_of_operations.slug }}">{{ base_of_operations }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
+                    <div class="row">
+                            <h3>Aspects:</h3>
+                            {% if aspects %}
+                            <ul>
+                                {% for aspect in aspects %}
+                                    <li>{{ aspect }}   
+                                    <a href="{% url 'edit_trait' pk=aspect.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div tyle="padding-left:50px">
+                </div>
+                        {% endif %}
+                        <a href="/personas/add_trait/{{ character.slug }}" style="color:gray">Add  <span class="glyphicon glyphicon-pencil"></span></a>
+                    </div>
+                    <div class="row">
+                        {% if memberships %}
+                            <h3>Membership:</h3>
+                            <ul>
+                                {% for membership in memberships %}
+                                    <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }} - Rank {{ membership.rank }} - ({{ membership.role }})</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col3">
+                                        <h3>Relationships:</h3>
+
+                    {% if relationships %}
+                        <ul>
+                            {% for relationship in relationships %}
+                                <li>
+                                <a href="/personas/character/{{ relationship.to_character.slug }}">{{ relationship.to_character }}</a> - {{ relationship.relationship_class }} of <a href="/personas/character/{{ relationship.from_character.slug }}">{{ relationship.from_character }}</a> ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
+                                    <a href="{% url 'edit_relationship' pk=relationship.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <a href="/personas/add_relationships/{{ character.slug }}" style="color:gray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
+                    <hr>
+        <a role="button" class="btn btn-primary" href="{% url 'edit_character' pk=character.pk %}">Edit Character  <span class="glyphicon glyphicon-cog"></span></a>
+                </div>
+            {% else %}
+                <strong>No characters exist in the database right now.</strong>
+            {% endif %}
+            </div> <!-- First Tab Ends -->
+        {% endblock %}
+        {% block column2 %}
+            <div class="tab-pane fade in" id="abilities"> <!-- Second Tab Starts -->
+            <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                {% if type_1_statistics %}
+                    <h3>{{ story.statistic_type_name_1 }}:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for stat in type_1_statistics %}
+                            <tr>
+                                <td> {{ stat.name }}</td>
+                                <td> {{ stat.value }}</td>
+                                
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                        
+                    {% endif %}
+                </table>
+                {% if type_2_statistics %}
+                    <h3>{{ story.statistic_type_name_2 }}:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for stat in type_2_statistics %}
+                            <tr>
+                                <td> {{ stat.name }}</td>
+                                <td> {{ stat.value }}</td>
+                                
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                        
+                    {% endif %}
+                </table>
+                {% if type_3_statistics %}
+                    <h3>{{ story.statistic_type_name_3 }}:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for stat in type_3_statistics %}
+                            <tr>
+                                <td> {{ stat.name }}</td>
+                                <td> {{ stat.value }}</td>
+                                
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                        
+                    {% endif %}
+                </table>
+                {% if type_4_statistics %}
+                    <h3>{{ story.statistic_type_name_4 }}:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for stat in type_4_statistics %}
+                            <tr>
+                                <td> {{ stat.name }}</td>
+                                <td> {{ stat.value }}</td>
+                                
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </table>
+                <div tyle="padding-left:50px">
+                    <a href="/personas/add_statistics/{{ character.slug }}" style="color:gray">Add Stat <span class="glyphicon glyphicon-pencil"></span></a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
+                <div class="row">
+                                        <h3>Abilities:</h3>
+
+                    {% if abilities %}
+                        <ul>
+                            {% for ability in abilities %}
+                                <li>
+                                    {{ ability }}
+                                    
+                                    <a href="{% url 'edit_ability' pk=ability.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <div tyle="padding-left:50px">
+                    <a href="/personas/add_ability/{{ character.slug }}" style="color:gray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>
+                </div>
+                </div>
+                
+                <div class="row">
+                    {% if artifacts %}
+                        <h3>Artifacts:</h3>
+                        <ul>
+                            {% for artifact in artifacts %}
+                                <li><a href="/personas/artifact/{{ artifact.slug }}">  {{ artifact.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    {% block column3 %}
+        <div class="tab-pane fade in" id="skills">
+            <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                {% if type_1_skills %}
+                    <h3>{{ story.skill_type_name_1}}:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for skill in type_1_skills %}
+                            <tr>
+                                <td> {{ skill.name }}</td>
+                                <td> {{ skill.value }}</td>
+                                
+                                <td><a href="{% url 'edit_skill' pk=skill.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+                {% if type_2_skills %}
+                    <h3>{{ story.skill_type_name_2}}:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for skill in type_2_skills %}
+                            <tr>
+                                <td> {{ skill.name }}</td>
+                                <td> {{ skill.value }}</td>
+                                
+                                <td><a href="{% url 'edit_skill' pk=skill.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+            </div>
+            <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
+                {% if type_3_skills %}
+                    <h3>{{ story.skill_type_name_3}}:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for skill in type_3_skills %}
+                            <tr>
+                                <td> {{ skill.name }}</td>
+                                <td> {{ skill.value }}</td>
+                               
+                                <td><a href="{% url 'edit_skill' pk=skill.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+                {% if type_4_skills %}
+                    <h3>{{ story.skill_type_name_4}}:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for skill in type_4_skills %}
+                            <tr>
+                                <td> {{ skill.name }}</td>
+                                <td> {{ skill.value }}</td>
+                               
+                                <td><a href="{% url 'edit_skill' pk=skill.pk  character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+                <div tyle="padding-left:50px">
+                    <a href="/personas/add_skills/{{ character.slug }}" style="color:gray">Add Skill <span class="glyphicon glyphicon-pencil"></span></a>
+                </div>
+            </div>
+            {% if combat_info %}
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col3">
+                    <h3>Combat Info:</h3>
+                    <table class="table table-condensed table-hover table-responsive">
+                        {% for element in combat_info %}
+                            <tr>
+                                <td> {{ element.title }}</td>
+                                <td> {{ element.data }}</td>
+                                
+                                <td><a href="{% url 'edit_combat_info' pk=element.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <div tyle="padding-left:50px">
+                        <a href="/personas/add_combat_info/{{ character.slug }}" style="color:gray">Add Combat Info <span class="glyphicon glyphicon-pencil"></span></a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endblock column3 %}
+    {% block column4 %}
+        <div class="tab-pane fade in" id="notes"> <!-- Tab Four Starts -->
+        <div class="col-md-8 col-sm-8" id="BBoard">
+            <h3>Notes:</h3>
+            {% if notes %}
+                {% for note in notes %}
+                    <div class="note">{{ note }} -- {{ note.date }}</div><br>
+                {% endfor %}
+            {% else %}
+                <strong>{{ character_name }} has no notes.</strong><br />
+                <br />
+            {% endif %}
+            <div>
+                <label>Add a new note:</label>
+                <form class="uniForm" method="post">
+                    {% crispy noteform %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block column5 %}
+    <div class="tab-pane fade in" id="images"> <!-- Tab Five Starts -->
+    <div class="col-md-8 col-sm-8" id="col4">
+        <h3>Images:</h3>
+        {% if gallery_images %}
+            {% for g_image in gallery_images %}
+                <div class="img-responsive">
+                    {% thumbnail g_image.image "400x400" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
+                </div>
+        {% endfor %}
+    {% else %}
+        <strong>{{ character_name }} has no images.</strong><br />
+        <br />
+    {% endif %}
+</div>
+</div>
+{% endblock %}
+{% block column6 %}
+<div class="tab-pane fade in" id="social"> <!-- Tab Six Starts -->
+<div class="col-md-8 col-sm-8" id="BBoard">
+<div class="row">
+    <h3>Communiques:</h3>
+    {% if communiques %}
+        
+        {% for communique in communiques %}
+            <div class="note">{{ communique }} -- {{ communique.date }}</div><br>
+        {% endfor %}
+        
+    {% else %}
+        <strong>{{ character_name }} has no messages.</strong><br />
+        <br />
+    {% endif %}
+    <div>
+        <label>Send a message from {{ character_name }}:</label>
+        <form class="uniForm" method="post">
+            {% crispy communique_form %}
+        </form>
+    </div>
+    <br><br><br>
+</div>
+</div>
+</div> <!-- Tab six Ends -->
+{% endblock %}
+</div> <!-- Tab Content Ends -->
+<script>
+var url = document.location.toString();
+if (url.match('#')) {
+$('#char_tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+}
+// Change hash for page-reload
+$('#char_tabs a').on('shown.bs.tab', function (e) {
+window.location.hash = e.target.hash;
+})
+</script>
+<div class="row"> <!-- Row for footer placement -->
+</div>
+{% block footer %}
+<div class="row">
+<footer>
+<a href="/personas/">Home</a>
+</footer>
+</div>
+{% endblock %}
+{% endblock content %}

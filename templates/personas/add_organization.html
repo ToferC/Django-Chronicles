@@ -1,0 +1,40 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<header>
+    <h1>Add Organization to "{{ story.title }}"</h1>
+</header>
+{% endblock %}
+
+<div class="row">
+
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <h3>Adding an Organization</h3>
+    <p>Organizations are the movers and shakers of your story. Secret societies, government agencies, street gangs: this is the place.</p>
+
+        <img src="{% static 'images/fantasy_army.jpg' %}" alt="Fantasy Army" width="100%" height="100%">
+    </div>
+{% endblock %}
+
+{% block column2 %}
+    <div class="col-md-3 col-sm-6 col-lg-3" id="col2">
+    <h3>Add an Organization</h3>
+    {% crispy organization_form %}
+    <br><br><br>
+    </div>
+{% endblock %}
+
+{% block r_content %}
+<div class="col-md-2 col-sm-0 col-lg-2">
+</div>
+{% endblock %}
+
+</div>

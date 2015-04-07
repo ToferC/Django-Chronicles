@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load thumbnail %}
+{% block title %}
+    <header>
+        <h1>Nation - {{ nation.name }}</h1>
+    </header>
+{% endblock %}
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
+{% block column1 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+        <div class="img-responsive">
+            {% thumbnail nation.image "200x200" crop="center" as im %}
+            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
+            <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
+        {% endthumbnail %}
+        <div class="row">
+            <h3>Story:</h3>
+            <a href="/personas/story/{{ story.slug }}">{{ story }}</a>
+        </div>
+        <div class="row">
+            <h3>Description:</h3>
+            {{ nation.description }}
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block column2 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+        <div class="row">
+        <h3>National Statistics</h3>
+            <table class="table table-condensed table-hover table-responsive">
+                <tr>
+                    <td>Might</td>
+                    <td>{{ nation.might }}</td>
+                </tr>
+                <tr>
+                    <td>Intrigue</td>
+                    <td>{{ nation.intrigue }}</td>
+                </tr>
+                <tr>
+                    <td>Magic</td>
+                    <td>{{ nation.magic }}</td>
+                </tr>
+                <tr>
+                    <td>Wealth</td>
+                    <td>{{ nation.wealth }}</td>
+                </tr>
+                <tr>
+                    <td>Influence</td>
+                    <td>{{ nation.influence }}</td>
+                </tr>
+                <tr>
+                    <td>Defense</td>
+                    <td>{{ nation.defense }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block column3 %}
+    <div class="col-md-2 col-sm-4 col-lg-2" id="col3">
+        <div id="BBoard">
+            <h3>Notes:</h3>
+            {% if notes %}
+                
+                {% for note in notes %}
+                    <div class="note">{{ note }} -- {{ note.date }}</div><br>
+                {% endfor %}
+                
+            {% else %}
+                <strong>{{ nation.name }} has no notes.</strong><br />
+                <br />
+            {% endif %}
+            <div>
+                <div>
+                    <label>Add a new note:</label>
+                    {% crispy form %}
+                    <br><br><br>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block r_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}

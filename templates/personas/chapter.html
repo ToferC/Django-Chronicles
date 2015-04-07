@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+{% extends "personas/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    <header>
+        <h1>Chapter {{ chapter.number }} - {{ chapter.title }}</h1>
+    </header>
+{% endblock %}
+
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <div class="row">
+        <h3>Story:</h3>
+        <a href="/personas/story/{{ story.slug }}">{{ story }}</a>
+    </div>
+    <div class="row">
+        <h3>Description:</h3>
+        {{ chapter.description }}
+    </div>
+    </div>
+{% endblock %}
+{% block column2 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+    <div class="row">
+        <h3>Scenes:</h3>
+        {% if scenes %}
+            <ul>
+                {% for scene in scenes %}
+                    <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>{{ chapter.title }} has no scenes.</strong>
+            <br />
+            {% endif %}
+        <a href="/personas/add_scene/{{ story.slug }}" style="color:gray">Add Scene <span class="glyphicon glyphicon-pencil"></span></a>
+        <hr>
+    </div>
+
+    <div class="row">
+        <h3>Locations:</h3>
+        {% if locations %}
+            <ul>
+                {% for location in locations %}
+                    <li><a href="/personas/location/{{ location.slug }}">{{ location }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>{{ chapter_title }} has no locations.</strong>
+            <br />
+        {% endif %}
+        <a href="/personas/add_location/{{ story.slug }}" style="color:gray">Add Location <span class="glyphicon glyphicon-pencil"></span></a>
+        <hr>
+    </div>
+
+    <div class="row">
+        <h3>Characters:</h3>
+        {% if characters %}
+            <ul>
+                {% for character in characters %}
+                    <li><a href="/personas/character/{{ character.slug }}">{{ character }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>{{ chapter.title }} has no Characters.</strong>
+            <br />
+        {% endif %}
+    </div>
+    </div>
+{% endblock %}
+
+{% block column3 %}
+    <div class="col-md-2 col-sm-4 col-lg-2" id="col3">
+    <div id="BBoard">
+    <h3>Notes:</h3>
+    {% if notes %}
+        
+        {% for note in notes %}
+            <div class="note">{{ note }} -- {{ note.date }}</div><br>
+        {% endfor %}
+        
+    {% else %}
+        <strong>{{ chapter.title }} has no notes.</strong><br />
+        <br />
+    {% endif %}
+    <div>
+        <div>
+        <label>Add a new note:</label>
+            {% crispy form %}
+            <br><br><br>
+    </div>
+    </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block r_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}

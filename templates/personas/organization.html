@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    <header>
+        <h1>Organization - {{ organization.name }}</h1>
+    </header>
+{% endblock %}
+
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <div class="row">
+        <h3>Story:</h3>
+        <a href="/personas/story/{{ story.slug }}">{{ story }}</a>
+    </div>
+    <div class="row">
+        <h3>Description:</h3>
+        {{ organization.description }}
+    </div>
+    <div class="row">
+        <h3>Purpose:</h3>
+        {{ organization.purpose }}
+        <hr>
+    </div>
+<div class="row">
+        <h3>Region:</h3>
+        {{ organization.region }}
+        <hr>
+    </div>
+        <div class="row">
+        <h3>Location:</h3>
+        <a href="/personas/location/{{ location.slug }}">{{ organization.location }}</a>
+        <hr>
+    </div>
+    </div>
+{% endblock %}
+{% block column2 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+    <div class="row">
+        <h3>Members:</h3>
+        {% if members %}
+            <ul>
+                {% for member in members %}
+                    <li><a href="/personas/character/{{ member.character.slug }}">{{ member.character }} - {{ member.role }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>{{ organization.name }} has no members.</strong>
+            <br />
+        {% endif %}
+    </div>
+    </div>
+{% endblock %}
+
+{% block column3 %}
+    <div class="col-md-2 col-sm-4 col-lg-2" id="col3">
+    <div id="BBoard">
+    <h3>Notes:</h3>
+    {% if notes %}
+        
+        {% for note in notes %}
+            <div class="note">{{ note }} -- {{ note.date }}</div><br>
+        {% endfor %}
+        
+    {% else %}
+        <strong>{{ organization.title }} has no notes.</strong><br />
+        <br />
+    {% endif %}
+    <div>
+        <div>
+        <label>Add a new note:</label>
+            {% crispy form %}
+            <br><br><br>
+    </div>
+    </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block r_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
