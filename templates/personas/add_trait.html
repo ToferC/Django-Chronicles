@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block column1 %}
-    <div class="col-md-2 col-sm-4 col-lg-3">
+    <div class="col-md-2 col-sm-4 col-lg-3" id="col1">
     <h3>Aspects and Traits</h3>
     <p>Aspects and traits are ways that you can distill your character down to a few succinct lines of prose.</p>
     <p>For each Aspect, choose a label that is most appropriate and come up with a fun, entertaining line that encapsulates your character.  You can find great resources for coming up with awesome aspects on the <a href="http://fate-srd.com">FATE System Reference Document</a> or in <a href="http://fate-srd.com/fate-core/making-good-aspect">FATE Core</a>.</p>
@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block column2 %}
-    <div class="col-md-3 col-sm-4 col-lg-2">
+    <div class="col-md-3 col-sm-4 col-lg-2" id="col2">
 <h3>Current Aspects</h3>
     {% if traits %}
     {% for trait in traits %}
@@ -45,7 +45,7 @@
 {% endblock %}
 
 {% block column3 %}
-    <div class="col-md-3 col-sm-4 col-lg-3">
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col3">
     <h3>Add or Modify Aspects</h3>
         {% crispy form %}
     <br><br><br>

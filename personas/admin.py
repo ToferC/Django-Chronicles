@@ -15,6 +15,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 class LocationAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
+    list_display = ('name', 'story', 'nation', 'terrain', 'features')
 
 class NationAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}

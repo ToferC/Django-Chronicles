@@ -449,6 +449,8 @@ def story(request, story_name_slug):
                 story__title=story.title).distinct().order_by('name')
         context_dict['organizations'] = Organization.objects.filter(
                 location__story__title=story.title).distinct().order_by('name')
+        context_dict['nations'] = Nation.objects.filter(
+            story=story).distinct().order_by('name')
 
         form = NoteForm(request.POST or None)
         context_dict['form'] = form
@@ -577,7 +579,7 @@ def add_character(request, story_title_slug):
         if character_form.is_valid():
             slug = slugify(character_form.cleaned_data['name'])
 
-            character_form.save(creator=creator, commit=True)
+            character_form.save(creator=creator, story=story, commit=True)
 
             return HttpResponseRedirect("/personas/add_trait/{}".format(slug))
 
@@ -772,10 +774,6 @@ def add_statistics(request, character_name_slug):
 
     else:
         form = StatisticForm(character=character)
-
-        #helper = StatisticFormSetHelper()
-        #helper.add_input(Submit("submit", "Save"))
-        #helper.add_input(Submit("cancel", "Cancel"))
 
     return render(request, 'personas/add_statistics.html', {'form': form,
         'slug': character_name_slug, 'character': character,
@@ -1139,7 +1137,7 @@ def delete_skill(request, pk, template_name='personas/delete_skill.html'):
     return render(request, template_name, {'object': skill})
 
 @login_required
-def edit_skill(request, pk, character=None, template_name='personas/edit_skill.html'):
+def edit_skill(request, pk, template_name='personas/edit_skill.html'):
     skill = Skill.objects.get(pk=pk)
     character = Character.objects.get(skill=skill)
     form = SkillForm(request.POST or None, instance=skill, character=character)
@@ -1159,7 +1157,7 @@ def delete_combat_info(request, pk, template_name='personas/delete_combat_info.h
     return render(request, template_name, {'object': combat_info})
 
 @login_required
-def edit_combat_info(request, pk, character=None, template_name='personas/edit_combat_info.html'):
+def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'):
     combat_info = CombatInfo.objects.get(pk=pk)
     character = Character.objects.get(combatinfo=combat_info)
     form = CombatInfoForm(request.POST or None, instance=combat_info)
@@ -1180,7 +1178,7 @@ def delete_relationship(request, pk, template_name='personas/delete_relationship
 
 
 @login_required
-def edit_relationship(request, pk, character=None, template_name='personas/edit_relationship.html'):
+def edit_relationship(request, pk, template_name='personas/edit_relationship.html'):
     relationship = Relationship.objects.get(pk=pk)
     character = Character.objects.get(from_character=relationship.from_character)
     form = RelationshipForm(request.POST or None, instance=relationship)
@@ -1201,14 +1199,14 @@ def delete_statistic(request, pk, template_name='personas/delete_statistic.html'
 
 
 @login_required
-def edit_statistic(request, pk, character=None, template_name='personas/edit_statistic.html'):
+def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
     statistic = Statistic.objects.get(pk=pk)
     character = Character.objects.get(statistic=statistic)
     form = StatisticForm(request.POST or None, instance=statistic, character=character)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
-    return render(request, template_name, {'form': form, 'from_character':character, 'statistic': statistic})
+    return render(request, template_name, {'form': form, 'character':character, 'statistic': statistic})
 
 
 @login_required
@@ -1222,7 +1220,7 @@ def delete_ability(request, pk, template_name='personas/delete_ability.html'):
 
 
 @login_required
-def edit_ability(request, pk, character=None, template_name='personas/edit_ability.html'):
+def edit_ability(request, pk, template_name='personas/edit_ability.html'):
     specialability = SpecialAbility.objects.get(pk=pk)
     character = Character.objects.get(specialability=specialability)
     form = SpecialAbilityForm(request.POST or None, instance=specialability)
@@ -1243,7 +1241,7 @@ def delete_trait(request, pk, template_name='personas/delete_trait.html'):
 
 
 @login_required
-def edit_trait(request, pk, character=None, template_name='personas/edit_trait.html'):
+def edit_trait(request, pk, template_name='personas/edit_trait.html'):
     trait = Trait.objects.get(pk=pk)
     character = Character.objects.get(trait=trait)
     form = TraitForm(request.POST or None, instance=trait)

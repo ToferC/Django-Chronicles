@@ -39,10 +39,11 @@ class CharacterForm(forms.ModelForm):
                         href="#">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
-    def save(self, creator, commit=True):
+    def save(self, creator, story=None, commit=True):
         instance = super(CharacterForm, self).save(commit=False)
         instance.slug = slugify(instance.name)
         instance.creator = creator
+        instance.story = story
         instance.save()
         return instance
 

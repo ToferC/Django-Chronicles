@@ -29,7 +29,7 @@
                                             <td> {{ element.title }}</td>
                                             <td> {{ element.data }}</td>
                                             <td><a href="{% url 'delete_combat_info' pk=element.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_combat_info' pk=element.pk character=character %}">Edit</a></td>
+                                <td><a href="{% url 'edit_combat_info' pk=element.pk %}">Edit</a></td>
                                         </tr>
                                     {% endfor %}
                                 {% else %}

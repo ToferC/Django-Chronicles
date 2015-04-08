@@ -12,27 +12,27 @@ urlpatterns = patterns('',
 
     url(r'^add_trait/(?P<character_name_slug>[\w\-]+)/$', views.add_trait, name='add_trait'),
     url(r'^delete_trait/(?P<pk>\d+)/$', views.delete_trait, name='delete_trait'),
-    url(r'^edit_trait/(?P<pk>\d+)/(?P<character>[\w\-]+)/$', views.edit_trait, name='edit_trait'),
+    url(r'^edit_trait/(?P<pk>\d+)/$', views.edit_trait, name='edit_trait'),
 
     url(r'^add_skills/(?P<character_name_slug>[\w\-]+)/$', views.add_skills, name='add_skills'),
     url(r'^delete_skill/(?P<pk>\d+)/$', views.delete_skill, name='delete_skill'),
-    url(r'^edit_skill/(?P<pk>\d+)/(?P<character>[\w\-]+)/$', views.edit_skill, name='edit_skill'),
+    url(r'^edit_skill/(?P<pk>\d+)/$', views.edit_skill, name='edit_skill'),
 
     url(r'^add_statistics/(?P<character_name_slug>[\w\-]+)/$', views.add_statistics, name='add_statistics'),
     url(r'^delete_statistic/(?P<pk>\d+)/$', views.delete_statistic, name='delete_statistic'),
-    url(r'^edit_statistic/(?P<pk>\d+)/(?P<character>[\w\-]+)/$', views.edit_statistic, name='edit_statistic'),
+    url(r'^edit_statistic/(?P<pk>\d+)/$', views.edit_statistic, name='edit_statistic'),
 
     url(r'^add_combat_info/(?P<character_name_slug>[\w\-]+)/$', views.add_combat_info, name='add_combat_info'),
     url(r'^delete_combat_info/(?P<pk>\d+)/$', views.delete_combat_info, name='delete_combat_info'),
-    url(r'^edit_combat_info/(?P<pk>\d+)/(?P<character>[\w\-]+)/$', views.edit_combat_info, name='edit_combat_info'),
+    url(r'^edit_combat_info/(?P<pk>\d+)/$', views.edit_combat_info, name='edit_combat_info'),
 
     url(r'^add_ability/(?P<character_name_slug>[\w\-]+)/$', views.add_ability, name='add_ability'),
     url(r'^delete_ability/(?P<pk>\d+)/$', views.delete_ability, name='delete_ability'),
-    url(r'^edit_ability/(?P<pk>\d+)/(?P<character>[\w\-]+)/$', views.edit_ability, name='edit_ability'),
+    url(r'^edit_ability/(?P<pk>\d+)/$', views.edit_ability, name='edit_ability'),
 
     url(r'^add_relationships/(?P<character_name_slug>[\w\-]+)/$', views.add_relationships, name='add_relationships'),
     url(r'^delete_relationship/(?P<pk>\d+)/$', views.delete_relationship, name='delete_relationship'),
-    url(r'^edit_relationship/(?P<pk>\d+)/(?P<character>[\w\-]+)/$', views.edit_relationship, name='edit_relationship'),
+    url(r'^edit_relationship/(?P<pk>\d+)/$', views.edit_relationship, name='edit_relationship'),
 
     url(r'^add_membership/(?P<character_name_slug>[\w\-]+)/$', views.add_membership, name='add_membership'),
 

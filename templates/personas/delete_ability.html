@@ -4,6 +4,7 @@
 {% block column1 %}
 <div class="col-md-8" id="col1">
 Hey, are you sure you want to delete {{ object.name }}?
+<hr>
 <form method="post">
   {% csrf_token %}
   <button type="submit" class="btn btn-danger">Yeap, I'm sure.</button>

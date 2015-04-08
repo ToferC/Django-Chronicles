@@ -5,6 +5,7 @@
 <div class="col-md-8" id="col1">
 <H3>Hey, are you ABSOLUTELY CERTAIN you want to delete {{ object.name }}?</H3>
 <p>This will permanently delete the story as well as any dependent information, characters, locations, etc.  Think carefully.</p>
+<hr>
 <form method="post">
   {% csrf_token %}
   <button type="submit" class="btn btn-danger">Yeap, I'm sure.</button>

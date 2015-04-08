@@ -11,12 +11,12 @@
 <div class="row">
 
 {% block l_content %}
-    <div class="col-md-2 col-sm-0 col-lg-2">
+    <div class="col-md-2 col-sm-0 col-lg-2" id="col1">
     </div>
 {% endblock %}
 
 {% block column1 %}
-    <div class="col-md-4 col-sm-4 col-lg-4">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
     <h3>Creating a Character</h3>
     <p>Creating your character is a three step process.  First, on this page, you will create your character's core information, including their name, description and image.  When you've finished, you can click submit and you'll be taken to the second page where you can enter your character's skills and competencies.  More about that when we get there.</p><br><br>
 
@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block column2 %}
-    <div class="col-md-4 col-sm-8 col-lg-4">
+    <div class="col-md-4 col-sm-8 col-lg-4" id="col3">
     <h3>Create a Character</h3>
     {% crispy character_form %}
     <br><br><br>

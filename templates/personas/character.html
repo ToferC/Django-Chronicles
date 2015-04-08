@@ -63,6 +63,7 @@
                     <div class="row">
                         <h3>Description</h3>
                         <p>{{ description }}</p>
+                        <hr>
                     </div>
                     <div class="row">
                         <h3>Details:</h3>
@@ -71,51 +72,54 @@
                             <li>Birthplace: <a href="/personas/location/{{ birthplace.slug }}">{{ birthplace }}</a></li>
                             <li>Home: <a href="/personas/location/{{ base_of_operations.slug }}">{{ base_of_operations }}</a></li>
                         </ul>
+                        <hr>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
                     <div class="row">
-                            <h3>Aspects:</h3>
-                            {% if aspects %}
+                        <h3>Aspects:</h3>
+                        {% if aspects %}
                             <ul>
                                 {% for aspect in aspects %}
-                                    <li>{{ aspect }}   
-                                    <a href="{% url 'edit_trait' pk=aspect.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    <li>{{ aspect }}
+                                        <a href="{% url 'edit_trait' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                     </li>
                                 {% endfor %}
                             </ul>
                             <div tyle="padding-left:50px">
-                </div>
+                            </div>
                         {% endif %}
-                        <a href="/personas/add_trait/{{ character.slug }}" style="color:gray">Add  <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_trait/{{ character.slug }}" style="color:gray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>
+                        <hr>
                     </div>
                     <div class="row">
+                        <h3>Memberships:</h3>
                         {% if memberships %}
-                            <h3>Membership:</h3>
                             <ul>
                                 {% for membership in memberships %}
-                                    <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }} - Rank {{ membership.rank }} - ({{ membership.role }})</a></li>
+                                    <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }}</a> - Rank {{ membership.rank }} - ({{ membership.role }})</li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
+                        <a href="/personas/add_membership/{{ character.slug }}" style="color:gray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>
+                        <hr>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 col-lg-4" id="col3">
-                                        <h3>Relationships:</h3>
-
+                    <h3>Relationships:</h3>
                     {% if relationships %}
                         <ul>
                             {% for relationship in relationships %}
                                 <li>
-                                <a href="/personas/character/{{ relationship.to_character.slug }}">{{ relationship.to_character }}</a> - {{ relationship.relationship_class }} of <a href="/personas/character/{{ relationship.from_character.slug }}">{{ relationship.from_character }}</a> ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
-                                    <a href="{% url 'edit_relationship' pk=relationship.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    <a href="/personas/character/{{ relationship.to_character.slug }}">{{ relationship.to_character }}</a> - {{ relationship.relationship_class }} of <a href="/personas/character/{{ relationship.from_character.slug }}">{{ relationship.from_character }}</a> ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
+                                    <a href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 </li>
                             {% endfor %}
                         </ul>
                     {% endif %}
                     <a href="/personas/add_relationships/{{ character.slug }}" style="color:gray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
                     <hr>
-        <a role="button" class="btn btn-primary" href="{% url 'edit_character' pk=character.pk %}">Edit Character  <span class="glyphicon glyphicon-cog"></span></a>
+                    <a role="button" class="btn btn-primary" href="{% url 'edit_character' pk=character.pk %}">Edit Character  <span class="glyphicon glyphicon-cog"></span></a>
                 </div>
             {% else %}
                 <strong>No characters exist in the database right now.</strong>
@@ -133,7 +137,7 @@
                                 <td> {{ stat.name }}</td>
                                 <td> {{ stat.value }}</td>
                                 
-                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                         
@@ -147,7 +151,7 @@
                                 <td> {{ stat.name }}</td>
                                 <td> {{ stat.value }}</td>
                                 
-                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                         
@@ -161,7 +165,7 @@
                                 <td> {{ stat.name }}</td>
                                 <td> {{ stat.value }}</td>
                                 
-                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                         
@@ -175,7 +179,7 @@
                                 <td> {{ stat.name }}</td>
                                 <td> {{ stat.value }}</td>
                                 
-                                <td><a href="{% url 'edit_statistic' pk=stat.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                     {% endif %}
@@ -186,34 +190,36 @@
             </div>
             <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
                 <div class="row">
-                                        <h3>Abilities:</h3>
-
+                    <h3>Abilities:</h3>
                     {% if abilities %}
                         <ul>
                             {% for ability in abilities %}
                                 <li>
                                     {{ ability }}
                                     
-                                    <a href="{% url 'edit_ability' pk=ability.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    <a href="{% url 'edit_ability' pk=ability.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 </li>
                             {% endfor %}
                         </ul>
                     {% endif %}
                     <div tyle="padding-left:50px">
-                    <a href="/personas/add_ability/{{ character.slug }}" style="color:gray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_ability/{{ character.slug }}" style="color:gray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>
+                    </div>
                 </div>
-                </div>
+                <hr>
                 
                 <div class="row">
+                    <h3>Artifacts:</h3>
                     {% if artifacts %}
-                        <h3>Artifacts:</h3>
                         <ul>
                             {% for artifact in artifacts %}
                                 <li><a href="/personas/artifact/{{ artifact.slug }}">  {{ artifact.name }}</a></li>
                             {% endfor %}
                         </ul>
                     {% endif %}
+                    <a href="/personas/add_artifact/{{ character.slug }}" style="color:gray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
                 </div>
+                <hr>
             </div>
         </div>
     {% endblock %}
@@ -228,7 +234,7 @@
                                 <td> {{ skill.name }}</td>
                                 <td> {{ skill.value }}</td>
                                 
-                                <td><a href="{% url 'edit_skill' pk=skill.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -241,11 +247,14 @@
                                 <td> {{ skill.name }}</td>
                                 <td> {{ skill.value }}</td>
                                 
-                                <td><a href="{% url 'edit_skill' pk=skill.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                     </table>
                 {% endif %}
+                <div tyle="padding-left:50px">
+                    <a href="/personas/add_skills/{{ character.slug }}" style="color:gray">Add Skill <span class="glyphicon glyphicon-pencil"></span></a>
+                </div>
             </div>
             <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
                 {% if type_3_skills %}
@@ -255,8 +264,8 @@
                             <tr>
                                 <td> {{ skill.name }}</td>
                                 <td> {{ skill.value }}</td>
-                               
-                                <td><a href="{% url 'edit_skill' pk=skill.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                
+                                <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -268,15 +277,12 @@
                             <tr>
                                 <td> {{ skill.name }}</td>
                                 <td> {{ skill.value }}</td>
-                               
-                                <td><a href="{% url 'edit_skill' pk=skill.pk  character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                
+                                <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                     </table>
                 {% endif %}
-                <div tyle="padding-left:50px">
-                    <a href="/personas/add_skills/{{ character.slug }}" style="color:gray">Add Skill <span class="glyphicon glyphicon-pencil"></span></a>
-                </div>
             </div>
             {% if combat_info %}
                 <div class="col-md-4 col-sm-4 col-lg-4" id="col3">
@@ -287,7 +293,7 @@
                                 <td> {{ element.title }}</td>
                                 <td> {{ element.data }}</td>
                                 
-                                <td><a href="{% url 'edit_combat_info' pk=element.pk character=character %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                                <td><a href="{% url 'edit_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -319,7 +325,6 @@
         </div>
     </div>
 {% endblock %}
-
 {% block column5 %}
     <div class="tab-pane fade in" id="images"> <!-- Tab Five Starts -->
     <div class="col-md-8 col-sm-8" id="col4">
@@ -329,8 +334,8 @@
                 <div class="img-responsive">
                     {% thumbnail g_image.image "400x400" crop="center" as im %}
                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-                    {% endthumbnail %}
-                </div>
+                {% endthumbnail %}
+            </div>
         {% endfor %}
     {% else %}
         <strong>{{ character_name }} has no images.</strong><br />
