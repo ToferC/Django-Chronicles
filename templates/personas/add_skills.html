@@ -31,8 +31,7 @@
                                         <tr>
                                             <td> {{ skill.name }}</td>
                                             <td> {{ skill.value }}</td>
-                                            <td><a href="{% url 'delete_skill' pk=skill.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_skill' pk=skill.pk %}">Edit</a></td>
+                                            <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> </td><td> <a href="{% url 'delete_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                 {% endif %}
@@ -44,8 +43,7 @@
                                         <tr>
                                             <td> {{ skill.name }}</td>
                                             <td> {{ skill.value }}</td>
-                                            <td><a href="{% url 'delete_skill' pk=skill.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_skill' pk=skill.pk %}">Edit</a></td>
+                                            <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> </td><td> <a href="{% url 'delete_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                 {% endif %}
@@ -61,8 +59,7 @@
                                         <tr>
                                             <td> {{ skill.name }}</td>
                                             <td> {{ skill.value }}</td>
-                                            <td><a href="{% url 'delete_skill' pk=skill.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_skill' pk=skill.pk %}">Edit</a></td>
+                                            <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> </td><td> <a href="{% url 'delete_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                 {% endif %}
@@ -74,8 +71,7 @@
                                         <tr>
                                             <td> {{ skill.name }}</td>
                                             <td> {{ skill.value }}</td>
-                                            <td><a href="{% url 'delete_skill' pk=skill.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_skill' pk=skill.pk %}">Edit</a></td>
+                                            <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> </td><td> <a href="{% url 'delete_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                 {% endif %}

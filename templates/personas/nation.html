@@ -8,6 +8,7 @@
         <h1>Nation - {{ nation.name }}</h1>
     </header>
 {% endblock %}
+{% block content %}
 {% block l_content %}
     <div class="col-md-2 col-sm-0 col-lg-2">
     </div>
@@ -27,13 +28,7 @@
             <h3>Description:</h3>
             {{ nation.description }}
         </div>
-    </div>
-    </div>
-{% endblock %}
-{% block column2 %}
-    <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
-        <div class="row">
-        <h3>National Statistics</h3>
+        <h3>Nation Statistics</h3>
             <table class="table table-condensed table-hover table-responsive">
                 <tr>
                     <td>Might</td>
@@ -60,6 +55,24 @@
                     <td>{{ nation.defense }}</td>
                 </tr>
             </table>
+    </div>
+    </div>
+{% endblock %}
+{% block column2 %}
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+        <div class="row">
+        <h3>Locations</h3>
+        {% if locations %}
+        <ul>
+        {% for location in locations %}
+            <li><a href="/personas/location/{{ location.slug }}">{{ location }}</a></li>
+        {% endfor %}
+        {% else %}
+        <strong>{{ nation.name }} has no locations.</strong><br>
+        {% endif %}
+        <a href="/personas/add_location/{{ story.slug }}" style="color:gray">Add Location <span class="glyphicon glyphicon-pencil"></span></a>
+            <hr>
+            <a role="button" class="btn btn-primary" href="{% url 'edit_nation' pk=nation.pk %}">Edit Nation<span class="glyphicon glyphicon-cog"></span></a>
         </div>
     </div>
 {% endblock %}
@@ -91,3 +104,4 @@
     <div class="col-md-2 col-sm-0 col-lg-2">
     </div>
 {% endblock %}
+{% endblock content %}

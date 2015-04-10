@@ -30,7 +30,7 @@
             {% if artifacts %}
             <ul>
             {% for artifact in artifacts %}
-                <li>{{ artifact }}</li>
+                <li>{{ artifact }} | <a href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> | <a href="{% url 'delete_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></li>
             {% endfor %}
                         </ul>
             {% endif %}
@@ -48,7 +48,7 @@
             </div>
             <hr>
             <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}/#details">Take me straight<br>to my character.</a>
+                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}/#abilities">Take me straight<br>to my character.</a>
             </div>
             </div>
     {% endif %}

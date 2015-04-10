@@ -27,7 +27,7 @@
         <div class="row" style="color:black">
             <script type="text/javascript">
             function map_init_basic (map, options) {
-            L.marker([{{ latitude|add:"0" }}, {{ longitude|add:"0" }}], 13).addTo(map)
+            L.marker([{{ latitude|add:"0" }}, {{ longitude|add:"0" }}], 10).addTo(map)
             .bindPopup( "{{location_name}}" ).openPopup();
             }
             var popup = L.popup();
@@ -48,31 +48,32 @@
     </div>
 {% endblock %}
 {% block column2 %}
-    <div class="col-md-2 col-sm-4 col-lg-2" id="col2">
+    <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
         <div class="row">
             <h3>Terrain:</h3>
-            {{ terrain }}
+            <strong>{{ terrain }}</strong>
+            <hr>
         </div>
         <div class="row">
             <h3>Features:</h3>
-            {{ features }}
+            <strong>{{ features }}</strong>
+            <hr>
         </div>
         <div class="row">
             <h3>Nation:</h3>
-            {{ nation }}
+            <a href="/personas/nation/{{ nation.slug }}"><strong>{{ nation }}</strong></a>
+            <hr>
         </div>
         <div class="row">
-            <h3>Latitude:</h3>
-            {{ latitude }}
+            <h3>Latitude & Longitude:</h3>
+            <strong style="text-align:center">{{ latitude }} by {{ longitude }}</strong>
+            <hr>
         </div>
-        <div class="row">
-            <h3>Longitude:</h3>
-            {{ longitude }}
-        </div>
+        <a role="button" class="btn btn-primary" href="{% url 'edit_location' pk=location.pk %}">Edit Location  <span class="glyphicon glyphicon-cog"></span></a>
     </div>
 {% endblock %}
 {% block column3 %}
-    <div class="col-md-2 col-sm-4 col-lg-2" id="col3">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
         <div class="row">
             <h3>Scenes:</h3>
             {% if scenes %}
@@ -83,8 +84,10 @@
                 </ul>
             {% else %}
                 <strong>{{ location_name }} has no scenes.</strong>
-                <br />
             {% endif %}
+            <br>
+            <a href="/personas/add_scene/{{ story.slug }}" style="color:gray">Add Scene <span class="glyphicon glyphicon-pencil"></span></a>
+            <hr>
         </div>
         <div class="row">
             <h3>Characters:</h3>
@@ -93,23 +96,42 @@
                     {% for character in characters %}
                         <div class="btn-group-vertical">
                             
-                            <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:black" href="/personas/character/{{ character.slug }}"><img src="{{ character.image.url }}" style="max-height:40px; float:left">  {{ character.name }}</a><br>
+                            <li><a href="/personas/character/{{ character.slug }}">{{ character.name }}</a></li>
                         </div>
                     {% endfor %}
                 </ul>
             {% else %}
                 <strong>{{ location_name }} has no characters.</strong>
-                <br />
             {% endif %}
+            <br>
+            <a href="/personas/add_character/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+            <hr> 
         </div>
+
+        <div class="row">
+            <h3>Organizations:</h3>
+            {% if organizations %}
+                <ul>
+                    {% for organization in organizations %}
+                        <div class="btn-group-vertical">
+                            
+                            <li><a href="/personas/organization/{{ organization.slug }}">{{ organization.name }}</a></li>
+                        </div>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>{{ location_name }} has no organizations.</strong>
+            {% endif %}
+            <br>
+            <a href="/personas/add_organization/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
+            <hr> 
+        </div>
+
+
         </div>
 {% endblock column3 %}
 {% block r_content %}
-            <div class="col-md-2 col-sm-0 col-lg-2">
+            <div class="col-md-0 col-sm-0 col-lg-0">
             </div>
 {% endblock %}
-    {% block footer %}
-        <footer>
-            <a href="/personas/">Main Page</a>
-        </footer>
-    {% endblock %}
+   

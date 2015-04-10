@@ -29,8 +29,7 @@
                                         <tr>
                                             <td> {{ stat.name }}</td>
                                             <td> {{ stat.value }}</td>
-                                            <td><a href="{% url 'delete_statistic' pk=stat.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_statistic' pk=stat.pk %}">Edit</a></td>
+                                            <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> </td><td> <a href="{% url 'delete_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                
@@ -43,8 +42,7 @@
                                         <tr>
                                             <td> {{ stat.name }}</td>
                                             <td> {{ stat.value }}</td>
-                                            <td><a href="{% url 'delete_statistic' pk=stat.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_statistic' pk=stat.pk %}">Edit</a></td>
+                                            <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> </td><td> <a href="{% url 'delete_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                
@@ -61,8 +59,7 @@
                                         <tr>
                                             <td> {{ stat.name }}</td>
                                             <td> {{ stat.value }}</td>
-                                            <td><a href="{% url 'delete_statistic' pk=stat.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_statistic' pk=stat.pk %}">Edit</a></td>
+                                            <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> </td><td> <a href="{% url 'delete_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                
@@ -75,8 +72,7 @@
                                         <tr>
                                             <td> {{ stat.name }}</td>
                                             <td> {{ stat.value }}</td>
-                                            <td><a href="{% url 'delete_statistic' pk=stat.pk %}">Delete</a></td>
-                                <td><a href="{% url 'edit_statistic' pk=stat.pk %}">Edit</a></td>
+                                            <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> </td><td> <a href="{% url 'delete_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                

@@ -30,6 +30,7 @@ class CharacterForm(forms.ModelForm):
         if self.story:
             self.fields['birthplace'].queryset = Location.objects.filter(story=self.story)
             self.fields['base_of_operations'].queryset = Location.objects.filter(story=self.story)
+            self.fields['nationality'].queryset = Nation.objects.filter(story=self.story)
 
 
         self.helper = FormHelper(self)
@@ -353,7 +354,17 @@ class LocationForm(forms.ModelForm):
         "nation", "latitude", "longitude", "image"]
 
     def __init__(self, *args, **kwargs):
+        try:
+            self.story = kwargs.pop('story')
+        except KeyError:
+            self.story = None
+
         super(LocationForm, self).__init__(*args, **kwargs)
+
+        if self.story:
+            self.fields['nation'].queryset = Nation.objects.filter(
+                story=self.story)
+
         self.helper = FormHelper(self)
         self.helper.layout.append(
             FormActions(
@@ -366,7 +377,7 @@ class OrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
         fields = ["name", "description", "purpose",
-        "region", "location"]
+        "region", "location", "image"]
 
     def __init__(self, *args, **kwargs):
         try:
@@ -387,6 +398,27 @@ class OrganizationForm(forms.ModelForm):
                         href="#">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
+
+class NationForm(forms.ModelForm):
+    class Meta:
+        model = Nation
+        fields = ["name", "description", "might",
+        "intrigue", "magic", "wealth", "influence", "defense", "image"]
+
+    def __init__(self, *args, **kwargs):
+        try:
+            self.story = kwargs.pop('story')
+        except KeyError:
+            self.story = None
+
+        super(NationForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.layout.append(
+            FormActions(
+                HTML("""<a role="button" class="btn btn-default"
+                        href="#">Cancel</a>"""),
+                Submit('save', 'Submit'),))
 
 
 class ItemForm(forms.ModelForm):

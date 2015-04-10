@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% extends "personas/base.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 {% load crispy_forms_tags %}
 
 {% block title %}
@@ -16,10 +17,16 @@
 
 {% block column1 %}
     <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
-    <div class="row">
-        <h3>Story:</h3>
-        <a href="/personas/story/{{ story.slug }}">{{ story }}</a>
-    </div>
+    <div class="image">
+                        {% thumbnail organization.image "200" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                            {% empty %}
+                            
+                        {% endthumbnail %}
+                        <p>
+                            Created by {{ author }}
+                        </p>
+                        </div>
     <div class="row">
         <h3>Description:</h3>
         {{ organization.description }}
@@ -34,28 +41,32 @@
         {{ organization.region }}
         <hr>
     </div>
-        <div class="row">
-        <h3>Location:</h3>
-        <a href="/personas/location/{{ location.slug }}">{{ organization.location }}</a>
-        <hr>
-    </div>
     </div>
 {% endblock %}
 {% block column2 %}
     <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
     <div class="row">
+        <h3>Headquarters:</h3>
+        <ul>
+        <li><a href="/personas/location/{{ organization.location.slug }}">{{ organization.location }}</a></li>
+        </ul>
+        <hr>
+    </div>
+    <div class="row">
         <h3>Members:</h3>
         {% if members %}
             <ul>
                 {% for member in members %}
-                    <li><a href="/personas/character/{{ member.character.slug }}">{{ member.character }} - {{ member.role }}</a></li>
+                    <li><a href="/personas/character/{{ member.character.slug }}">{{ member.character }}</a> - Rank {{ member.rank }} - {{ member.role }}</li>
                 {% endfor %}
             </ul>
         {% else %}
             <strong>{{ organization.name }} has no members.</strong>
             <br />
         {% endif %}
+        <hr>
     </div>
+    <a role="button" class="btn btn-primary" href="{% url 'edit_organization' pk=organization.pk %}">Edit Organization  <span class="glyphicon glyphicon-cog"></span></a>
     </div>
 {% endblock %}
 

@@ -18,7 +18,7 @@
 {% block column1 %}
     <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
     <h3>Adding a Scene</h3>
-    <p>Add text here</p>
+    <p>Scenes are where the action and drama of your chronicle take place.  An action scene, an investigative scene or a love scene, all take place here.</p>
 
         <img src="{% static 'images/035.jpg' %}" alt="Cthulhu" width="100%" height="100%">
     </div>
@@ -30,14 +30,6 @@
     {% crispy scene_form %}
     <br><br><br>
     </div>
-{% endblock %}
-{% block column3 %}
-    <div class="col-md-2 col-sm-2 col-lg-2" id="col1">
-
-    <a role="button" class="btn btn-primary" href="#">Add a Character</a>
-    <a role="button" class="btn btn-primary" href="#">Add a Location</a>
-    <a role="button" class="btn btn-primary" href="#">Add an Artifact</a>
-</div>
 {% endblock %}
 
 {% block r_content %}

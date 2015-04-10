@@ -314,6 +314,7 @@ class Organization(models.Model):
     region = models.CharField(max_length=128)
     location = models.ForeignKey(Location)
     story = models.ForeignKey('Story')
+    image = models.ImageField(upload_to='organization_images/%Y/%m/%d', default='organization_images/nothing.jpg')
 
     slug = models.SlugField(unique=True)
 

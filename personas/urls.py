@@ -35,16 +35,37 @@ urlpatterns = patterns('',
     url(r'^edit_relationship/(?P<pk>\d+)/$', views.edit_relationship, name='edit_relationship'),
 
     url(r'^add_membership/(?P<character_name_slug>[\w\-]+)/$', views.add_membership, name='add_membership'),
+    url(r'^delete_membership/(?P<pk>\d+)/$', views.delete_membership, name='delete_membership'),
+    url(r'^edit_membership/(?P<pk>\d+)/$', views.edit_membership, name='edit_membership'),
 
     url(r'^create_story/$', views.create_story, name="create_story"),
     url(r'^delete_story/(?P<pk>\d+)/$', views.delete_story, name='delete_story'),
     url(r'^edit_story/(?P<pk>\d+)/$', views.edit_story, name='edit_story'),
 
     url(r'^add_chapter/(?P<story_title_slug>[\w\-]+)/$', views.add_chapter, name='add_chapter'),
+    url(r'^delete_chapter/(?P<pk>\d+)/$', views.delete_chapter, name='delete_chapter'),
+    url(r'^edit_chapter/(?P<pk>\d+)/$', views.edit_chapter, name='edit_chapter'),
+
     url(r'^add_scene/(?P<story_title_slug>[\w\-]+)/$', views.add_scene, name='add_scene'),
+    url(r'^delete_scene/(?P<pk>\d+)/$', views.delete_scene, name='delete_scene'),
+    url(r'^edit_scene/(?P<pk>\d+)/$', views.edit_scene, name='edit_scene'),
+
     url(r'^add_location/(?P<story_title_slug>[\w\-]+)/$', views.add_location, name='add_location'),
+    url(r'^delete_location/(?P<pk>\d+)/$', views.delete_location, name='delete_location'),
+    url(r'^edit_location/(?P<pk>\d+)/$', views.edit_location, name='edit_location'),
+
     url(r'^add_organization/(?P<story_title_slug>[\w\-]+)/$', views.add_organization, name='add_organization'),
+    url(r'^delete_organization/(?P<pk>\d+)/$', views.delete_organization, name='delete_organization'),
+    url(r'^edit_organization/(?P<pk>\d+)/$', views.edit_organization, name='edit_organization'),
+
     url(r'^add_artifact/(?P<slug>[\w\-]+)/$', views.add_artifact, name='add_artifact'),
+    url(r'^delete_artifact/(?P<pk>\d+)/$', views.delete_artifact, name='delete_artifact'),
+    url(r'^edit_artifact/(?P<pk>\d+)/$', views.edit_artifact, name='edit_artifact'),
+
+    url(r'^add_nation/(?P<story_title_slug>[\w\-]+)/$', views.add_nation, name='add_nation'),
+    url(r'^delete_nation/(?P<pk>\d+)/$', views.delete_nation, name='delete_nation'),
+    url(r'^edit_nation/(?P<pk>\d+)/$', views.edit_nation, name='edit_nation'),
+
     url(r'^register/$', views.register, name='register'),
     url(r'^collections/$', views.collections, name='collections'),
     url(r'^login/$', views.user_login, name='login'),

@@ -16,28 +16,20 @@
 {% endblock %}
 
 {% block column1 %}
-    <div class="col-md-3 col-sm-4 col-lg-3">
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
     <h3>Adding a Location</h3>
-    <p>Add text here</p>
+    <p>Locations are the places where the action and drama in your story occurs.  It can be a mansion, a room, a geographic location or anyplace else that's appropriate to your chronicle.</p>
 
         <img src="{% static 'images/035.jpg' %}" alt="Cthulhu" width="100%" height="100%">
     </div>
 {% endblock %}
 
 {% block column2 %}
-    <div class="col-md-3 col-sm-6 col-lg-3">
-    <h3>Add a Locataion</h3>
+    <div class="col-md-3 col-sm-6 col-lg-3" id="col2">
+    <h3>Add a Location</h3>
     {% crispy location_form %}
     <br><br><br>
     </div>
-{% endblock %}
-{% block column3 %}
-    <div class="col-md-2 col-sm-2 col-lg-2">
-
-    <a role="button" class="btn btn-primary" href="personas/add_character/{{ story_slug }}">Add a Character</a>
-    <a role="button" class="btn btn-primary" href="personas/add_location/{{ story_slug }}">Add a Location</a>
-    <a role="button" class="btn btn-primary" href="personas/add_artifact/{{ story_slug }}">Add an Artifact</a>
-</div>
 {% endblock %}
 
 {% block r_content %}

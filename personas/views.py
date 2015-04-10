@@ -13,7 +13,7 @@ from crispy_forms.helper import FormHelper
 from personas.models import Nation, Location, Character, Organization, Relationship, Membership, Trait, SpecialAbility, Item, Story, MainMap, Chapter, Scene, Skill, Note, Communique
 from personas.models import Statistic, CombatInfo, GalleryImage
 from personas.forms import CharacterForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, TraitForm, TraitFormSetHelper, SkillFormSetHelper, ItemForm, SpecialAbilityForm, RelationshipForm
-from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm
+from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm
 
 
 # Normal Views
@@ -58,6 +58,7 @@ def location(request, location_name_slug):
 
         context_dict['story'] = Story.objects.get(location=location)
 
+        context_dict['location'] = location
         context_dict['location_name'] = location.name
         context_dict['creator'] = location.creator
         context_dict['image'] = location.image
@@ -70,8 +71,10 @@ def location(request, location_name_slug):
         context_dict['slug'] = location.slug
         context_dict['scenes'] = Scene.objects.filter(
             location__name=location.name)
+        context_dict['organizations'] = Organization.objects.filter(
+            location__name=location.name).distinct()
         context_dict['characters'] = Character.objects.filter(
-            scene__location__name=location.name)
+            base_of_operations__name=location.name)
 
         context_dict['notes'] = Note.objects.filter(location__name=location.name)
 
@@ -102,6 +105,7 @@ def scene(request, scene_name_slug):
     try:
         scene = Scene.objects.get(slug=scene_name_slug)
 
+        context_dict['scene'] = scene
         context_dict['scene_title'] = scene.title
         context_dict['slug'] = scene_name_slug
         context_dict['location'] = scene.location
@@ -224,10 +228,12 @@ def nation(request, nation_name_slug):
 
     try:
         nation = Nation.objects.get(slug=nation_name_slug)
-        story = Story.objects.get(location__nation=nation)
+        story = Story.objects.get(nation=nation)
 
         context_dict['nation'] = nation
         context_dict['story'] = story
+        context_dict['locations'] = Location.objects.filter(
+            nation=nation).distinct()
 
         context_dict['notes'] = Note.objects.filter(
             nation__name=nation.name)[0:10]
@@ -488,7 +494,7 @@ def mainmap(request, mainmap_slug):
         context_dict['tile'] = mainmap.tiles
 
         context_dict['locations'] = Location.objects.filter(
-            scene__chapter__story__title=mainmap.story).distinct()
+            story=mainmap.story).distinct()
 
     except MainMap.DoesNotExist:
         pass
@@ -605,7 +611,7 @@ def create_story(request):
         if story_form.is_valid():
             slug = slugify(story_form.cleaned_data['title'])
 
-            story_form.save(creator=creator, commit=True)
+            story_form.save(author=creator, commit=True)
 
             return HttpResponseRedirect("/personas/story/{}".format(slug))
 
@@ -899,7 +905,8 @@ def add_relationships(request, character_name_slug):
                 relationship.save()
                 relationship_form = RelationshipForm(story=story)
 
-            HttpResponseRedirect("")
+            
+            relationship_form = RelationshipForm(story=story)
 
         else:
             print (relationship_form.errors)
@@ -942,7 +949,7 @@ def add_chapter(request, story_title_slug):
                 chapter.save()
                 chapter_form = ChapterForm()
 
-            HttpResponseRedirect("/personas/chapter/{}".format(chapter_slug))
+            return HttpResponseRedirect("/personas/chapter/{}".format(chapter_slug))
 
         else:
             print (chapter_form.errors)
@@ -974,8 +981,7 @@ def add_scene(request, story_title_slug):
             scene.save()
             scene_form.save_m2m()
 
-            HttpResponseRedirect("personas/scene/{}".format(scene.slug))
-            scene_form = SceneForm(story=story)
+            return HttpResponseRedirect("/personas/scene/{}".format(scene.slug))
 
         else:
             print (scene_form.errors)
@@ -1003,18 +1009,18 @@ def add_location(request, story_title_slug):
         if location_form.is_valid():
             location = location_form.save(commit=False)
             location.creator = request.user
+            location.story = story
             location.slug = slugify(location.name)
             location.save()
             #location_form.save_m2m()
 
-            HttpResponseRedirect("personas/location/{}".format(location.slug))
-            location_form = LocationForm()
+            return HttpResponseRedirect("/personas/location/{}".format(location.slug))
 
         else:
             print (location_form.errors)
 
     else:
-        location_form = LocationForm()
+        location_form = LocationForm(story=story)
 
     return render(request, 'personas/add_location.html', {
         'slug': story_title_slug, 'story':story, 'locations': locations,
@@ -1039,8 +1045,7 @@ def add_organization(request, story_title_slug):
             organization.save()
             #organization_form.save_m2m()
 
-            HttpResponseRedirect("/personas/organization/{}".format(organization.slug))
-            #organization_form = OrganizationForm(story=story)
+            return HttpResponseRedirect("/personas/organization/{}".format(organization.slug))
 
         else:
             print (organization_form.errors)
@@ -1051,6 +1056,37 @@ def add_organization(request, story_title_slug):
     return render(request, 'personas/add_organization.html', {
         'slug': story_title_slug, 'story':story, 'organizations': organizations,
         'organization_form':organization_form})
+
+
+@login_required
+def add_nation(request, story_title_slug):
+
+    story = Story.objects.get(slug=story_title_slug)
+
+    nations = Nation.objects.filter(location__story=story)
+
+    if request.method == 'POST':
+
+        nation_form = NationForm(request.POST, request.FILES or None, story=story)
+
+        if nation_form.is_valid():
+            nation = nation_form.save(commit=False)
+            nation.story = story
+            nation.slug = slugify(nation.name)
+            nation.save()
+
+            return HttpResponseRedirect("/personas/nation/{}".format(nation.slug))
+
+        else:
+            print (nation_form.errors)
+
+    else:
+        nation_form = NationForm(story=story)
+
+    return render(request, 'personas/add_nation.html', {
+        'slug': story_title_slug, 'story':story, 'nations': nations,
+        'nation_form':nation_form})
+
 
 
 @login_required
@@ -1071,8 +1107,7 @@ def add_membership(request, character_name_slug):
             membership.character = character
             membership.save()
 
-            HttpResponseRedirect("/personas/character/{}".format(character.slug))
-            #membership_form = MembershipForm(story=story)
+            return HttpResponseRedirect("/personas/character/{}".format(character.slug))
 
         else:
             print (membership_form.errors)
@@ -1111,8 +1146,7 @@ def add_artifact(request, slug, *args, **kwargs):
             artifact.story = story
             artifact.save()
 
-            HttpResponseRedirect("personas/artifact/{}".format(artifact.slug))
-            artifact_form = ItemForm()
+            return HttpResponseRedirect("")
 
         else:
             print (artifact_form.errors)
@@ -1140,11 +1174,13 @@ def delete_skill(request, pk, template_name='personas/delete_skill.html'):
 def edit_skill(request, pk, template_name='personas/edit_skill.html'):
     skill = Skill.objects.get(pk=pk)
     character = Character.objects.get(skill=skill)
+    story = character.story
     form = SkillForm(request.POST or None, instance=skill, character=character)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/character/{}/#skills'.format(character.slug))
-    return render(request, template_name, {'form': form, 'character': character, 'skill': skill})
+    return render(request, template_name, {'form': form, 'character': character,
+        'skill': skill, 'story':story})
 
 
 @login_required
@@ -1160,11 +1196,13 @@ def delete_combat_info(request, pk, template_name='personas/delete_combat_info.h
 def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'):
     combat_info = CombatInfo.objects.get(pk=pk)
     character = Character.objects.get(combatinfo=combat_info)
+    story = character.story
     form = CombatInfoForm(request.POST or None, instance=combat_info)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/character/{}/#skills'.format(character.slug))
-    return render(request, template_name, {'form': form, 'character': character, 'combat_info': combat_info})
+    return render(request, template_name, {'form': form, 'character': character,
+        'combat_info': combat_info, 'story':story})
 
 
 @login_required
@@ -1181,11 +1219,13 @@ def delete_relationship(request, pk, template_name='personas/delete_relationship
 def edit_relationship(request, pk, template_name='personas/edit_relationship.html'):
     relationship = Relationship.objects.get(pk=pk)
     character = Character.objects.get(from_character=relationship.from_character)
+    story = character.story
     form = RelationshipForm(request.POST or None, instance=relationship)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
-    return render(request, template_name, {'form': form, 'from_character':character, 'relationship': relationship})
+    return render(request, template_name, {'form': form, 'from_character':character,
+        'relationship': relationship, 'story':story})
 
 
 @login_required
@@ -1202,11 +1242,13 @@ def delete_statistic(request, pk, template_name='personas/delete_statistic.html'
 def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
     statistic = Statistic.objects.get(pk=pk)
     character = Character.objects.get(statistic=statistic)
+    story = character.story
     form = StatisticForm(request.POST or None, instance=statistic, character=character)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
-    return render(request, template_name, {'form': form, 'character':character, 'statistic': statistic})
+    return render(request, template_name, {'form': form, 'character':character,
+        'statistic': statistic, 'story':story})
 
 
 @login_required
@@ -1223,11 +1265,13 @@ def delete_ability(request, pk, template_name='personas/delete_ability.html'):
 def edit_ability(request, pk, template_name='personas/edit_ability.html'):
     specialability = SpecialAbility.objects.get(pk=pk)
     character = Character.objects.get(specialability=specialability)
+    story = character.story
     form = SpecialAbilityForm(request.POST or None, instance=specialability)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
-    return render(request, template_name, {'form': form, 'character':character, 'ability': specialability})
+    return render(request, template_name, {'form': form, 'character': character,
+        'ability': specialability, 'story':story})
 
 
 @login_required
@@ -1244,11 +1288,13 @@ def delete_trait(request, pk, template_name='personas/delete_trait.html'):
 def edit_trait(request, pk, template_name='personas/edit_trait.html'):
     trait = Trait.objects.get(pk=pk)
     character = Character.objects.get(trait=trait)
+    story = character.story
     form = TraitForm(request.POST or None, instance=trait)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
-    return render(request, template_name, {'form': form, 'character':character, 'trait': trait})
+    return render(request, template_name, {'form': form, 'character':character, 'trait': trait,
+        'story':story})
 
 
 @login_required
@@ -1263,12 +1309,14 @@ def delete_character(request, pk, template_name='personas/delete_character.html'
 @login_required
 def edit_character(request, pk, template_name='personas/edit_character.html'):
     character = Character.objects.get(pk=pk)
+    story = character.story
     user = request.user
     form = CharacterForm(request.POST or None, request.FILES or None, instance=character)
     if form.is_valid():
         form.save(creator=character.creator)
         return HttpResponseRedirect('/personas/character/{}'.format(character.slug))
-    return render(request, template_name, {'form': form, 'character':character})
+    return render(request, template_name, {'form': form, 'character':character,
+        'story':story})
 
 
 @login_required
@@ -1289,4 +1337,159 @@ def edit_story(request, pk, template_name='personas/edit_story.html'):
         form.save(author=story.author)
         return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
     return render(request, template_name, {'form': form, 'story':story})
+
+
+@login_required
+def delete_location(request, pk, template_name='personas/delete_location.html'):
+    location = Location.objects.get(pk=pk)
+    story = Story.objects.get(location=location)
+    if request.method=='POST':
+        location.delete()
+        return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    return render(request, template_name, {'object': location})
+
+
+@login_required
+def edit_location(request, pk, template_name='personas/edit_location.html'):
+    location = Location.objects.get(pk=pk)
+    story = location.story
+    user = request.user
+    form = LocationForm(request.POST or None, request.FILES or None, instance=location)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/location/{}'.format(location.slug))
+    return render(request, template_name, {'form': form, 'object':location, 'story':story})
+
+
+@login_required
+def delete_organization(request, pk, template_name='personas/delete_organization.html'):
+    organization = Organization.objects.get(pk=pk)
+    story = Story.objects.get(organization=organization)
+    if request.method=='POST':
+        organization.delete()
+        return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    return render(request, template_name, {'object': organization})
+
+
+@login_required
+def edit_organization(request, pk, template_name='personas/edit_organization.html'):
+    organization = Organization.objects.get(pk=pk)
+    story = organization.story
+    user = request.user
+    form = OrganizationForm(request.POST or None, request.FILES or None, instance=organization)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/organization/{}'.format(organization.slug))
+    return render(request, template_name, {'form': form, 'object':organization, 'story':story})
+
+
+@login_required
+def delete_chapter(request, pk, template_name='personas/delete_chapter.html'):
+    chapter = Chapter.objects.get(pk=pk)
+    story = Story.objects.get(chapter=chapter)
+    if request.method=='POST':
+        chapter.delete()
+        return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
+    return render(request, template_name, {'object': chapter})
+
+
+@login_required
+def edit_chapter(request, pk, template_name='personas/edit_chapter.html'):
+    chapter = Chapter.objects.get(pk=pk)
+    story = chapter.story
+    user = request.user
+    form = ChapterForm(request.POST or None, request.FILES or None, instance=chapter)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/chapter/{}'.format(chapter.slug))
+    return render(request, template_name, {'form': form, 'object':chapter, 'story':story})
+
+
+@login_required
+def delete_scene(request, pk, template_name='personas/delete_scene.html'):
+    scene = Scene.objects.get(pk=pk)
+    story = Story.objects.get(chapter__scene=scene)
+    if request.method=='POST':
+        scene.delete()
+        return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
+    return render(request, template_name, {'object': scene})
+
+
+@login_required
+def edit_scene(request, pk, template_name='personas/edit_scene.html'):
+    scene = Scene.objects.get(pk=pk)
+    user = request.user
+    story = Story.objects.get(chapter__scene=scene)
+    form = SceneForm(request.POST or None, request.FILES or None, instance=scene, story=story)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/scene/{}'.format(scene.slug))
+    return render(request, template_name, {'form': form, 'object':scene, 'story':story})
+
+
+@login_required
+def delete_membership(request, pk, template_name='personas/delete_membership.html'):
+    membership = Membership.objects.get(pk=pk)
+    character = membership.character
+    if request.method=='POST':
+        membership.delete()
+        return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+    return render(request, template_name, {'object': membership})
+
+
+@login_required
+def edit_membership(request, pk, template_name='personas/edit_membership.html'):
+    membership = Membership.objects.get(pk=pk)
+    character = membership.character
+    story = character.story
+    form = MembershipForm(request.POST or None, instance=membership)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+    return render(request, template_name, {'form': form, 'character':character, 'membership': membership,
+        'story':story})
+
+
+@login_required
+def delete_artifact(request, pk, template_name='personas/delete_artifact.html'):
+    artifact = Item.objects.get(pk=pk)
+    character = Character.objects.get(item=artifact)
+    if request.method=='POST':
+        artifact.delete()
+        return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
+    return render(request, template_name, {'object': artifact})
+
+
+@login_required
+def edit_artifact(request, pk, template_name='personas/edit_artifact.html'):
+    artifact = Item.objects.get(pk=pk)
+    character = Character.objects.get(item=artifact)
+    story= character.story
+    form = ItemForm(request.POST or None, instance=artifact)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
+    return render(request, template_name, {'form': form, 'character':character, 'artifact': artifact, 'story':story})
+
+
+@login_required
+def delete_nation(request, pk, template_name='personas/delete_nation.html'):
+    nation = Nation.objects.get(pk=pk)
+    story = Story.objects.get(nation=nation)
+    if request.method=='POST':
+        nation.delete()
+        return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    return render(request, template_name, {'object': nation})
+
+
+@login_required
+def edit_nation(request, pk, template_name='personas/edit_nation.html'):
+    nation = Nation.objects.get(pk=pk)
+    story = Story.objects.get(nation=nation)
+    user = request.user
+    form = NationForm(request.POST or None, request.FILES or None, instance=nation)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/nation/{}'.format(nation.slug))
+    return render(request, template_name, {'form': form, 'object':nation, 'story':story})
 

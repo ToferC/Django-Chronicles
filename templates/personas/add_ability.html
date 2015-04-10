@@ -30,7 +30,8 @@
                                 
                                 {% for ability in abilities %}
                                     <h4>{{ ability.name }}</h4>
-                                    <li>{{ ability.description }}</li>
+                                    <li>{{ ability.description }}
+                                    <a href="{% url 'edit_ability' pk=ability.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> | <a href="{% url 'delete_ability' pk=ability.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></li>
                                     {% endfor %}
                                 {% else %}
                                         <strong>No Abilities.</strong>

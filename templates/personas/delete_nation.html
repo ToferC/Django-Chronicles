@@ -1,0 +1,18 @@
+{% extends 'personas/base.html' %}
+
+{% block content %}
+{% block column1 %}
+<div class="col-md-8" id="col1">
+<H3>Hey, are you ABSOLUTELY CERTAIN you want to delete {{ object.name }}?</H3>
+<p>This will permanently delete the object.  Think carefully.</p>
+<hr>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Yeap, I'm sure.</button>
+</form>
+<hr>
+<a href="/personas/" class="btn btn-action">No way. Take me home.</button>
+</div>
+{% endblock %}
+{% endblock %}

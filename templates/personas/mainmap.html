@@ -8,12 +8,13 @@
 {% endblock %}
 
 {% block l_content %}
-    <div class="col-md-2 col-sm-0 col-lg-2">
+    <div class="col-md-0 col-sm-0 col-lg-0">
     </div>
 {% endblock %}
 
 {% block column1 %}
-    <div class="col-md-6 col-sm-9 col-lg-6" id="col1">
+    <div class="col-md-9 col-sm-9 col-lg-9" id="col1">
+    <div class="container">
             <script type="text/javascript">
 
                 function map_init_basic (map, options) {
@@ -46,11 +47,12 @@
             {% leaflet_map "Britannia" callback="window.map_init_basic"%}
             </div>
     </div>
+    </div>
 {% endblock %}
 
 {% block column2 %}
 
-    <div class="col-md-2 col-sm-3 col-lg-2" id="col2">
+    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
     <h3>Locations: </h3>
     {% for location in locations %}
         <ul>

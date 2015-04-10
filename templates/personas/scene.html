@@ -18,24 +18,33 @@
     <div class="row">
         <h3>Story:</h3>
         <a href="/personas/story/{{ story.slug }}">{{ story }}</a>
+        <hr>
     </div>
     <div class="row">
         <h3>Chapter:</h3>
         <a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a>
+        <hr>
     </div>
     <div class="row">
-        <h3>Location:</h3>
-        <a href="/personas/location/{{ location.slug }}">{{ location }}</a>
-    </div>
-    <div class="row">
-        <h3>Time:</h3>
-        {{ time }}
+        <h3>Description:</h3>
+        {{ description }}
+        <hr>
     </div>
     </div>
 {% endblock %}
 
 {% block column2 %}
     <div class="col-md-2 col-sm-4 col-lg-2" id="col2">
+    <div class="row">
+        <h3>Time:</h3>
+        {{ time }}
+        <hr>
+    </div>
+    <div class="row">
+        <h3>Location:</h3>
+        <a href="/personas/location/{{ location.slug }}">{{ location }}</a>
+        <hr>
+    </div>
     <div class="row">
         <h3>Characters:</h3>
         {% if characters %}
@@ -44,20 +53,13 @@
                 {% endfor %}
         {% else %}
             <strong>{{ scene_title }} has no characters.</strong>
-            <br />
         {% endif %}
+        <br>
+        <a href="/personas/add_character/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+        <hr>
     </div>
     <div class="row">
-        <h3>Description:</h3>
-        {{ description }}
-    </div>
-    <div class="row">
-    <h3>Add Story Elements</h3>
-    <div container>
-    <a role="button" class="btn btn-primary" href="/personas/add_character/{{ story_slug }}">Add a Character</a><br><br>
-    <a role="button" class="btn btn-primary" href="/personas/add_location/{{ story_slug }}">Add a Location</a><br><br>
-    <a role="button" class="btn btn-primary" href="/personas/add_artifact/{{ story_slug }}">Add an Artifact</a><br><br>
-    </div>
+    <a role="button" class="btn btn-primary" href="{% url 'edit_scene' pk=scene.pk %}">Edit Scene  <span class="glyphicon glyphicon-cog"></span></a>
     </div>
     </div>
 {% endblock %}
@@ -88,10 +90,4 @@
 {% block r_content %}
 <div class="col-md-3 col-sm-0 col-lg-2 col-lg-3" id="col1">
 </div>
-{% endblock %}
-
-{% block footer %}
-    <footer>
-        <a href="/personas/">Main Page</a>
-    </footer>
 {% endblock %}

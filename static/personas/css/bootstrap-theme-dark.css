@@ -14,11 +14,14 @@
 
  .wrapper {
   min-height: 100%;
-  margin: 0 auto -155px;
+  height: auto;
+  height: 100%;
+  margin: 0 auto -4em;
  }
 
- footer, .push {
-  height: 155px;
+ .footer {
+  clear: both;
+  height: 4em;
   width: 100%;
   text-align: center;
   background-image: -webkit-linear-gradient(top, #3c3c3c 0%, #222 100%);
@@ -28,6 +31,12 @@
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3c3c3c', endColorstr='#ff222222', GradientType=0);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-repeat: repeat-x;
+ }
+
+ .push {
+  clear: both;
+  height: 4em;
+  width: 100%;
  }
 
 
@@ -87,20 +96,6 @@ tr:hover {
   background-color: white;
   color: black;
   padding-left: 10px;
- }
-
- #social_footer {
-  width: 100%;
-  text-align: center;
-  background-image: -webkit-linear-gradient(top, #3c3c3c 0%, #222 100%);
-  background-image:      -o-linear-gradient(top, #3c3c3c 0%, #222 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#3c3c3c), to(#222));
-  background-image:         linear-gradient(to bottom, #3c3c3c 0%, #222 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3c3c3c', endColorstr='#ff222222', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  background-repeat: repeat-x;;
-  text-align: center;
-  color: orange;
  }
 
  .leaflet-container {
