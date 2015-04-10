@@ -70,12 +70,17 @@
                                                 <li><a href="/personas/add_scene/{{ story.slug }}">Add Scene</a></li>
                                                 <li><a href="/personas/add_location/{{ story.slug }}">Add Location</a></li>
                                                 <li><a href="/personas/add_organization/{{ story.slug }}">Add Organization</a></li>
-                                                <li><a href="/personas/add_character/{{ story.slug }}">Add Character</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="/personas/add_character/{{ story.slug }}">
+                                                Add Character</a></li>
+                                                <li class="divider"></li>
                                                 <li><a href="/personas/add_artifact/{{ story.slug }}">Add Artifact</a></li>
+
                                             </ul>
                                         {% else %}
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Choose a Story</a>
+                                            <a href="/personas/" class="dropdown-toggle" data-toggle="dropdown">Choose a Story</a>
                                         {% endif %}
+                                        <!--
                                         <li><a href="#">Organizations</a></li>
                                         <li><a href="#">Locations</a></li>
                                     </li>
@@ -94,7 +99,7 @@
                                             <li><a href="/personas/add_character">Add Character</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="/personas/mainmap/britannia-magika.html">Map</a></li>
+                                    <li><a href="/personas/mainmap/britannia-magika.html">Map</a></li> -->
                                 </ul>
                                 <form class="navbar-form navbar-right" role="search">
                                     {% if user.is_authenticated %}

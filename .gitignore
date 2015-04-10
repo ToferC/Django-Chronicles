@@ -1,1 +1,2 @@
-persona2/settings.py
+media/
+*.sqlite3
