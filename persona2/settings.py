@@ -17,12 +17,13 @@ STATIC_PATH = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+from keys import *
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6*)z$i*t@5z-8u&2eiqm+%5t0wx6a*g3076ea29(g%+=d%w^om'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -34,6 +35,7 @@ ALLOWED_HOSTS = []
 TEMPLATE_DIRS = [TEMPLATE_PATH,]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 STATICFILES_DIRS = (STATIC_PATH,)
+STATIC_ROOT = "/users/christopherallison/.virtualenvs/persona2/persona2/static/"
 
 '''TREASURE_MAP = {
     'BACKEND': 'treasuremap.backends.google.GoogleMapBackend',
@@ -120,8 +122,12 @@ WSGI_APPLICATION = 'persona2.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db5.sqlite3'),
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'chronicles',
+    'USER': 'christopher_allison',
+    'PASSWORD': '',
+    'HOST': 'localhost',
+    'PORT': '',
     }
 }
 
