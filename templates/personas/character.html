@@ -289,9 +289,9 @@
         </div>
     </div>
     <div class="tab-pane fade in" id="combat"> <!-- Tab Four Starts -->
-    {% if combat_info %}
         <div class="col-md-8 col-sm-8 col-lg-8" id="col2">
             <h3>Combat Info:</h3>
+            {% if combat_info %}
             <table class="table table-condensed table-hover table-responsive">
                 {% for element in combat_info %}
                     <tr>
@@ -302,11 +302,11 @@
                     </tr>
                 {% endfor %}
             </table>
+                {% endif %}
             <div tyle="padding-left:50px">
                 <a href="/personas/add_combat_info/{{ character.slug }}" style="color:lightgray">Add Combat Info <span class="glyphicon glyphicon-pencil"></span></a>
             </div>
         </div>
-    {% endif %}
 </div>
 <div class="tab-pane fade in" id="notes"> <!-- Tab Four Starts -->
 <div class="col-md-8 col-sm-8" id="BBoard">

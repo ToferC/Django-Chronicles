@@ -1,2 +1,1 @@
-gunicorn persona2.wsgi --bind=localhost:8001
-nginx
+web: gunicorn persona2.wsgi

@@ -131,6 +131,11 @@ DATABASES = {
     }
 }
 
+# Security
+
+#CSRF_COOKIE_SECURE = True
+#ESSION_COOKIE_SECURE = True
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
