@@ -25,7 +25,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # SECURITY WARNING: keep the secret key used in production secret!
 if os.environ.get("RACK_ENV", None) != "production":
     from keys import *
-    SECRET_KEY = os.environ['SECRET_KEY']
+
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
