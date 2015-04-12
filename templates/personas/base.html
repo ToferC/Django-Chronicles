@@ -60,11 +60,23 @@
                             <!-- Collection of links, forms and other content for toggling -->
                             <div class="collapse navbar-collapse" id="MyNavBar">
                                 <ul class="nav navbar-nav">
+                                <li><a href="/personas/story/{{ story.slug }}">{{ story.title }}</a></li>
                                     <li class="dropdown">
                                         {% if story %}
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ story.title }}</a>
+                                        <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Story Elements</a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="/personas/story/{{ story.slug }}">Story</a></li>
+
+                                        <li><a href="/personas/story/{{ story.slug }}/#chapters">Chapters</a></li>
+                                        <li><a href="/personas/story/{{ story.slug }}/#geography">Geography</a></li>
+                                        <li><a href="/personas/story/{{ story.slug }}/#chapters">Political</a></li>
+                                        <li><a href="/personas/story/{{ story.slug }}/#characters">Characters</a></li>
+                                        <li><a href="/personas/story/{{ story.slug }}/#maps">Maps</a></li>
+                                        <li><a href="/personas/story/{{ story.slug }}/#notes">Notes</a></li>
+                                        </ul>
+                                        <li class="dropdown">
+                                            <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Add Content</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/personas/story/{{ story.slug }}">Add Content</a></li>
                                                 <li class="divider"></li>
                                                 <li><a href="/personas/add_chapter/{{ story.slug }}">Add Chapter</a></li>
                                                 <li><a href="/personas/add_scene/{{ story.slug }}">Add Scene</a></li>
@@ -76,34 +88,15 @@
                                                 <li class="divider"></li>
                                                 <li><a href="/personas/add_artifact/{{ story.slug }}">Add Artifact</a></li>
 
-                                            </ul>
+                                            </ul></li>
                                         {% else %}
                                             <a href="/personas/" class="dropdown-toggle" data-toggle="dropdown">Choose a Story</a>
                                         {% endif %}
-                                        <!--
-                                        <li><a href="#">Organizations</a></li>
-                                        <li><a href="#">Locations</a></li>
-                                    </li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                            Characters
-                                            <b class="caret"></b>
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Protagonists</a></li>
-                                            <li><a href="#">Antagonists</a></li>
-                                            <li><a href="#">Supporting Characters</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Creatures</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="/personas/add_character">Add Character</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="/personas/mainmap/britannia-magika.html">Map</a></li> -->
                                 </ul>
+
                                 <form class="navbar-form navbar-right" role="search">
                                     {% if user.is_authenticated %}
-                                        <a class="btn btn-inverse" style="font-size:70%; background-color:darkslategray" href="/personas/logout" role="button">Logged in as {{ user.username }}<br>  Click again to logout.</a>
+                                        <a class="btn btn-inverse" style="font-size:70%; background-color:darkslategray" href="/personas/logout" role="button">Logged in as {{ user.username }}</a>
                                     {% else %}
                                         <a class="btn btn-inverse" href="/personas/register" role="button">Register</a>
                                         <a class="btn btn-inverse" href="/personas/login" role="button">Log In</a>
