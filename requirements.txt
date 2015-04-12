@@ -1,6 +1,7 @@
 Django==1.7.4
 Markdown==2.6.1
 Pillow==2.7.0
+SQLAlchemy==0.9.9
 South==1.0.2
 defusedxml==0.4.1
 dj-database-url==0.3.0
@@ -10,6 +11,7 @@ django-crispy-forms==1.4.0
 django-geojson==2.6.0
 django-leaflet==0.15.2
 django-markdown==0.8.4
+django-postgrespool==0.3.0
 django-toolbelt==0.0.1
 django-treasuremap==0.2
 gunicorn==19.3.0
