@@ -155,7 +155,7 @@ if os.environ.get("RACK_ENV", None) == "production":
     import dj_database_url
 
     DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
-    INSTALLED_APPS += ("gunicorn")
+    INSTALLED_APPS += ("gunicorn",)
     DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
     TEMPLATE_DEBUG = DEBUG
 
