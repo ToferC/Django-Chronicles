@@ -23,7 +23,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-if environ.get("RACK_ENV", None) != "production":
+if os.environ.get("RACK_ENV", None) != "production":
     from keys import *
     SECRET_KEY = os.environ['SECRET_KEY']
 
@@ -151,7 +151,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if environ.get("RACK_ENV", None) == "production":
+if os.environ.get("RACK_ENV", None) == "production":
     import dj_database_url
 
     DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
