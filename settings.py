@@ -17,15 +17,13 @@ STATIC_PATH = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
+from keys import *
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-if environ.get("RACK_ENV", None) != "production":
-    from keys import *
-    SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -158,18 +156,3 @@ if environ.get("RACK_ENV", None) == "production":
     INSTALLED_APPS += ("gunicorn")
     DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
     TEMPLATE_DEBUG = DEBUG
-
-    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-    # Allow all host headers
-    ALLOWED_HOSTS = ['*']
-
-    # Static asset configuration
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = 'staticfiles'
-    STATIC_URL = '/static/'
-
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
