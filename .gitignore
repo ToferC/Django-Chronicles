@@ -3,3 +3,5 @@ media/
 keys.py
 venv
 *.pyc
+rootkey.csv.txt
+*.boto

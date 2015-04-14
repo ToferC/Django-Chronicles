@@ -149,7 +149,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if environ.get("RACK_ENV", None) == "production":
+if not DEBUG:
     import dj_database_url
 
     DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}

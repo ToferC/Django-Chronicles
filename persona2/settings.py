@@ -18,7 +18,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -152,13 +151,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if os.environ.get("RACK_ENV", None) == "production":
-    import dj_database_url
+if DEBUG:
+    #import dj_database_url
 
-    DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+    #DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
     INSTALLED_APPS += ("gunicorn",)
-    DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
-    TEMPLATE_DEBUG = DEBUG
+    #DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
+    #TEMPLATE_DEBUG = DEBUG
 
     # Honor the 'X-Forwarded-Proto' header for request.is_secure()
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -167,10 +166,24 @@ if os.environ.get("RACK_ENV", None) == "production":
     ALLOWED_HOSTS = ['*']
 
     # Static asset configuration
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = 'staticfiles'
-    STATIC_URL = '/static/'
 
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+
+    #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    #STATIC_ROOT = 'staticfiles'
+    #STATIC_URL = '/static/'
+
+    #STATICFILES_DIRS = (
+    #    os.path.join(BASE_DIR, 'static'),
+    #)

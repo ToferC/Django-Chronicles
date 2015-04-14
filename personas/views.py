@@ -1036,14 +1036,14 @@ def add_organization(request, story_title_slug):
 
     if request.method == 'POST':
 
-        organization_form = OrganizationForm(request.POST or None)
+        organization_form = OrganizationForm(request.POST or None, request.FILES or None)
 
         if organization_form.is_valid():
             organization = organization_form.save(commit=False)
             organization.creator = request.user
             organization.slug = slugify(organization.name)
+            organization.story = story
             organization.save()
-            #organization_form.save_m2m()
 
             return HttpResponseRedirect("/personas/organization/{}".format(organization.slug))
 
@@ -1313,7 +1313,7 @@ def edit_character(request, pk, template_name='personas/edit_character.html'):
     user = request.user
     form = CharacterForm(request.POST or None, request.FILES or None, instance=character)
     if form.is_valid():
-        form.save(creator=character.creator)
+        form.save(creator=character.creator, story=story)
         return HttpResponseRedirect('/personas/character/{}'.format(character.slug))
     return render(request, template_name, {'form': form, 'character':character,
         'story':story})
@@ -1358,7 +1358,7 @@ def edit_location(request, pk, template_name='personas/edit_location.html'):
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/location/{}'.format(location.slug))
-    return render(request, template_name, {'form': form, 'object':location, 'story':story})
+    return render(request, template_name, {'form': form, 'location':location, 'story':story})
 
 
 @login_required
@@ -1380,7 +1380,7 @@ def edit_organization(request, pk, template_name='personas/edit_organization.htm
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/organization/{}'.format(organization.slug))
-    return render(request, template_name, {'form': form, 'object':organization, 'story':story})
+    return render(request, template_name, {'form': form, 'organization':organization, 'story':story})
 
 
 @login_required
@@ -1491,5 +1491,5 @@ def edit_nation(request, pk, template_name='personas/edit_nation.html'):
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/nation/{}'.format(nation.slug))
-    return render(request, template_name, {'form': form, 'object':nation, 'story':story})
+    return render(request, template_name, {'form': form, 'nation':nation, 'story':story})
 

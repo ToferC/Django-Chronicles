@@ -29,7 +29,7 @@
             Created by {{ organization.creator }}
         </p>
         <hr>
- <a href="{% url 'delete_organization' pk=object.pk %}" class="btn btn-danger">Delete organization</a>
+ <a href="{% url 'delete_organization' pk=organization.pk %}" class="btn btn-danger">Delete organization</a>
 </div>
 {% endblock %}
 
