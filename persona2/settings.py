@@ -152,7 +152,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 if DEBUG:
-    #import dj_database_url
+    import dj_database_url
+    DATABASES['default'] =  dj_database_url.config()
+    DATABASES['default']['ENGINE'] = 'django_postgrespool'
 
     #DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
     INSTALLED_APPS += ("gunicorn",)
