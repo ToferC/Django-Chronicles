@@ -91,6 +91,7 @@ INSTALLED_APPS = (
     'djgeojson',
     'sorl.thumbnail',
     'django_markdown',
+    'herokuapp',
     #'treasuremap',
     #'allauth.socialaccount',
     # ... include the providers you want to enable:
@@ -149,12 +150,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
 
 if DEBUG:
+
+    # postgres://cwvttxhquxhynd:Oj1Tx1k5asiQKnDNP5MPdLO0Is@ec2-23-23-225-50.compute-1.amazonaws.com:5432/
+
     import dj_database_url
-    DATABASES['default'] =  dj_database_url.config()
-    DATABASES['default']['ENGINE'] = 'django_postgrespool'
+    DATABASES['default'] = dj_database_url.config(default='postgres://localhost')
+
+    '''DATABASES = {
+    'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'd7k47qsa53t6o0',
+    'USER': 'cwvttxhquxhynd',
+    'PASSWORD': 'Oj1Tx1k5asiQKnDNP5MPdLO0Is',
+    'HOST': 'ec2-23-23-225-50.compute-1.amazonaws.com',
+    'PORT': '5432',
+    }
+}'''
+    #DATABASES['default']['ENGINE'] = 'django_postgrespool'
+    #DATABASES['NAME'] = 'chronicles'
 
     #DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
     INSTALLED_APPS += ("gunicorn",)
@@ -181,6 +197,7 @@ if DEBUG:
     MEDIAFILES_LOCATION = 'media'
     MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
     DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+
 
     #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     #STATIC_ROOT = 'staticfiles'
