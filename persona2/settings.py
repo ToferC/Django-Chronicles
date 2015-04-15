@@ -157,8 +157,8 @@ if DEBUG:
     # postgres://cwvttxhquxhynd:Oj1Tx1k5asiQKnDNP5MPdLO0Is@ec2-23-23-225-50.compute-1.amazonaws.com:5432/
 
     import dj_database_url
-    DATABASES['default'] = dj_database_url.config(default='postgres://localhost')
-
+    DATABASES['default'] = dj_database_url.config()
+    
     '''DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -197,7 +197,6 @@ if DEBUG:
     MEDIAFILES_LOCATION = 'media'
     MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
     DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
-
 
     #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     #STATIC_ROOT = 'staticfiles'
