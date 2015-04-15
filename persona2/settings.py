@@ -157,7 +157,7 @@ if DEBUG:
     # postgres://cwvttxhquxhynd:Oj1Tx1k5asiQKnDNP5MPdLO0Is@ec2-23-23-225-50.compute-1.amazonaws.com:5432/
 
     import dj_database_url
-    DATABASES['default'] = dj_database_url.config()
+    #DATABASES['default'] = dj_database_url.config()
     
     '''DATABASES = {
     'default': {
@@ -173,7 +173,7 @@ if DEBUG:
     #DATABASES['NAME'] = 'chronicles'
 
     #DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
-    INSTALLED_APPS += ("gunicorn",)
+    #INSTALLED_APPS += ("gunicorn",)
     #DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
     #TEMPLATE_DEBUG = DEBUG
 
