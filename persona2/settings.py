@@ -10,7 +10,24 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import socket
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+# openshift is our PAAS for now.
+ON_PAAS = 'OPENSHIFT_REPO_DIR' in os.environ
+
+if ON_PAAS:
+    SECRET_KEY = os.environ['OPENSHIFT_SECRET_TOKEN']
+else:
+    from keys import *
+    #SECRET_KEY = os.environ['SECRET_KEY']
+
+DEBUG = not ON_PAAS
+DEBUG = DEBUG or 'DEBUG' in os.environ
+if ON_PAAS and DEBUG:
+    print("*** Warning - Debug mode is on ***")
+
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 STATIC_PATH = os.path.join(BASE_DIR, 'static')
 
@@ -21,31 +38,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-if os.environ.get("RACK_ENV", None) != "production":
-    from keys import *
-
-SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-TEMPLATE_DEBUG = True
+if ON_PAAS:
+    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()]
+else:
+    ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = []
 
 TEMPLATE_DIRS = [TEMPLATE_PATH,]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 STATICFILES_DIRS = (STATIC_PATH,)
-
-'''TREASURE_MAP = {
-    'BACKEND': 'treasuremap.backends.google.GoogleMapBackend',
-    'API_KEY': 'AIzaSyCt_OIk6L_5Ai7K19G6bsZMA9L7lw6yTjY',
-    'SIZE': (400, 600),
-    'MAP_OPTIONS': {
-        'zoom': 5
-    }
-}'''
 
 LEAFLET_CONFIG = {
     #'SPACIAL_EXTENT': (5.0, 44.0, 7.5, 46),
@@ -61,15 +65,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     'django.contrib.auth.context_processors.auth',
     # allauth specific context processors
-    "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
+    #"allauth.account.context_processors.account",
+    #"allauth.socialaccount.context_processors.socialaccount",
 )
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail
-    "allauth.account.auth_backends.AuthenticationBackend",
+    #"allauth.account.auth_backends.AuthenticationBackend",
 )
 
 
@@ -85,8 +89,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'personas',
     'crispy_forms',
-    'allauth',
-    'allauth.account',
+    #'allauth',
+    #'allauth.account',
     'leaflet',
     'djgeojson',
     'sorl.thumbnail',
@@ -122,16 +126,46 @@ WSGI_APPLICATION = 'persona2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'chronicles',
-    'USER': 'christopher_allison',
-    'PASSWORD': '',
-    'HOST': 'localhost',
-    'PORT': '',
+if ON_PAAS:
+    # determine if we are on MySQL or POSTGRESQL
+    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ: 
+    
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',  
+                'NAME':     os.environ['OPENSHIFT_APP_NAME'],
+                'USER':     os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
+                'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
+                'HOST':     os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'],
+                'PORT':     os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
+            }
+        }
+        
+    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ: 
+    
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME':     os.environ['OPENSHIFT_APP_NAME'],
+                'USER':     os.environ['OPENSHIFT_MYSQL_DB_USERNAME'],
+                'PASSWORD': os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'],
+                'HOST':     os.environ['OPENSHIFT_MYSQL_DB_HOST'],
+                'PORT':     os.environ['OPENSHIFT_MYSQL_DB_PORT'],
+            }
+        }
+      
+else:
+
+    DATABASES = {
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'chronicles',
+        'USER': 'christopher_allison',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
+        }
     }
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -152,56 +186,32 @@ USE_TZ = True
 
 STATIC_URL = '/staticfiles/'
 
-if DEBUG:
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
-    # postgres://cwvttxhquxhynd:Oj1Tx1k5asiQKnDNP5MPdLO0Is@ec2-23-23-225-50.compute-1.amazonaws.com:5432/
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 
-    import dj_database_url
-    #DATABASES['default'] = dj_database_url.config()
-    
-    '''DATABASES = {
-    'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'd7k47qsa53t6o0',
-    'USER': 'cwvttxhquxhynd',
-    'PASSWORD': 'Oj1Tx1k5asiQKnDNP5MPdLO0Is',
-    'HOST': 'ec2-23-23-225-50.compute-1.amazonaws.com',
-    'PORT': '5432',
-    }
-}'''
-    #DATABASES['default']['ENGINE'] = 'django_postgrespool'
-    #DATABASES['NAME'] = 'chronicles'
+MEDIAFILES_LOCATION = 'media'
+MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 
-    #DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
-    #INSTALLED_APPS += ("gunicorn",)
-    #DEBUG = bool(os.environ.get('DJANGO_DEBUG', ''))
-    #TEMPLATE_DEBUG = DEBUG
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+TEMPLATE_DIRS = [TEMPLATE_PATH,]
+STATICFILES_DIRS = (STATIC_PATH,)
 
-    # Allow all host headers
-    ALLOWED_HOSTS = ['*']
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-    # Static asset configuration
-
-    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
-    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-    STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
-    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
-
-    MEDIAFILES_LOCATION = 'media'
-    MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
-    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
-
-    #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    #STATIC_ROOT = 'staticfiles'
-    #STATIC_URL = '/static/'
-
-    #STATICFILES_DIRS = (
-    #    os.path.join(BASE_DIR, 'static'),
-    #)
+LEAFLET_CONFIG = {
+    #'SPACIAL_EXTENT': (5.0, 44.0, 7.5, 46),
+    'DEFAULT_CENTER': (50.91, -1.37),
+    'DEFAULT_ZOOM': 6,
+    'MIN_ZOOM': 1,
+    'MAX_ZOOM': 18,
+    'TILES': "http://pelagios.dme.ait.ac.at/tilesets/imperium/{z}/{x}/{y}.png"
+}
