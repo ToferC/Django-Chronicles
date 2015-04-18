@@ -73,10 +73,8 @@ class Trait(models.Model):
     label = models.CharField(max_length=12, choices=TRAIT_TYPE_CHOICES, default="CO", blank=True)
     name = models.CharField(max_length=128)
     character = models.ForeignKey('Character')
-    slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.name)
         super(Trait, self).save(*args, **kwargs)
 
 
@@ -249,6 +247,7 @@ class Character(models.Model):
         max_length=32, default="Supporting", verbose_name="Character Type")
     xp = models.PositiveSmallIntegerField(blank=True, default=0)
     description = MarkdownField(blank=True)
+    scratchpad = MarkdownField(blank=True)
     age = models.PositiveSmallIntegerField(default=21)
     nationality = models.ForeignKey(Nation, default=1)
     birthplace = models.ForeignKey(Location, related_name='place_of_birth', default=1)
@@ -345,7 +344,6 @@ class Scene(models.Model):
     characters = models.ManyToManyField(Character, blank=True)
     chapter = models.ForeignKey("Chapter")
 
-
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -354,6 +352,7 @@ class Scene(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Chapter(models.Model):
     title = models.CharField(max_length=128)
@@ -399,7 +398,6 @@ class Story(models.Model):
         (MYSTERY, 'Mystery'),
     )
 
-
     LIGHT = "Light"
     DARK = "Dark"
 
@@ -415,6 +413,7 @@ class Story(models.Model):
     image = models.ImageField(upload_to='story_images/%Y/%m/%d', default='story_images/nobody.jpg')
     background = models.ImageField(upload_to='story_backgrounds/%Y/%m/%d', default='story_backgrounds/nothing.jpg')
     colour_theme = models.CharField(max_length=12, choices=THEME_CHOICES, default='Dark')
+    map_tile = models.CharField(max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
     skill_type_name_1 = models.CharField(max_length=24, default="General", blank=True)
     skill_type_name_2 = models.CharField(max_length=24, default="Investigative", blank=True)
     skill_type_name_3 = models.CharField(max_length=24, default="Combat", blank=True)

@@ -31,8 +31,8 @@ class SceneAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug')
 
 class TraitAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
-
+    pass
+    
 class MembershipAdmin(admin.ModelAdmin):
     list_display = ('organization', 'character', 'rank', 'role')
 

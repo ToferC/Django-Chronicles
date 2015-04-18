@@ -32,10 +32,15 @@
         <div class="row" style="color:black">
             <script type="text/javascript">
             function map_init_basic (map, options) {
+            L.tileLayer("{{ story.map_tile }}", {
+                        attribution: "Pliedes Roman Empire Map",
+                        maxZoom: 18
+                    }).addTo(map);
             L.marker([{{ latitude|add:"0" }}, {{ longitude|add:"0" }}], 10).addTo(map)
             .bindPopup( "{{location_name}}" ).openPopup();
             }
             var popup = L.popup();
+            
             function onMapClick(e) {
             popup
             .setLatLng(e.latlng)

@@ -37,7 +37,7 @@ class CharacterForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/story/{{ story.slug }}/#characters">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
     def save(self, creator, story=None, commit=True):
@@ -83,7 +83,7 @@ class SkillForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/character/{{ character.slug }}/#skills">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -121,7 +121,7 @@ class StatisticForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/character/{{ character.slug }}/#abilities">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -137,7 +137,7 @@ class CombatInfoForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/character/{{ character.slug }}/#combat">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -162,7 +162,7 @@ class TraitForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/character/{{ character.slug }}/#details">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -192,8 +192,10 @@ class SpecialAbilityForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
-                Submit('save', 'Submit'),))
+                        href="/personas/character/{{ character.slug }}/#abilities">
+                        Cancel</a>"""),
+                Submit('save', 'Submit'),)
+            )
 
 
 class MembershipForm(forms.ModelForm):
@@ -217,7 +219,7 @@ class MembershipForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/character/{{ character.slug }}/#details">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -236,7 +238,7 @@ class ItemForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/character/{{ character.slug }}/#abilities">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -266,7 +268,7 @@ class RelationshipForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/character/{{ character.slug }}/#details">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -282,7 +284,7 @@ class StoryForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
     def save(self, author, commit=True):
@@ -309,7 +311,7 @@ class ChapterForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/story/{{ story.slug }}/#chapters">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -343,7 +345,7 @@ class SceneForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/chapter/{{ chapter.slug }}">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -369,7 +371,7 @@ class LocationForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/story/{{ story.slug }}/#geography">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -395,7 +397,7 @@ class OrganizationForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/story/{{ story.slug }}/#political">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -417,7 +419,7 @@ class NationForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/story/{{ story.slug }}/#political">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -432,7 +434,7 @@ class ItemForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/story/{{ story.slug }}">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -450,7 +452,7 @@ class NoteForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
     def save(self, creator, character=None, scene=None, location=None, organization=None, chapter=None, story=None, nation=None, commit=True):
@@ -481,7 +483,7 @@ class CommuniqueForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/character/{{ character.slug }}/#social">Cancel</a>"""),
                 Submit('send', 'Submit'),))
 
     def save(self, author, commit):
@@ -506,7 +508,7 @@ class UserForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="#">Cancel</a>"""),
+                        href="/personas/">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 

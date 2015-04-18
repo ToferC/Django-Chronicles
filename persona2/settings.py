@@ -21,7 +21,7 @@ if ON_PAAS:
     SECRET_KEY = os.environ['OPENSHIFT_SECRET_TOKEN']
 else:
     from keys import *
-    #SECRET_KEY = os.environ['SECRET_KEY']
+    SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = not ON_PAAS
 DEBUG = DEBUG or 'DEBUG' in os.environ
@@ -46,19 +46,6 @@ if ON_PAAS:
 else:
     ALLOWED_HOSTS = []
 
-
-TEMPLATE_DIRS = [TEMPLATE_PATH,]
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
-STATICFILES_DIRS = (STATIC_PATH,)
-
-LEAFLET_CONFIG = {
-    #'SPACIAL_EXTENT': (5.0, 44.0, 7.5, 46),
-    'DEFAULT_CENTER': (50.91, -1.37),
-    'DEFAULT_ZOOM': 6,
-    'MIN_ZOOM': 1,
-    'MAX_ZOOM': 18,
-    'TILES': "http://pelagios.dme.ait.ac.at/tilesets/imperium/{z}/{x}/{y}.png"
-}
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     # Required by allauth template tags
@@ -128,11 +115,11 @@ WSGI_APPLICATION = 'persona2.wsgi.application'
 
 if ON_PAAS:
     # determine if we are on MySQL or POSTGRESQL
-    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ: 
-    
+    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ:
+
         DATABASES = {
             'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',  
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
                 'NAME':     os.environ['OPENSHIFT_APP_NAME'],
                 'USER':     os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
                 'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
@@ -140,9 +127,9 @@ if ON_PAAS:
                 'PORT':     os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
             }
         }
-        
-    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ: 
-    
+
+    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ:
+
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.mysql',
@@ -153,7 +140,7 @@ if ON_PAAS:
                 'PORT':     os.environ['OPENSHIFT_MYSQL_DB_PORT'],
             }
         }
-      
+
 else:
 
     DATABASES = {
@@ -184,7 +171,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi','static')
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
 
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -213,5 +205,5 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 6,
     'MIN_ZOOM': 1,
     'MAX_ZOOM': 18,
-    'TILES': "http://pelagios.dme.ait.ac.at/tilesets/imperium/{z}/{x}/{y}.png"
+    'TILES': ""
 }

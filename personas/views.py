@@ -276,6 +276,7 @@ def character(request, character_name_slug):
         context_dict['c_type'] = character.c_type
         context_dict['xp'] = character.xp
         context_dict['description'] = character.description
+        context_dict['scratchpad'] = character.scratchpad
 
         context_dict['aspects'] = Trait.objects.filter(
             character__name=character.name)
@@ -356,7 +357,7 @@ def character(request, character_name_slug):
                 else:
                     print (context_dict['communique_form'].errors)
 
-            return HttpResponseRedirect("/personas/character/{}/#social".format(character_name_slug))
+            return HttpResponseRedirect("/personas/character/{}/#notes".format(character_name_slug))
 
         else:
 
