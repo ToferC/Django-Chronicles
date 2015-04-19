@@ -1,6 +1,5 @@
 media/
 *.sqlite3
-keys.py
 venv
 *.pyc
 rootkey.csv.txt
