@@ -1,12 +1,9 @@
 boto==2.38.0
 defusedxml==0.4.1
-dj-database-url==0.3.0
-dj-static==0.0.6
 Django==1.7.4
 django-allauth==0.19.1
 django-crispy-forms==1.4.0
 django-geojson==2.6.0
-django-herokuapp==0.9.19
 django-leaflet==0.15.2
 django-markdown==0.8.4
 django-postgrespool==0.3.0
@@ -14,9 +11,6 @@ django-require==1.0.7
 django-require-s3==1.0.0
 django-s3-folder-storage==0.2
 django-storages==1.1.8
-django-toolbelt==0.0.1
-django-treasuremap==0.2
-gunicorn==19.3.0
 jsonfield==1.0.3
 Markdown==2.6.1
 oauthlib==0.7.2
