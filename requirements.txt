@@ -1,12 +1,8 @@
-Django==1.7.4
-Markdown==2.6.1
-Pillow==2.7.0
-SQLAlchemy==0.9.9
-South==1.0.2
 boto==2.38.0
 defusedxml==0.4.1
 dj-database-url==0.3.0
 dj-static==0.0.6
+Django==1.7.4
 django-allauth==0.19.1
 django-crispy-forms==1.4.0
 django-geojson==2.6.0
@@ -18,12 +14,13 @@ django-require==1.0.7
 django-require-s3==1.0.0
 django-s3-folder-storage==0.2
 django-storages==1.1.8
--e git+https://github.com/jschneier/django-storages-redux.git@bc480c7865121b7f40952a7abdc43d61c94bd2ce#egg=django_storages_redux-origin/HEAD
 django-toolbelt==0.0.1
 django-treasuremap==0.2
 gunicorn==19.3.0
 jsonfield==1.0.3
+Markdown==2.6.1
 oauthlib==0.7.2
+Pillow==2.7.0
 psycopg2==2.6
 python3-openid==3.0.5
 pytz==2015.2
@@ -32,5 +29,7 @@ requests-oauthlib==0.4.2
 sh==1.11
 six==1.9.0
 sorl-thumbnail==12.2
+South==1.0.2
+SQLAlchemy==0.9.9
 static3==0.5.1
 waitress==0.8.9

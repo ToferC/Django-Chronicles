@@ -82,7 +82,7 @@ INSTALLED_APPS = (
     'djgeojson',
     'sorl.thumbnail',
     'django_markdown',
-    'herokuapp',
+    #'herokuapp',
     #'treasuremap',
     #'allauth.socialaccount',
     # ... include the providers you want to enable:
@@ -172,7 +172,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi','static')
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -193,9 +193,10 @@ DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+STATICFILES_DIRS = (STATIC_PATH,)
+
 
 TEMPLATE_DIRS = [TEMPLATE_PATH,]
-STATICFILES_DIRS = (STATIC_PATH,)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
