@@ -104,10 +104,8 @@
             {% if characters %}
                 <ul>
                     {% for character in characters %}
-                        <div class="btn-group-vertical">
                             
                             <li><a href="/personas/character/{{ character.slug }}">{{ character.name }}</a></li>
-                        </div>
                     {% endfor %}
                 </ul>
             {% else %}

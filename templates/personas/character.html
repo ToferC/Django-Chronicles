@@ -53,7 +53,7 @@
         {% if character_name %}
             <br>
             <div class="img-responsive">
-                {% thumbnail image "175" crop="center" as im %}
+                {% thumbnail image "250" crop="center" as im %}
                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
                 <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
             {% endthumbnail %}
@@ -292,7 +292,7 @@
         <div class="col-md-8 col-sm-8 col-lg-8" id="col2">
             <h3>Combat Info:</h3>
             {% if combat_info %}
-            <table class="table table-condensed table-hover table-responsive">
+            <table class="table table-condensed table-hover table-responsive" style="background:black">
                 {% for element in combat_info %}
                     <tr>
                         <td> {{ element.title }}</td>
@@ -306,6 +306,11 @@
             <div tyle="padding-left:50px">
                 <a href="/personas/add_combat_info/{{ character.slug }}" style="color:lightgray">Add Combat Info <span class="glyphicon glyphicon-pencil"></span></a>
             </div>
+            <hr>
+            <h3>Scratchpad:</h3>
+                <textarea name="test" id="scratchpad" style="color:black"></textarea>
+                {% markdown_editor "#scratchpad" %}
+                {% markdown_media %}               
         </div>
 </div>
 <div class="tab-pane fade in" id="notes"> <!-- Tab Four Starts -->

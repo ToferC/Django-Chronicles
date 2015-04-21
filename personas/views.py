@@ -649,10 +649,9 @@ def add_trait(request, character_name_slug):
             else:
                 name = cd.get('name')
                 label = cd.get('label')
-                slug = slugify(cd.get('name'))
                 trait = Trait(
                     name=name, label=label,
-                    character=trait_character, slug=slug)
+                    character=trait_character)
 
                 trait.save()
                 form = TraitForm()
@@ -1201,7 +1200,7 @@ def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'
     form = CombatInfoForm(request.POST or None, instance=combat_info)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#skills'.format(character.slug))
+        return HttpResponseRedirect('/personas/character/{}/#combat'.format(character.slug))
     return render(request, template_name, {'form': form, 'character': character,
         'combat_info': combat_info, 'story':story})
 
@@ -1219,7 +1218,7 @@ def delete_relationship(request, pk, template_name='personas/delete_relationship
 @login_required
 def edit_relationship(request, pk, template_name='personas/edit_relationship.html'):
     relationship = Relationship.objects.get(pk=pk)
-    character = Character.objects.get(from_character=relationship.from_character)
+    character = Character.objects.get(id=relationship.from_character_id)
     story = character.story
     form = RelationshipForm(request.POST or None, instance=relationship)
     if form.is_valid():
