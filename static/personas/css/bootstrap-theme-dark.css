@@ -98,10 +98,6 @@ tr:hover {
   padding-left: 10px;
  }
 
- #char_tabs, .tab-pane {
-  background-color: black;
- }
-
  .leaflet-container {
   height: 600px;
   width: 600px;

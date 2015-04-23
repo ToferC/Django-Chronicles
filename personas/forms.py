@@ -4,7 +4,9 @@ from django.forms.models import modelform_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from personas.models import Nation, Location, Character, Organization, Relationship, Membership, Trait, SpecialAbility, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile
-from personas.models import Statistic, CombatInfo
+from personas.models import Statistic, CombatInfo, ScratchPad
+from django_markdown.widgets import MarkdownWidget
+from django_markdown.fields import MarkdownFormField
 #from treasuremap.forms import LatLongField
 
 from crispy_forms.helper import FormHelper
@@ -139,6 +141,25 @@ class CombatInfoForm(forms.ModelForm):
                 HTML("""<a role="button" class="btn btn-default"
                         href="/personas/character/{{ character.slug }}/#combat">Cancel</a>"""),
                 Submit('save', 'Submit'),))
+
+
+class ScratchPadForm(forms.ModelForm):
+    class Meta:
+        model = ScratchPad
+        fields = ['content',]
+
+    def __init__(self, *args, **kwargs):
+        super(ScratchPadForm, self).__init__(*args, **kwargs)
+
+        self.fields['content'] = forms.CharField(widget=MarkdownWidget())
+
+        self.helper = FormHelper(self)
+        self.layout = Layout(InlineField('content',))
+        self.helper.layout.append(
+            FormActions(
+                HTML("""<a role="button" class="btn btn-default"
+                        href="/personas/character/{{ character.slug }}/#combat">Cancel</a>"""),
+                Submit('snapshot', 'Submit'),))
 
 
 class SkillFormSetHelper(FormHelper):
@@ -477,7 +498,19 @@ class CommuniqueForm(forms.ModelForm):
         fields = ('content', 'receiver')
 
     def __init__(self, *args, **kwargs):
+
+        try:
+            self.story = kwargs.pop('story')
+        except KeyError:
+            self.story = None
+
         super(CommuniqueForm, self).__init__(*args, **kwargs)
+
+        if self.story:
+            self.fields['receiver'].queryset = Character.objects.filter(
+                story=self.story).order_by('name')
+
+
         self.helper = FormHelper(self)
         self.helper.form_tag = False
         self.helper.layout.append(

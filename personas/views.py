@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.template.response import TemplateResponse
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.forms.formsets import formset_factory
@@ -11,10 +12,11 @@ from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateVi
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
 from personas.models import Nation, Location, Character, Organization, Relationship, Membership, Trait, SpecialAbility, Item, Story, MainMap, Chapter, Scene, Skill, Note, Communique
-from personas.models import Statistic, CombatInfo, GalleryImage
+from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
 from personas.forms import CharacterForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, TraitForm, TraitFormSetHelper, SkillFormSetHelper, ItemForm, SpecialAbilityForm, RelationshipForm
-from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm
+from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm
 
+from datetime import datetime
 
 # Normal Views
 
@@ -267,7 +269,6 @@ def character(request, character_name_slug):
 
     try:
         character = Character.objects.get(slug=character_name_slug)
-        #for item in character:
 
         context_dict['character_name'] = character.name
         context_dict['character'] = character
@@ -276,7 +277,14 @@ def character(request, character_name_slug):
         context_dict['c_type'] = character.c_type
         context_dict['xp'] = character.xp
         context_dict['description'] = character.description
-        context_dict['scratchpad'] = character.scratchpad
+
+        # Set up ScratchPad for character
+        try:
+            scratchpad = ScratchPad.objects.get(
+                character__name=character.name)
+        except ScratchPad.DoesNotExist:
+            scratchpad = ScratchPad(character=character, creator=request.user,
+                content="Enter info here and save to update", date=datetime.now())
 
         context_dict['aspects'] = Trait.objects.filter(
             character__name=character.name)
@@ -343,6 +351,9 @@ def character(request, character_name_slug):
                 if noteform.is_valid():
                     noteform.save(
                         creator=creator, character=note_subject, commit=True)
+
+                    return HttpResponseRedirect("/personas/character/{}/#notes".format(character_name_slug))
+
                 else:
                     print (context_dict['noteform'].errors)
 
@@ -353,16 +364,34 @@ def character(request, character_name_slug):
 
                 if communique_form.is_valid():
                     communique_form.save(author=post_creator, commit=True)
+                    
+                    return HttpResponseRedirect("/personas/character/{}/#social".format(character_name_slug))
 
                 else:
                     print (context_dict['communique_form'].errors)
 
-            return HttpResponseRedirect("/personas/character/{}/#notes".format(character_name_slug))
+            if 'snapshot' in request.POST:
+
+                scratchpadform = ScratchPadForm(request.POST or None, instance=scratchpad)
+
+                if scratchpadform.is_valid():
+                    scratchpadform.character = character
+
+                    scratchpad.save()
+
+                    context_dict['scratchpadform'] = ScratchPadForm(instance=scratchpad)
+
+                    return HttpResponseRedirect("/personas/character/{}/#combat".format(character_name_slug))
+
+                else:
+                    print (context_dict['scratchpadform'].errors)
 
         else:
 
             context_dict['noteform'] = NoteForm()
-            context_dict['communique_form'] = CommuniqueForm()
+            context_dict['communique_form'] = CommuniqueForm(story=character.story)
+            context_dict['scratchpadform'] = ScratchPadForm(instance=scratchpad)
+
 
     except Character.DoesNotExist:
         pass
@@ -1178,7 +1207,8 @@ def edit_skill(request, pk, template_name='personas/edit_skill.html'):
     form = SkillForm(request.POST or None, instance=skill, character=character)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#skills'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#skills'.format(character.slug)})
     return render(request, template_name, {'form': form, 'character': character,
         'skill': skill, 'story':story})
 
@@ -1200,7 +1230,8 @@ def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'
     form = CombatInfoForm(request.POST or None, instance=combat_info)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#combat'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#combat'.format(character.slug)})
     return render(request, template_name, {'form': form, 'character': character,
         'combat_info': combat_info, 'story':story})
 
@@ -1223,7 +1254,9 @@ def edit_relationship(request, pk, template_name='personas/edit_relationship.htm
     form = RelationshipForm(request.POST or None, instance=relationship)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#details'.format(
+            character.slug)})
     return render(request, template_name, {'form': form, 'from_character':character,
         'relationship': relationship, 'story':story})
 
@@ -1246,7 +1279,8 @@ def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
     form = StatisticForm(request.POST or None, instance=statistic, character=character)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#abilities'.format(character.slug)})
     return render(request, template_name, {'form': form, 'character':character,
         'statistic': statistic, 'story':story})
 
@@ -1269,7 +1303,8 @@ def edit_ability(request, pk, template_name='personas/edit_ability.html'):
     form = SpecialAbilityForm(request.POST or None, instance=specialability)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#abilities'.format(character.slug)})
     return render(request, template_name, {'form': form, 'character': character,
         'ability': specialability, 'story':story})
 
@@ -1292,7 +1327,8 @@ def edit_trait(request, pk, template_name='personas/edit_trait.html'):
     form = TraitForm(request.POST or None, instance=trait)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#details'.format(character.slug)})
     return render(request, template_name, {'form': form, 'character':character, 'trait': trait,
         'story':story})
 

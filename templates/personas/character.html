@@ -52,16 +52,14 @@
     <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
         {% if character_name %}
             <br>
-            <div class="img-responsive">
-                {% thumbnail image "250" crop="center" as im %}
-                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
+                {% thumbnail image "400" crop="center" as im %}
+                <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" align="middle">{% empty %}
                 <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
             {% endthumbnail %}
             <p>
                 Created by {{ creator }}
             </p>
             <hr>
-        </div>
         <div class="row">
             <h3>Description</h3>
             <p>{{ description }}</p>
@@ -86,7 +84,7 @@
                         <ul>
                             {% for aspect in aspects %}
                                 <li>{{ aspect }}
-                                    <a href="{% url 'edit_trait' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_trait' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -103,7 +101,7 @@
                     {% if memberships %}
                         <ul>
                             {% for membership in memberships %}
-                                <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }}</a> - Rank {{ membership.rank }} - ({{ membership.role }}) | <a href="{% url 'edit_membership' pk=membership.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }}</a> - Rank {{ membership.rank }} - ({{ membership.role }}) | <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_membership' pk=membership.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -111,13 +109,14 @@
                     <a href="/personas/add_membership/{{ character.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>
                     <hr>
                 </div>
+                <div class="row">
                 <h3>Relationships:</h3>
                 {% if relationships %}
                     <ul>
                         {% for relationship in relationships %}
                             <li>
                                 <a href="/personas/character/{{ relationship.to_character.slug }}">{{ relationship.to_character }}</a> - {{ relationship.relationship_class }} of <a href="/personas/character/{{ relationship.from_character.slug }}">{{ relationship.from_character }}</a> ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
-                                <a href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -125,6 +124,7 @@
                 <a href="/personas/add_relationships/{{ character.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
                 <hr>
                 <a role="button" class="btn btn-primary" href="{% url 'edit_character' pk=character.pk %}">Edit Character  <span class="glyphicon glyphicon-cog"></span></a>
+                </div>
             </div>
         {% else %}
             <strong>No characters exist in the database right now.</strong>
@@ -140,7 +140,7 @@
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
                             
-                            <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                         </tr>
                     {% endfor %}
                     
@@ -154,7 +154,7 @@
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
                             
-                            <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                         </tr>
                     {% endfor %}
                     
@@ -168,7 +168,7 @@
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
                             
-                            <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                         </tr>
                     {% endfor %}
                     
@@ -182,7 +182,7 @@
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
                             
-                            <td><a href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                         </tr>
                     {% endfor %}
                 {% endif %}
@@ -200,7 +200,7 @@
                             <li>
                                 {{ ability }}
                                 
-                                <a href="{% url 'edit_ability' pk=ability.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_ability' pk=ability.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -217,7 +217,7 @@
                     <ul>
                         {% for artifact in artifacts %}
                             <li><a href="/personas/artifact/{{ artifact.slug }}">  {{ artifact.name }}</a>: {{ artifact.description }}
-                            <a href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                            <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -237,7 +237,7 @@
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
                             
-                            <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -250,7 +250,7 @@
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
                             
-                            <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -268,7 +268,7 @@
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
                             
-                            <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -281,7 +281,7 @@
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
                             
-                            <td><a href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -298,7 +298,7 @@
                         <td> {{ element.title }}</td>
                         <td> {{ element.data }}</td>
                         
-                        <td><a href="{% url 'edit_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                        <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -308,9 +308,8 @@
             </div>
             <hr>
             <h3>Scratchpad:</h3>
-                <textarea name="test" id="scratchpad" style="color:black"></textarea>
-                {% markdown_editor "#scratchpad" %}
-                {% markdown_media %}               
+                {% crispy scratchpadform %}
+                {% markdown_media %}          
         </div>
 </div>
 <div class="tab-pane fade in" id="notes"> <!-- Tab Four Starts -->
@@ -337,11 +336,9 @@
 <h3>Images:</h3>
 {% if gallery_images %}
     {% for g_image in gallery_images %}
-        <div class="img-responsive">
             {% thumbnail g_image.image "400x400" crop="center" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}
-    </div>
 {% endfor %}
 {% else %}
 <strong>{{ character_name }} has no images.</strong><br />
@@ -373,6 +370,7 @@
 </div> <!-- Tab six Ends -->
 </div> <!-- Tab Content Ends -->
 </div> <!-- Container content ends -->
+
 <script>
 var url = document.location.toString();
 if (url.match('#')) {

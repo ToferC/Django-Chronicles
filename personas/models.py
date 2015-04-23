@@ -121,7 +121,7 @@ class Note(models.Model):
 class GalleryImage(models.Model):
     creator = models.ForeignKey(User, default=0)
     image = models.ImageField(upload_to='content_images/%Y/%m/%d', default='content_images/nothing.jpg')
-    title = models.CharField(max_length=32)
+    title = models.CharField(max_length=64)
     date = models.DateTimeField(auto_now=True)
     character = models.ForeignKey("Character", blank=True, null=True)
     location = models.ForeignKey("Location", blank=True, null=True)
@@ -138,6 +138,16 @@ class GalleryImage(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ScratchPad(models.Model):
+    creator = models.ForeignKey(User, default=0)
+    content = MarkdownField()
+    date = models.DateTimeField(auto_now=True)
+    character = models.ForeignKey("Character", blank=True, null=True)
+
+    def __str__(self):
+        return self.content
 
 
 class Communique(models.Model):
@@ -247,7 +257,6 @@ class Character(models.Model):
         max_length=32, default="Supporting", verbose_name="Character Type")
     xp = models.PositiveSmallIntegerField(blank=True, default=0)
     description = MarkdownField(blank=True)
-    scratchpad = MarkdownField(blank=True)
     age = models.PositiveSmallIntegerField(default=21)
     nationality = models.ForeignKey(Nation, default=1)
     birthplace = models.ForeignKey(Location, related_name='place_of_birth', default=1)
@@ -409,20 +418,33 @@ class Story(models.Model):
     author = models.ForeignKey(User)
     publication_date = models.DateField()
     description = models.TextField(blank=True)
-    genre = models.CharField(max_length=128, choices=GENRE_CHOICES, default='Fantasy')
-    image = models.ImageField(upload_to='story_images/%Y/%m/%d', default='story_images/nobody.jpg')
-    background = models.ImageField(upload_to='story_backgrounds/%Y/%m/%d', default='story_backgrounds/nothing.jpg')
-    colour_theme = models.CharField(max_length=12, choices=THEME_CHOICES, default='Dark')
-    map_tile = models.CharField(max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
-    skill_type_name_1 = models.CharField(max_length=24, default="General", blank=True)
-    skill_type_name_2 = models.CharField(max_length=24, default="Investigative", blank=True)
-    skill_type_name_3 = models.CharField(max_length=24, default="Combat", blank=True)
-    skill_type_name_4 = models.CharField(max_length=24, default="Knowledge", blank=True)
+    genre = models.CharField(
+        max_length=128, choices=GENRE_CHOICES, default='Fantasy')
+    image = models.ImageField(
+        upload_to='story_images/%Y/%m/%d', default='story_images/nobody.jpg')
+    background = models.ImageField(
+        upload_to='story_backgrounds/%Y/%m/%d', default='story_backgrounds/nothing.jpg')
+    colour_theme = models.CharField(
+        max_length=12, choices=THEME_CHOICES, default='Dark')
+    map_tile = models.CharField(
+        max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+    skill_type_name_1 = models.CharField(
+        max_length=24, default="General", blank=True)
+    skill_type_name_2 = models.CharField(
+        max_length=24, default="Investigative", blank=True)
+    skill_type_name_3 = models.CharField(
+        max_length=24, default="Combat", blank=True)
+    skill_type_name_4 = models.CharField(
+        max_length=24, default="Knowledge", blank=True)
 
-    statistic_type_name_1 = models.CharField(max_length=24, default="Physical", blank=True)
-    statistic_type_name_2 = models.CharField(max_length=24, default="Mental", blank=True)
-    statistic_type_name_3 = models.CharField(max_length=24, default="Social", blank=True)
-    statistic_type_name_4 = models.CharField(max_length=24, default="Magic", blank=True)
+    statistic_type_name_1 = models.CharField(
+        max_length=24, default="Physical", blank=True)
+    statistic_type_name_2 = models.CharField(
+        max_length=24, default="Mental", blank=True)
+    statistic_type_name_3 = models.CharField(
+        max_length=24, default="Social", blank=True)
+    statistic_type_name_4 = models.CharField(
+        max_length=24, default="Magic", blank=True)
 
 
     slug = models.SlugField(unique=True)

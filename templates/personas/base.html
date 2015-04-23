@@ -147,7 +147,10 @@
                         autoSize    : false,
                         closeClick  : false,
                         openEffect  : 'none',
-                        closeEffect : 'none'
+                        closeEffect : 'none',
+                        'afterClose': function() {
+                            window.location.reload();
+                        },
                         });
                 });
             </script>
