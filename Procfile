@@ -1,2 +1,2 @@
-web: waitress-serve persona2.wsgi:application
+web: gunicorn persona2.wsgi --log-file -
 
