@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 ON_PAAS = 'HEROKU_PAAS' in os.environ
 
 if ON_PAAS:
-    SECRET_KEY = os.environ['SECRET KEY']
+    SECRET_KEY = os.environ['SECRET_KEY']
 else:
     from keys import *
     SECRET_KEY = os.environ['SECRET_KEY']
