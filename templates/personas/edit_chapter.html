@@ -22,8 +22,9 @@
 <div class="col-md-2 col-sm-2 col-lg-2">
         <div class="img-responsive">
             {% thumbnail chapter.image "175" crop="center" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
-            <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
+            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% empty %}
+           
         {% endthumbnail %}
         <p>
             Created by {{ chapter.creator }}

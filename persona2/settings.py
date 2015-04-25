@@ -15,10 +15,10 @@ import socket
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # openshift is our PAAS for now.
-ON_PAAS = 'OPENSHIFT_REPO_DIR' in os.environ
+ON_PAAS = 'HEROKU_PAAS' in os.environ
 
 if ON_PAAS:
-    SECRET_KEY = os.environ['OPENSHIFT_SECRET_TOKEN']
+    SECRET_KEY = os.environ['SECRET KEY']
 else:
     from keys import *
     SECRET_KEY = os.environ['SECRET_KEY']
@@ -42,7 +42,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # SECURITY WARNING: don't run with debug turned on in production!
 
 if ON_PAAS:
-    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()]
+    ALLOWED_HOSTS = []
 else:
     ALLOWED_HOSTS = []
 
@@ -82,8 +82,6 @@ INSTALLED_APPS = (
     'djgeojson',
     'sorl.thumbnail',
     'django_markdown',
-    #'herokuapp',
-    #'treasuremap',
     #'allauth.socialaccount',
     # ... include the providers you want to enable:
     #'allauth.socialaccount.providers.amazon',
@@ -115,31 +113,10 @@ WSGI_APPLICATION = 'persona2.wsgi.application'
 
 if ON_PAAS:
     # determine if we are on MySQL or POSTGRESQL
-    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ:
-
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME':     os.environ['OPENSHIFT_APP_NAME'],
-                'USER':     os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
-                'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
-                'HOST':     os.environ['OPENSHIFT_POSTGRESQL_DB_HOST'],
-                'PORT':     os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
-            }
-        }
-
-    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ:
-
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME':     os.environ['OPENSHIFT_APP_NAME'],
-                'USER':     os.environ['OPENSHIFT_MYSQL_DB_USERNAME'],
-                'PASSWORD': os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'],
-                'HOST':     os.environ['OPENSHIFT_MYSQL_DB_HOST'],
-                'PORT':     os.environ['OPENSHIFT_MYSQL_DB_PORT'],
-            }
-        }
+    import dj_database_url
+    DATABASES = {}
+    DATABASES['default'] = dj_database_url.config()
+    DATABASES['default']['ENGINE'] = 'django_postgrespool'
 
 else:
 
@@ -194,7 +171,6 @@ DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 STATICFILES_DIRS = (STATIC_PATH,)
-
 
 TEMPLATE_DIRS = [TEMPLATE_PATH,]
 
