@@ -14,7 +14,6 @@
 {% endblock %}
 {% block column1 %}
     <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
-    <div class="row" id="row1">
                 {% thumbnail image "400" crop="center" as im %}
                 <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" align="middle">
                 {% empty %}

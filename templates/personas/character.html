@@ -49,6 +49,8 @@
         </li>
     </ul>
     
+    {% block column1 %}
+
     <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
         {% if character_name %}
             <br>
@@ -369,6 +371,7 @@
 </div>
 </div> <!-- Tab six Ends -->
 </div> <!-- Tab Content Ends -->
+{% endblock column1 %}
 </div> <!-- Container content ends -->
 
 <script>

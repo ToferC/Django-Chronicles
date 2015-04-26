@@ -15,9 +15,8 @@
 {% endblock %}
 {% block column1 %}
     <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
-        <div class="img-responsive">
-            {% thumbnail nation.image "200x200" crop="center" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
+            {% thumbnail nation.image "400" crop="center" as im %}
+            <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
             <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
         {% endthumbnail %}
         <div class="row">
@@ -55,7 +54,6 @@
                     <td>{{ nation.defense }}</td>
                 </tr>
             </table>
-    </div>
     </div>
 {% endblock %}
 {% block column2 %}
