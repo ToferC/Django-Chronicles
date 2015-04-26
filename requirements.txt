@@ -13,7 +13,6 @@ django-require==1.0.7
 django-require-s3==1.0.0
 django-s3-folder-storage==0.2
 django-storages==1.1.8
--e git+https://github.com/jschneier/django-storages-redux.git@bc480c7865121b7f40952a7abdc43d61c94bd2ce#egg=django_storages_redux-master
 django-toolbelt==0.0.1
 gunicorn==19.3.0
 jsonfield==1.0.3
