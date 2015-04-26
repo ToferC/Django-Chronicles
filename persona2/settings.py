@@ -28,7 +28,7 @@ DEBUG = DEBUG or 'DEBUG' in os.environ
 if ON_PAAS and DEBUG:
     print("*** Warning - Debug mode is on ***")
 
-TEMPLATE_PATH = os.path.join(BASE_DIR, 'personas/templates')
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 STATIC_PATH = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
@@ -55,6 +55,17 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     #"allauth.account.context_processors.account",
     #"allauth.socialaccount.context_processors.socialaccount",
 )
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            # ... some options here ...
+        },
+    },
+]
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -116,7 +127,7 @@ if ON_PAAS:
     import dj_database_url
     DATABASES = {}
     DATABASES['default'] = dj_database_url.config()
-    DATABASES['default']['ENGINE'] = 'django_postgrespool'
+    #DATABASES['default']['ENGINE'] = 'django_postgrespool'
 
 else:
 
