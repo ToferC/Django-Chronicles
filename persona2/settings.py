@@ -47,15 +47,6 @@ else:
     ALLOWED_HOSTS = []
 
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    # Required by allauth template tags
-    "django.core.context_processors.request",
-    'django.contrib.auth.context_processors.auth',
-    # allauth specific context processors
-    #"allauth.account.context_processors.account",
-    #"allauth.socialaccount.context_processors.socialaccount",
-)
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -66,13 +57,6 @@ TEMPLATES = [
         },
     },
 ]
-
-AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
-    "django.contrib.auth.backends.ModelBackend",
-    # `allauth` specific authentication methods, such as login by e-mail
-    #"allauth.account.auth_backends.AuthenticationBackend",
-)
 
 
 # Application definition
@@ -87,19 +71,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'personas',
     'crispy_forms',
-    #'allauth',
-    #'allauth.account',
     'leaflet',
     'djgeojson',
     'sorl.thumbnail',
     'django_markdown',
-    #'allauth.socialaccount',
-    # ... include the providers you want to enable:
-    #'allauth.socialaccount.providers.amazon',
-    #'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.github',
-    #'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.twitter',
 )
 
 SITE_ID = 1

@@ -9,7 +9,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^personas/', include('personas.urls')),
-    (r'^accounts/', include('allauth.urls')),
     url('^markdown/', include( 'django_markdown.urls')),
     #url(r'^about/', include('personas.urls')),
 )
