@@ -28,7 +28,7 @@ DEBUG = DEBUG or 'DEBUG' in os.environ
 if ON_PAAS and DEBUG:
     print("*** Warning - Debug mode is on ***")
 
-TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'personas/templates')
 STATIC_PATH = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
