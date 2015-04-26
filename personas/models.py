@@ -243,12 +243,14 @@ class Character(models.Model):
     ANTAGONIST = "Antagonist"
     SUPPORTING = "Supporting"
     CREATURE = "Creature"
+    CONSTRUCT = "Construct"
 
     CHAR_CHOICES = (
         (PROTAGONIST, "Protagonist"),
         (ANTAGONIST, "Antagonist"),
         (SUPPORTING, "Supporting"),
-        (CREATURE, "Creature"))
+        (CREATURE, "Creature"),
+        (CONSTRUCT, "Construct"))
 
     creator = models.ForeignKey(User, unique=False, blank=True)
     name = models.CharField(max_length=128, unique=False)
@@ -285,6 +287,7 @@ class Relationship(models.Model):
     LOVER = 'Lover'
     PARTNER = 'Partner'
     MEMBER = 'Member'
+    OWNER = "Owner"
 
     RELATIONSHIP_CLASS_CHOICES = (
         (ALLY, 'Ally'),
@@ -298,6 +301,7 @@ class Relationship(models.Model):
         (LOVER, 'Lover'),
         (PARTNER, 'Business Partner'),
         (MEMBER, 'Co-member'),
+        (OWNER, "Owner"),
     )
 
     from_character = models.ForeignKey(Character, related_name="from_character")

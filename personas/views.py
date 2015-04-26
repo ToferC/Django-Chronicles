@@ -157,6 +157,7 @@ def artifact(request, artifact_name_slug):
         context_dict['description'] = artifact.description
         context_dict['character'] = character
         context_dict['story'] = story
+        context_dict['image'] = get_object_or_404(GalleryImage, item=artifact)
         context_dict['abilities'] = SpecialAbility.objects.filter(item__name=artifact.name)
 
         context_dict['notes'] = Note.objects.filter(
@@ -1219,7 +1220,9 @@ def delete_combat_info(request, pk, template_name='personas/delete_combat_info.h
     character = Character.objects.get(combatinfo=combat_info)
     if request.method=='POST':
         combat_info.delete()
-        return HttpResponseRedirect('/personas/character/{}/#skills'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#skills'.format(
+            character.slug)})
     return render(request, template_name, {'object': combat_info})
 
 @login_required
@@ -1239,10 +1242,12 @@ def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'
 @login_required
 def delete_relationship(request, pk, template_name='personas/delete_relationship.html'):
     relationship = Relationship.objects.get(pk=pk)
-    character = Character.objects.get(from_character=relationship.from_character)
+    character = Character.objects.get(id=relationship.from_character_id)
     if request.method=='POST':
         relationship.delete()
-        return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#details'.format(
+            character.slug)})
     return render(request, template_name, {'object': relationship})
 
 
@@ -1267,7 +1272,9 @@ def delete_statistic(request, pk, template_name='personas/delete_statistic.html'
     character = Character.objects.get(statistic=statistic)
     if request.method=='POST':
         statistic.delete()
-        return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#abilities'.format(
+            character.slug)})
     return render(request, template_name, {'object': statistic})
 
 
@@ -1291,7 +1298,9 @@ def delete_ability(request, pk, template_name='personas/delete_ability.html'):
     character = Character.objects.get(specialability=specialability)
     if request.method=='POST':
         specialability.delete()
-        return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#details'.format(
+            character.slug)})
     return render(request, template_name, {'object': specialability})
 
 
@@ -1315,7 +1324,9 @@ def delete_trait(request, pk, template_name='personas/delete_trait.html'):
     character = Character.objects.get(trait=trait)
     if request.method=='POST':
         trait.delete()
-        return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#details'.format(
+            character.slug)})
     return render(request, template_name, {'object': trait})
 
 
@@ -1492,7 +1503,9 @@ def delete_artifact(request, pk, template_name='personas/delete_artifact.html'):
     character = Character.objects.get(item=artifact)
     if request.method=='POST':
         artifact.delete()
-        return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#abilities'.format(
+            character.slug)})
     return render(request, template_name, {'object': artifact})
 
 
@@ -1504,7 +1517,9 @@ def edit_artifact(request, pk, template_name='personas/edit_artifact.html'):
     form = ItemForm(request.POST or None, instance=artifact)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#abilities'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#abilities'.format(
+            character.slug)})
     return render(request, template_name, {'form': form, 'character':character, 'artifact': artifact, 'story':story})
 
 

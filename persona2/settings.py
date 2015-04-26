@@ -110,7 +110,7 @@ else:
         'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'chronicles',
-        'USER': 'christopher_allison',
+        'USER': '',
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '',
