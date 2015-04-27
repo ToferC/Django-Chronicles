@@ -110,9 +110,8 @@ class Note(models.Model):
     story = models.ForeignKey("Story", blank=True, null=True)
     rating = models.PositiveSmallIntegerField(default=0)
 
-    def save(self, creator, character, location, organization, scene, chapter, story, *args, **kwargs):
-        self.creator = creator
-        super(Note, self).save(creator, *args, **kwargs)
+    def save(self, *args, **kwargs):
+        super(Note, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{} -- ({})".format(self.content, self.creator)

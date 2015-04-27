@@ -486,7 +486,7 @@ class NoteForm(forms.ModelForm):
         instance.story = story
         instance.organization = organization
         instance.nation = nation
-        instance.save(creator, character, scene, chapter, story, organization, nation, location)
+        instance.save()
         return instance
 
 
