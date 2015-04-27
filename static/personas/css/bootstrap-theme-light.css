@@ -33,18 +33,24 @@
   background-repeat: repeat-x;
  }
 
+@media screen and (max-width: 480px) {
+  .footer {
+    display: none;
+    visibility: hidden;
+}
+}
+
  .push {
   clear: both;
   height: 4em;
   width: 100%;
  }
 
-
  h3, h1, p, header, li, ul {
-  color: white;
+  color: black;
  }
 
- h1 {
+  h1 {
   text-align: center;
  }
 
@@ -69,7 +75,7 @@ a:active {
 }
 
  table, label {
-  color: white;
+  color: black;
  }
 
 tr:hover {
@@ -78,18 +84,18 @@ tr:hover {
 }
 
  #col1 {
-  color: white;
+  color: black;
   padding-left: 55px;
  }
 
  #col2, #col3, #col4 {
-  color: white;
+  color: black;
   padding-left: 25px;
  }
 
  #BBoard {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
  }
 
  .note {

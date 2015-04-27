@@ -14,11 +14,14 @@
 
  .wrapper {
   min-height: 100%;
-  margin: 0 auto -155px;
+  height: auto;
+  height: 100%;
+  margin: 0 auto -4em;
  }
 
- footer, .push {
-  height: 155px;
+ .footer {
+  clear: both;
+  height: 4em;
   width: 100%;
   text-align: center;
   background-image: -webkit-linear-gradient(top, #3c3c3c 0%, #222 100%);
@@ -30,12 +33,25 @@
   background-repeat: repeat-x;
  }
 
+@media screen and (max-width: 480px) {
+  .footer {
+    display: none;
+    visibility: hidden;
+}
+}
 
- h3, h1, p, header, li, ul {
-  color: black;
+ .push {
+  clear: both;
+  height: 4em;
+  width: 100%;
  }
 
-  h1 {
+
+ h3, h1, p, header, li, ul {
+  color: white;
+ }
+
+ h1 {
   text-align: center;
  }
 
@@ -60,7 +76,7 @@ a:active {
 }
 
  table, label {
-  color: black;
+  color: white;
  }
 
 tr:hover {
@@ -69,38 +85,24 @@ tr:hover {
 }
 
  #col1 {
-  color: black;
+  color: white;
   padding-left: 55px;
  }
 
  #col2, #col3, #col4 {
-  color: black;
+  color: white;
   padding-left: 25px;
  }
 
  #BBoard {
-  background-color: white;
-  color: black;
+  background-color: black;
+  color: white;
  }
 
  .note {
   background-color: white;
   color: black;
   padding-left: 10px;
- }
-
- #social_footer {
-  width: 100%;
-  text-align: center;
-  background-image: -webkit-linear-gradient(top, #3c3c3c 0%, #222 100%);
-  background-image:      -o-linear-gradient(top, #3c3c3c 0%, #222 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#3c3c3c), to(#222));
-  background-image:         linear-gradient(to bottom, #3c3c3c 0%, #222 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3c3c3c', endColorstr='#ff222222', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  background-repeat: repeat-x;;
-  text-align: center;
-  color: orange;
  }
 
  .leaflet-container {

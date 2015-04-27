@@ -98,7 +98,7 @@ class SpecialAbility(models.Model):
 
 class Note(models.Model):
     creator = models.ForeignKey(User, default=0)
-    content = models.TextField()
+    content = MarkdownField()
     date = models.DateTimeField(auto_now=True)
     character = models.ForeignKey("Character", blank=True, null=True)
     location = models.ForeignKey("Location", blank=True, null=True)
