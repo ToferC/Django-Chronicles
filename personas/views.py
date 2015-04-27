@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.template.response import TemplateResponse
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -17,6 +17,9 @@ from personas.forms import CharacterForm, NoteForm, CommuniqueForm, UserForm, Us
 from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm
 
 from datetime import datetime
+
+# Permission functions
+
 
 # Normal Views
 
@@ -157,7 +160,10 @@ def artifact(request, artifact_name_slug):
         context_dict['description'] = artifact.description
         context_dict['character'] = character
         context_dict['story'] = story
-        context_dict['image'] = get_object_or_404(GalleryImage, item=artifact)
+        try:
+            context_dict['image'] = GalleryImage.objects.get(item=artifact)
+        except GalleryImage.DoesNotExist:
+            pass
         context_dict['abilities'] = SpecialAbility.objects.filter(item__name=artifact.name)
 
         context_dict['notes'] = Note.objects.filter(
@@ -363,13 +369,19 @@ def character(request, character_name_slug):
 
                 communique_form = CommuniqueForm(request.POST)
 
-                if communique_form.is_valid():
-                    communique_form.save(author=post_creator, commit=True)
-                    
-                    return HttpResponseRedirect("/personas/character/{}/#social".format(character_name_slug))
+                if request.user == character.creator:
+
+                    if communique_form.is_valid():
+                        communique_form.save(author=post_creator, commit=True)
+
+                        return HttpResponseRedirect("/personas/character/{}/#social".format(character_name_slug))
+
+                    else:
+                        print (context_dict['communique_form'].errors)
 
                 else:
-                    print (context_dict['communique_form'].errors)
+                    print("You do not have permission to send a communique from this character.")
+                    return HttpResponseRedirect("/personas/character/{}/#social".format(character_name_slug))
 
             if 'snapshot' in request.POST:
 
@@ -532,6 +544,8 @@ def mainmap(request, mainmap_slug):
 
     return render(request, 'personas/mainmap.html', context_dict)
 
+
+# Admin Views
 
 def register(request):
     registered = False
@@ -1195,9 +1209,12 @@ def add_artifact(request, slug, *args, **kwargs):
 def delete_skill(request, pk, template_name='personas/delete_skill.html'):
     skill = Skill.objects.get(pk=pk)
     character = Character.objects.get(skill=skill)
-    if request.method=='POST':
-        skill.delete()
-        return HttpResponseRedirect('/personas/character/{}/#skills'.format(character.slug))
+    if request.user == character.creator:
+        if request.method=='POST':
+            skill.delete()
+            return HttpResponseRedirect('/personas/character/{}/#skills'.format(character.slug))
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': skill})
 
 @login_required
@@ -1218,11 +1235,14 @@ def edit_skill(request, pk, template_name='personas/edit_skill.html'):
 def delete_combat_info(request, pk, template_name='personas/delete_combat_info.html'):
     combat_info = CombatInfo.objects.get(pk=pk)
     character = Character.objects.get(combatinfo=combat_info)
-    if request.method=='POST':
-        combat_info.delete()
-        return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#skills'.format(
-            character.slug)})
+    if request.user == character.creator:
+        if request.method=='POST':
+            combat_info.delete()
+            return TemplateResponse(request, 'personas/redirect_template.html',
+             {'redirect_url':'/personas/character/{}/#skills'.format(
+                character.slug)})
+    else:
+        return HttpResponse("You do not have permission to edit this.")
     return render(request, template_name, {'object': combat_info})
 
 @login_required
@@ -1243,11 +1263,14 @@ def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'
 def delete_relationship(request, pk, template_name='personas/delete_relationship.html'):
     relationship = Relationship.objects.get(pk=pk)
     character = Character.objects.get(id=relationship.from_character_id)
-    if request.method=='POST':
-        relationship.delete()
-        return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#details'.format(
-            character.slug)})
+    if request.user == character.creator:
+        if request.method=='POST':
+            relationship.delete()
+            return TemplateResponse(request, 'personas/redirect_template.html',
+             {'redirect_url':'/personas/character/{}/#details'.format(
+                character.slug)})
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': relationship})
 
 
@@ -1270,11 +1293,14 @@ def edit_relationship(request, pk, template_name='personas/edit_relationship.htm
 def delete_statistic(request, pk, template_name='personas/delete_statistic.html'):
     statistic = Statistic.objects.get(pk=pk)
     character = Character.objects.get(statistic=statistic)
-    if request.method=='POST':
-        statistic.delete()
-        return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#abilities'.format(
-            character.slug)})
+    if request.user == character.creator:
+        if request.method=='POST':
+            statistic.delete()
+            return TemplateResponse(request, 'personas/redirect_template.html',
+             {'redirect_url':'/personas/character/{}/#abilities'.format(
+                character.slug)})
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': statistic})
 
 
@@ -1296,11 +1322,14 @@ def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
 def delete_ability(request, pk, template_name='personas/delete_ability.html'):
     specialability = SpecialAbility.objects.get(pk=pk)
     character = Character.objects.get(specialability=specialability)
-    if request.method=='POST':
-        specialability.delete()
-        return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#details'.format(
-            character.slug)})
+    if request.user == character.creator:
+        if request.method=='POST':
+            specialability.delete()
+            return TemplateResponse(request, 'personas/redirect_template.html',
+             {'redirect_url':'/personas/character/{}/#details'.format(
+                character.slug)})
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': specialability})
 
 
@@ -1322,11 +1351,14 @@ def edit_ability(request, pk, template_name='personas/edit_ability.html'):
 def delete_trait(request, pk, template_name='personas/delete_trait.html'):
     trait = Trait.objects.get(pk=pk)
     character = Character.objects.get(trait=trait)
-    if request.method=='POST':
-        trait.delete()
-        return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#details'.format(
-            character.slug)})
+    if request.user == character.creator:
+        if request.method=='POST':
+            trait.delete()
+            return TemplateResponse(request, 'personas/redirect_template.html',
+             {'redirect_url':'/personas/character/{}/#details'.format(
+                character.slug)})
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': trait})
 
 
@@ -1347,9 +1379,12 @@ def edit_trait(request, pk, template_name='personas/edit_trait.html'):
 @login_required
 def delete_character(request, pk, template_name='personas/delete_character.html'):
     character = Character.objects.get(pk=pk)
-    if request.method=='POST':
-        character.delete()
-        return HttpResponseRedirect('/personas/')
+    if request.user == character.creator:
+        if request.method=='POST':
+            character.delete()
+            return HttpResponseRedirect('/personas/')
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': character})
 
 
@@ -1369,9 +1404,12 @@ def edit_character(request, pk, template_name='personas/edit_character.html'):
 @login_required
 def delete_story(request, pk, template_name='personas/delete_story.html'):
     story = Story.objects.get(pk=pk)
-    if request.method=='POST':
-        story.delete()
-        return HttpResponseRedirect('/personas/')
+    if request.user == story.author:
+        if request.method=='POST':
+            story.delete()
+            return HttpResponseRedirect('/personas/')
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': story})
 
 
@@ -1390,9 +1428,12 @@ def edit_story(request, pk, template_name='personas/edit_story.html'):
 def delete_location(request, pk, template_name='personas/delete_location.html'):
     location = Location.objects.get(pk=pk)
     story = Story.objects.get(location=location)
-    if request.method=='POST':
-        location.delete()
-        return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    if request.user == location.creator:
+        if request.method=='POST':
+            location.delete()
+            return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': location})
 
 
@@ -1412,9 +1453,12 @@ def edit_location(request, pk, template_name='personas/edit_location.html'):
 def delete_organization(request, pk, template_name='personas/delete_organization.html'):
     organization = Organization.objects.get(pk=pk)
     story = Story.objects.get(organization=organization)
-    if request.method=='POST':
-        organization.delete()
-        return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    if request.user == story.author:
+        if request.method=='POST':
+            organization.delete()
+            return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': organization})
 
 
@@ -1434,9 +1478,12 @@ def edit_organization(request, pk, template_name='personas/edit_organization.htm
 def delete_chapter(request, pk, template_name='personas/delete_chapter.html'):
     chapter = Chapter.objects.get(pk=pk)
     story = Story.objects.get(chapter=chapter)
-    if request.method=='POST':
-        chapter.delete()
-        return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
+    if request.user == story.author:
+        if request.method=='POST':
+            chapter.delete()
+            return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': chapter})
 
 
@@ -1456,9 +1503,12 @@ def edit_chapter(request, pk, template_name='personas/edit_chapter.html'):
 def delete_scene(request, pk, template_name='personas/delete_scene.html'):
     scene = Scene.objects.get(pk=pk)
     story = Story.objects.get(chapter__scene=scene)
-    if request.method=='POST':
-        scene.delete()
-        return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
+    if request.user == story.author:
+        if request.method=='POST':
+            scene.delete()
+            return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': scene})
 
 
@@ -1478,9 +1528,12 @@ def edit_scene(request, pk, template_name='personas/edit_scene.html'):
 def delete_membership(request, pk, template_name='personas/delete_membership.html'):
     membership = Membership.objects.get(pk=pk)
     character = membership.character
-    if request.method=='POST':
-        membership.delete()
-        return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+    if request.user == character.creator:
+        if request.method=='POST':
+            membership.delete()
+            return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': membership})
 
 
@@ -1501,11 +1554,14 @@ def edit_membership(request, pk, template_name='personas/edit_membership.html'):
 def delete_artifact(request, pk, template_name='personas/delete_artifact.html'):
     artifact = Item.objects.get(pk=pk)
     character = Character.objects.get(item=artifact)
-    if request.method=='POST':
-        artifact.delete()
-        return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#abilities'.format(
-            character.slug)})
+    if request.user == character.creator:
+        if request.method=='POST':
+            artifact.delete()
+            return TemplateResponse(request, 'personas/redirect_template.html',
+             {'redirect_url':'/personas/character/{}/#abilities'.format(
+                character.slug)})
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': artifact})
 
 
@@ -1527,9 +1583,12 @@ def edit_artifact(request, pk, template_name='personas/edit_artifact.html'):
 def delete_nation(request, pk, template_name='personas/delete_nation.html'):
     nation = Nation.objects.get(pk=pk)
     story = Story.objects.get(nation=nation)
-    if request.method=='POST':
-        nation.delete()
-        return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    if request.user == story.author:
+        if request.method=='POST':
+            nation.delete()
+            return HttpResponseRedirect('/personas/{}'.format(story.slug))
+    else:
+        return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': nation})
 
 

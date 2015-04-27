@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^personas/', include('personas.urls')),
     url('^markdown/', include( 'django_markdown.urls')),
+    url('^', include('django.contrib.auth.urls')),
     #url(r'^about/', include('personas.urls')),
 )
 
