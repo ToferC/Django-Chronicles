@@ -45,12 +45,12 @@
             .openOn(map);
             }
             map.on('click', onMapClick);
-            </script>
+            </script>                
+            </div>
             <h3 style="color:white">Map Location:</h3><br>
                 <div class="container leaflet-container" id="smallmap">
                 {% leaflet_map "Britannia" callback="window.map_init_basic"%}
                 </div>
-        </div>
         </div>
     </div>
 {% endblock %}
