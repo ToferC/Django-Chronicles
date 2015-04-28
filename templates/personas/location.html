@@ -9,133 +9,147 @@
     </header>
 {% endblock %}
 {% block l_content %}
-    <div class="col-md-2 col-sm-0 col-lg-2" id="col1">
+    <div class="col-md-1 col-sm-0 col-lg-1" id="col1">
     </div>
 {% endblock %}
 {% block column1 %}
     <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
-                {% thumbnail image "400" crop="center" as im %}
-                <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" align="middle">
-                {% empty %}
-            {% endthumbnail %}
-            <p>
-                Created by {{ creator }}
-            </p>
-            <hr>
-        <div class="row">
-            <h3>Description:</h3>
-            {{ description }}
-        </div>
-        <div class="row" style="color:black">
-            <script type="text/javascript">
-            function map_init_basic (map, options) {
-            L.tileLayer("{{ story.map_tile }}", {
-                        attribution: "Pliedes Roman Empire Map",
-                        maxZoom: 18
-                    }).addTo(map);
-            L.marker([{{ latitude|add:"0" }}, {{ longitude|add:"0" }}], 10).addTo(map)
-            .bindPopup( "{{location_name}}" ).openPopup();
-            }
-            var popup = L.popup();
-            
-            function onMapClick(e) {
-            popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString())
-            .openOn(map);
-            }
-            map.on('click', onMapClick);
-            </script>                
-            <h3 style="color:white">Map Location:</h3><br>
-                <div class="container leaflet-container" id="smallmap">
-                {% leaflet_map "Britannia" callback="window.map_init_basic"%}
-                </div>
+        {% thumbnail image "400" crop="center" as im %}
+        <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" align="middle">
+        {% empty %}
+    {% endthumbnail %}
+    <p>
+        Created by {{ creator }}
+    </p>
+    <hr>
+    <div class="row">
+        <h3>Description:</h3>
+        {{ description }}
+    </div>
+    <div class="row">
+        <h3>Terrain:</h3>
+        <strong>{{ terrain }}</strong>
+    </div>
+    <div class="row">
+        <h3>Features:</h3>
+        <strong>{{ features }}</strong>
+    </div>
+    <div class="row">
+        <h3>Nation:</h3>
+        <a href="/personas/nation/{{ nation.slug }}"><strong>{{ nation }}</strong></a>
+    </div>
+    <div class="row">
+        <h3>Latitude & Longitude:</h3>
+        <strong style="text-align:center">{{ latitude }} by {{ longitude }}</strong>
+        <hr>
+    </div>
+    <div class="row" style="color:black">
+        <script type="text/javascript">
+        function map_init_basic (map, options) {
+        L.tileLayer("{{ story.map_tile }}", {
+        attribution: "Pliedes Roman Empire Map",
+        maxZoom: 18
+        }).addTo(map);
+        L.marker([{{ latitude|add:"0" }}, {{ longitude|add:"0" }}], 10).addTo(map)
+        .bindPopup( "{{location_name}}" ).openPopup();
+        }
+        var popup = L.popup();
+        
+        function onMapClick(e) {
+        popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+        }
+        map.on('click', onMapClick);
+        </script>
+        <h3 style="color:white">Map Location:</h3><br>
+        <div class="container leaflet-container" id="smallmap">
+            {% leaflet_map "Britannia" callback="window.map_init_basic"%}
         </div>
     </div>
+</div>
 {% endblock %}
+
 {% block column2 %}
-    <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
-        <div class="row">
-            <h3>Terrain:</h3>
-            <strong>{{ terrain }}</strong>
-            <hr>
-        </div>
-        <div class="row">
-            <h3>Features:</h3>
-            <strong>{{ features }}</strong>
-            <hr>
-        </div>
-        <div class="row">
-            <h3>Nation:</h3>
-            <a href="/personas/nation/{{ nation.slug }}"><strong>{{ nation }}</strong></a>
-            <hr>
-        </div>
-        <div class="row">
-            <h3>Latitude & Longitude:</h3>
-            <strong style="text-align:center">{{ latitude }} by {{ longitude }}</strong>
-            <hr>
-        </div>
-        <a role="button" class="btn btn-primary" href="{% url 'edit_location' pk=location.pk %}">Edit Location  <span class="glyphicon glyphicon-cog"></span></a>
+<div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <div class="row">
+        <h3>Scenes:</h3>
+        {% if scenes %}
+            <ul>
+                {% for scene in scenes %}
+                    <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>{{ location_name }} has no scenes.</strong>
+        {% endif %}
+        <br>
+        <a href="/personas/add_scene/{{ story.slug }}" style="color:gray">Add Scene <span class="glyphicon glyphicon-pencil"></span></a>
+        <hr>
     </div>
-{% endblock %}
+    <div class="row">
+        <h3>Characters:</h3>
+        {% if characters %}
+            <ul>
+                {% for character in characters %}
+                    
+                    <li><a href="/personas/character/{{ character.slug }}">{{ character.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>{{ location_name }} has no characters.</strong>
+        {% endif %}
+        <br>
+        <a href="/personas/add_character/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+        <hr>
+    </div>
+    <div class="row">
+        <h3>Organizations:</h3>
+        {% if organizations %}
+            <ul>
+                {% for organization in organizations %}
+                    <div class="btn-group-vertical">
+                        
+                        <li><a href="/personas/organization/{{ organization.slug }}">{{ organization.name }}</a></li>
+                    </div>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>{{ location_name }} has no organizations.</strong>
+        {% endif %}
+        <br>
+        <a href="/personas/add_organization/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
+        <hr>
+    </div>
+    <a role="button" class="btn btn-primary" href="{% url 'edit_location' pk=location.pk %}">Edit Location  <span class="glyphicon glyphicon-cog"></span></a>
+</div>
+{% endblock column2 %}
+
 {% block column3 %}
     <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
-        <div class="row">
-            <h3>Scenes:</h3>
-            {% if scenes %}
-                <ul>
-                    {% for scene in scenes %}
-                        <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <strong>{{ location_name }} has no scenes.</strong>
-            {% endif %}
-            <br>
-            <a href="/personas/add_scene/{{ story.slug }}" style="color:gray">Add Scene <span class="glyphicon glyphicon-pencil"></span></a>
-            <hr>
-        </div>
-        <div class="row">
-            <h3>Characters:</h3>
-            {% if characters %}
-                <ul>
-                    {% for character in characters %}
-                            
-                            <li><a href="/personas/character/{{ character.slug }}">{{ character.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <strong>{{ location_name }} has no characters.</strong>
-            {% endif %}
-            <br>
-            <a href="/personas/add_character/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
-            <hr> 
-        </div>
-
-        <div class="row">
-            <h3>Organizations:</h3>
-            {% if organizations %}
-                <ul>
-                    {% for organization in organizations %}
-                        <div class="btn-group-vertical">
-                            
-                            <li><a href="/personas/organization/{{ organization.slug }}">{{ organization.name }}</a></li>
-                        </div>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <strong>{{ location_name }} has no organizations.</strong>
-            {% endif %}
-            <br>
-            <a href="/personas/add_organization/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
-            <hr> 
-        </div>
-
-
-        </div>
-{% endblock column3 %}
-{% block r_content %}
-            <div class="col-md-1 col-sm-0 col-lg-1">
-            </div>
+    <div id="BBoard">
+    <h3>Notes:</h3>
+    {% if notes %}
+        
+        {% for note in notes %}
+            <div class="note">{{ note|truncatechars:256 }} <a href="" >... Read more.</a> -- {{ note.date }}</div><br>
+        {% endfor %}
+        
+    {% else %}
+        <strong>{{ location_name }} has no notes.</strong><br />
+        <br />
+    {% endif %}
+    <div>
+        <label>Add a new note:</label>
+            {% crispy form %}
+            <br><br><br>
+    </div>
+    </div>
+    </div>
 {% endblock %}
-   
+
+{% block r_content %}
+<div class="col-md-1 col-sm-0 col-lg-1">
+</div>
+{% endblock %}
