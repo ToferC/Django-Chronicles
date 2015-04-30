@@ -122,7 +122,8 @@
         <a href="/personas/add_organization/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
     </div>
-    <a role="button" class="btn btn-primary" href="{% url 'edit_location' pk=location.pk %}">Edit Location  <span class="glyphicon glyphicon-cog"></span></a>
+    {% if user == location.creator %}
+    <a role="button" class="btn btn-primary" href="{% url 'edit_location' pk=location.pk %}">Edit Location  <span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
 </div>
 {% endblock column2 %}
 

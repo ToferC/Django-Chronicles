@@ -70,7 +70,9 @@
                         {{ description }}
                         <hr>
                     </div>
+                    {% if user == story.author %}
                     <a role="button" class="btn btn-primary" href="{% url 'edit_story' pk=story.pk %}">Edit Story  <span class="glyphicon glyphicon-cog"></span></a>
+                    {% else %}{% endif %}
     </div>
 <!-- Tab panes -->
         <div class="tab-content">

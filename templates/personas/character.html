@@ -86,14 +86,17 @@
                         <ul>
                             {% for aspect in aspects %}
                                 <li>{{ aspect }}
+                                    {% if user == character.creator %}
                                     <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_trait' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    {% else %}{% endif %}
                                 </li>
                             {% endfor %}
                         </ul>
                         <div tyle="padding-left:50px">
                         </div>
                     {% endif %}
-                    <a href="/personas/add_trait/{{ character.slug }}" style="color:lightgray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>
+                    {% if user == character.creator %}
+                    <a href="/personas/add_trait/{{ character.slug }}" style="color:lightgray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
                     <hr>
                 </div>
             </div>
@@ -103,12 +106,16 @@
                     {% if memberships %}
                         <ul>
                             {% for membership in memberships %}
-                                <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }}</a> - Rank {{ membership.rank }} - ({{ membership.role }}) | <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_membership' pk=membership.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }}</a> - Rank {{ membership.rank }} - ({{ membership.role }}) | 
+                                {% if user == character.creator %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_membership' pk=membership.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
                                 </li>
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <a href="/personas/add_membership/{{ character.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>
+                    {% if user == character.creator %}
+                    <a href="/personas/add_membership/{{ character.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
                     <hr>
                 </div>
                 <div class="row">
@@ -118,14 +125,20 @@
                         {% for relationship in relationships %}
                             <li>
                                 <a href="/personas/character/{{ relationship.to_character.slug }}">{{ relationship.to_character }}</a> - {{ relationship.relationship_class }} of <a href="/personas/character/{{ relationship.from_character.slug }}">{{ relationship.from_character }}</a> ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
+                                {% if user == character.creator %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% endif %}
+                {% if user == character.creator %}
                 <a href="/personas/add_relationships/{{ character.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
+                {% else %}{% endif %}
                 <hr>
+                {% if user == character.creator %}
                 <a role="button" class="btn btn-primary" href="{% url 'edit_character' pk=character.pk %}">Edit Character  <span class="glyphicon glyphicon-cog"></span></a>
+                {% else %}{% endif %}
                 </div>
             </div>
         {% else %}
@@ -141,8 +154,8 @@
                         <tr>
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
-                            
-                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            {% if user == character.creator %}
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                     
@@ -155,8 +168,8 @@
                         <tr>
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
-                            
-                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            {% if user == character.creator %}
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                     
@@ -169,8 +182,8 @@
                         <tr>
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
-                            
-                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            {% if user == character.creator %}
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                     
@@ -183,14 +196,15 @@
                         <tr>
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
-                            
-                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            {% if user == character.creator %}
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                 {% endif %}
             </table>
             <div tyle="padding-left:50px">
-                <a href="/personas/add_statistics/{{ character.slug }}" style="color:lightgray">Add Stat <span class="glyphicon glyphicon-pencil"></span></a>
+                {% if user == character.creator %}
+                <a href="/personas/add_statistics/{{ character.slug }}" style="color:lightgray">Add Stat <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
         </div>
         <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
@@ -201,14 +215,15 @@
                         {% for ability in abilities %}
                             <li>
                                 {{ ability }}
-                                
-                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_ability' pk=ability.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% if user == character.creator %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_ability' pk=ability.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% endif %}
                 <div tyle="padding-left:50px">
-                    <a href="/personas/add_ability/{{ character.slug }}" style="color:lightgray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>
+                {% if user == character.creator %}
+                    <a href="/personas/add_ability/{{ character.slug }}" style="color:lightgray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
                 </div>
             </div>
             <hr>
@@ -219,12 +234,14 @@
                     <ul>
                         {% for artifact in artifacts %}
                             <li><a href="/personas/artifact/{{ artifact.slug }}">  {{ artifact.name }}</a>: {{ artifact.description }}
-                            <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                            {% if user == character.creator %}
+                            <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% endif %}
-                <a href="/personas/add_artifact/{{ character.slug }}" style="color:lightgray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
+                {% if user == character.creator %}
+                <a href="/personas/add_artifact/{{ character.slug }}" style="color:lightgray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
             <hr>
         </div>
@@ -238,8 +255,8 @@
                         <tr>
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
-                            
-                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            {% if user == character.creator %}
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                 </table>
@@ -251,14 +268,15 @@
                         <tr>
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
-                            
-                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            {% if user == character.creator %}
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                 </table>
             {% endif %}
             <div tyle="padding-left:50px">
-                <a href="/personas/add_skills/{{ character.slug }}" style="color:lightgray">Add Skill <span class="glyphicon glyphicon-pencil"></span></a>
+            {% if user == character.creator %}
+                <a href="/personas/add_skills/{{ character.slug }}" style="color:lightgray">Add Skill <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
         </div>
         <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
@@ -269,8 +287,8 @@
                         <tr>
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
-                            
-                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            {% if user == character.creator %}
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                 </table>
@@ -282,8 +300,8 @@
                         <tr>
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
-                            
-                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                            {% if user == character.creator %}
+                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                 </table>
@@ -299,19 +317,24 @@
                     <tr>
                         <td> {{ element.title }}</td>
                         <td> {{ element.data }}</td>
-                        
-                        <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>
+                        {% if user == character.creator %}
+                        <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                     </tr>
                 {% endfor %}
             </table>
                 {% endif %}
             <div tyle="padding-left:50px">
-                <a href="/personas/add_combat_info/{{ character.slug }}" style="color:lightgray">Add Combat Info <span class="glyphicon glyphicon-pencil"></span></a>
+            {% if user == character.creator %}
+                <a href="/personas/add_combat_info/{{ character.slug }}" style="color:lightgray">Add Combat Info <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
             <hr>
             <h3>Scratchpad:</h3>
+            {% if user == character.creator %}
                 {% crispy scratchpadform %}
-                {% markdown_media %}          
+                {% markdown_media %} 
+                {% else %}
+                    {{ scratchpad }}
+                {% endif %}         
         </div>
 </div>
 <div class="tab-pane fade in" id="notes"> <!-- Tab Four Starts -->
@@ -359,9 +382,11 @@
 <br />
 {% endif %}
 <div>
+{% if user == character.creator %}
 <label>Send a message from {{ character_name }}:</label>
 <form class="uniForm" method="post">
     {% crispy communique_form %}
+    {% else %}{% endif %}
 </form>
 </div>
 <br><br><br>

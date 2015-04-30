@@ -294,6 +294,8 @@ def character(request, character_name_slug):
             scratchpad = ScratchPad(character=character, creator=request.user,
                 content="Enter info here and save to update", date=datetime.now())
 
+        context_dict['scratchpad'] = scratchpad
+
         context_dict['aspects'] = Trait.objects.filter(
             character__name=character.name)
 

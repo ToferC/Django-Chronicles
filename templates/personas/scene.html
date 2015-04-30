@@ -60,7 +60,9 @@
         <hr>
     </div>
     <div class="row">
+    {% if user == scene.creator %}
     <a role="button" class="btn btn-primary" href="{% url 'edit_scene' pk=scene.pk %}">Edit Scene  <span class="glyphicon glyphicon-cog"></span></a>
+    {% else %}{% endif %}
     </div>
     </div>
 {% endblock %}
