@@ -1,6 +1,7 @@
 {% extends "personas/base.html" %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
+{% load django_markdown django_markdown_static %}
 
 {% block title %}
 <header>
@@ -13,15 +14,18 @@
 {% block column1 %}
     <div class="col-md-12 col-sm-12 col-lg-12" id="col1">
     <h3>Note</h3>
-    {{ note }}
+    <hr>
+    {{ note|markdown }}
 
-    </div>
     <hr>
     {% if user == note.creator %}
     <a role="button" class="btn btn-primary" href="{% url 'edit_note' pk=note.pk %}">Edit Note  <span class="glyphicon glyphicon-cog"></span></a>
      <a role="button" class="btn btn-danger" href="{% url 'delete_note' pk=note.pk %}">Delete Note  <span class="glyphicon glyphicon-cog"></span></a>
 
     {% else %}{% endif %}
+
+    </div>
+    
 {% endblock %}
 
 </div>

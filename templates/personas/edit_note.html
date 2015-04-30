@@ -1,29 +1,19 @@
 {% extends "personas/base.html" %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
+{% load django_markdown %}
+
 {% block title %}
     <header>
         <h1>Edit Note for {{ object.name }}</h1>
     </header>
 {% endblock %}
 
-{% block content_l %}
-<div class="col-md-2 col-sm-2 col-lg-2" id="col1">
-    </div>
-{% endblock %}
 {% block column1 %}
-<div class="col-md-6 col-sm-6 col-lg-6" id="col1">
+<div class="col-md-8 col-sm-8 col-lg-8" id="col1">
     {% crispy form %}
-</div>
-{% endblock %}
-
-{% block column2 %}
-<div class="col-md-2 col-sm-2 col-lg-2">
- <a href="{% url 'delete_note' pk=object.pk %}" class="btn btn-danger">Delete Ability</a>
-</div>
-{% endblock %}
-
-{% block content_r %}
-<div class="col-md-2 col-sm-2 col-lg-2">
-    </div>
+    {% markdown_media %}
+<hr>
+ <a href="{% url 'delete_note' pk=object.pk %}" class="btn btn-danger">Delete Note</a>
+ </div>
 {% endblock %}

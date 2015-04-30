@@ -114,7 +114,7 @@ class Note(models.Model):
         super(Note, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "{} -- ({})".format(self.content, self.creator)
+        return self.content
 
 
 class GalleryImage(models.Model):
