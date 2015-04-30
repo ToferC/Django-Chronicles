@@ -26,7 +26,7 @@ class Nation(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.name)
+        slug = slugify("{}-{}".format(self.story.title, self.name))
         super(Nation, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -49,7 +49,7 @@ class Location(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.name)
+        slug = slugify("{}-{}".format(self.story.title, self.name))
         super(Location, self).save(*args, **kwargs)
 
 
@@ -228,7 +228,7 @@ class Item(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.name)
+        slug = slugify("{}-{}".format(self.story.title, self.name))
         super(Item, self).save(*args, **kwargs)
 
 
@@ -267,7 +267,7 @@ class Character(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, slug=None, creator=None, *args, **kwargs):
-        slug = slugify(self.name)
+        slug = slugify("{}-{}".format(self.story.title, self.name))
         super(Character, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -330,7 +330,7 @@ class Organization(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.name)
+        slug = slugify("{}-{}".format(self.story.title, self.name))
         super(Organization, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -352,14 +352,14 @@ class Scene(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(blank=True)
     location = models.ForeignKey(Location, blank=True)
-    time = models.DateTimeField(default="2014-01-01")
+    time = models.DateTimeField(auto_now=True)
     characters = models.ManyToManyField(Character, blank=True)
     chapter = models.ForeignKey("Chapter")
 
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.title)
+        slug = slugify("{}-{}".format(self.chapter.story.title, self.title))
         super(Scene, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -376,7 +376,7 @@ class Chapter(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.title)
+        slug = slugify("{}-{}".format(self.story.title, self.title))
         super(Chapter, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -419,7 +419,7 @@ class Story(models.Model):
 
     title = models.CharField(max_length=128)
     author = models.ForeignKey(User)
-    publication_date = models.DateField()
+    publication_date = models.DateField(auto_now=True)
     description = models.TextField(blank=True)
     genre = models.CharField(
         max_length=128, choices=GENRE_CHOICES, default='Fantasy')

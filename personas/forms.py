@@ -44,7 +44,7 @@ class CharacterForm(forms.ModelForm):
 
     def save(self, creator, story=None, commit=True):
         instance = super(CharacterForm, self).save(commit=False)
-        instance.slug = slugify(instance.name)
+        instance.slug = slugify("{}-{}".format(story.title, instance.name))
         instance.creator = creator
         instance.story = story
         instance.save()
@@ -476,16 +476,40 @@ class NoteForm(forms.ModelForm):
                         href="/personas/">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
-    def save(self, creator, character=None, scene=None, location=None, organization=None, chapter=None, story=None, nation=None, commit=True):
+    def save(self, commit=False, *args, **kwargs):
         instance = super(NoteForm, self).save(commit=False)
-        instance.character = character
-        instance.creator = creator
-        instance.scene = scene
-        instance.location = location
-        instance.chapter = chapter
-        instance.story = story
-        instance.organization = organization
-        instance.nation = nation
+        try:
+            instance.character = kwargs.pop('character')
+        except KeyError:
+            pass
+        try:
+            instance.creator = kwargs.pop('creator')
+        except KeyError:
+            instance.creator = None
+        try:
+            instance.scene = kwargs.pop('scene')
+        except KeyError:
+            pass
+        try:
+            instance.location = kwargs.pop('location')
+        except KeyError:
+            pass
+        try:
+            instance.chapter = kwargs.pop('chapter')
+        except KeyError:
+            pass
+        try:
+            instance.story = kwargs.pop('story')
+        except KeyError:
+            pass
+        try:
+            instance.organization = kwargs.pop('organization')
+        except KeyError:
+            pass
+        try:
+            instance.nation = kwargs.pop('nation')
+        except KeyError:
+            pass
         instance.save()
         return instance
 

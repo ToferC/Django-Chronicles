@@ -40,8 +40,8 @@ class SkillAdmin(admin.ModelAdmin):
     list_display = ('character', 's_type', 'name', 'value')
 
 class NoteAdmin(admin.ModelAdmin):
-    list_display = ('creator', 'date', 'character', 'location', 
-        'scene', 'chapter', 'story', 'organization' ,'rating')
+    list_display = ('creator', 'date', 'character', 'location', 'item', 
+        'organization', 'scene', 'chapter', 'story', 'organization' ,'rating')
 
 class CommuniqueAdmin(admin.ModelAdmin):
     list_display = ('author', 'receiver', 'content', 'date', 'rating')

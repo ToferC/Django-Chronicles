@@ -83,13 +83,14 @@ def location(request, location_name_slug):
 
         context_dict['notes'] = Note.objects.filter(location__name=location.name)
 
+        form = NoteForm(request.POST or None)
+        context_dict['form'] = form
+
         if request.method == 'POST':
             if form.is_valid():
 
                 form = context_dict['form']
-                post_scene = scene
-                post_creator = request.user
-                form.save(scene=post_scene, creator=post_creator, commit=True)
+                form.save(location=location, creator=request.user, commit=True)
 
                 return HttpResponseRedirect("")
 
@@ -524,6 +525,17 @@ def story(request, story_name_slug):
     return render(request, 'personas/story.html', context_dict)
 
 
+def note(request, story_slug, pk):
+
+    context_dict = {}
+    context_dict['story'] = get_object_or_404(Story, slug=story_slug)
+    note = get_object_or_404(Note, pk=pk)
+
+    context_dict['note'] = note
+
+    return render(request, 'personas/note.html', context_dict)
+
+
 def mainmap(request, mainmap_slug):
     context_dict = {}
 
@@ -628,7 +640,8 @@ def add_character(request, story_title_slug):
         creator = request.user
 
         if character_form.is_valid():
-            slug = slugify(character_form.cleaned_data['name'])
+            slug = slugify("{}-{}".format(
+                story.title, character_form.cleaned_data['name']))
 
             character_form.save(creator=creator, story=story, commit=True)
 
@@ -986,7 +999,8 @@ def add_chapter(request, story_title_slug):
                 title = chapter_data.get('title')
                 number = chapter_data.get('number')
                 chapter_description = chapter_data.get('description')
-                chapter_slug = slugify(chapter_data.get('title'))
+                chapter_slug = slugify("{}-{}".format(story.title,
+                    chapter_data.get('title')))
                 chapter = Chapter(title=title, story=story, number=number,
                     description=chapter_description, slug=chapter_slug)
 
@@ -1021,7 +1035,7 @@ def add_scene(request, story_title_slug):
 
         if scene_form.is_valid():
             scene = scene_form.save(commit=False)
-            scene.slug = slugify(scene.title)
+            scene.slug = slugify("{}-{}".format(story.title, scene.title))
             scene.save()
             scene_form.save_m2m()
 
@@ -1054,7 +1068,7 @@ def add_location(request, story_title_slug):
             location = location_form.save(commit=False)
             location.creator = request.user
             location.story = story
-            location.slug = slugify(location.name)
+            location.slug = slugify("{}-{}".format(story.title, location.name))
             location.save()
             #location_form.save_m2m()
 
@@ -1085,7 +1099,8 @@ def add_organization(request, story_title_slug):
         if organization_form.is_valid():
             organization = organization_form.save(commit=False)
             organization.creator = request.user
-            organization.slug = slugify(organization.name)
+            organization.slug = slugify(
+                "{}-{}".format(story.title, organization.name))
             organization.story = story
             organization.save()
 
@@ -1116,7 +1131,8 @@ def add_nation(request, story_title_slug):
         if nation_form.is_valid():
             nation = nation_form.save(commit=False)
             nation.story = story
-            nation.slug = slugify(nation.name)
+            nation.slug = slugify(
+                "{}-{}".format(story.title, nation.name))
             nation.save()
 
             return HttpResponseRedirect("/personas/nation/{}".format(nation.slug))
@@ -1182,7 +1198,8 @@ def add_artifact(request, slug, *args, **kwargs):
 
         if artifact_form.is_valid():
             artifact = artifact_form.save(commit=False)
-            artifact.slug = slugify(artifact.name)
+            artifact.slug = slugify(
+                "{}-{}".format(story.title, artifact.name))
             if character:
                 artifact.character = character
             else:
@@ -1577,6 +1594,28 @@ def edit_artifact(request, pk, template_name='personas/edit_artifact.html'):
          {'redirect_url':'/personas/character/{}/#abilities'.format(
             character.slug)})
     return render(request, template_name, {'form': form, 'character':character, 'artifact': artifact, 'story':story})
+
+
+@login_required
+def delete_note(request, pk, template_name='personas/delete_note.html'):
+    note = Note.objects.get(pk=pk)
+    if request.user == note.creator:
+        if request.method=='POST':
+            note.delete()
+            return HttpResponseRedirect('/personas/')
+    else:
+        return HttpResponse("You do not have permission to delete this.")
+    return render(request, template_name, {'object': note})
+
+
+@login_required
+def edit_note(request, pk, template_name='personas/edit_note.html'):
+    note = Note.objects.get(pk=pk)
+    form = NoteForm(request.POST or None, instance=note)
+    if form.is_valid():
+        form.save(creator=note.creator)
+        return HttpResponseRedirect('/personas/')
+    return render(request, template_name, {'form': form, 'object': note})
 
 
 @login_required

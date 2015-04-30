@@ -28,7 +28,7 @@
             <link rel="stylesheet" href="{% static 'personas/js/fancybox/source/jquery.fancybox.css' %}" type="text/css" media="screen" />
             <script type="text/javascript" src="{% static 'personas/js/fancybox/source/jquery.fancybox.pack.js' %}"></script>
             
-            <title>Personas</title>
+            <title>Personas {{ story.title }} {{ chapter.title }} {{ scene_title }} {{ character.name }}</title>
             {% leaflet_js %}
             {% leaflet_css %}
         </head>

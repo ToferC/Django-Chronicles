@@ -1,0 +1,27 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<header>
+    <h1>Note from "{{ story.title }}"</h1>
+</header>
+{% endblock %}
+
+<div class="row">
+
+{% block column1 %}
+    <div class="col-md-12 col-sm-12 col-lg-12" id="col1">
+    <h3>Note</h3>
+    {{ note }}
+
+    </div>
+    <hr>
+    {% if user == note.creator %}
+    <a role="button" class="btn btn-primary" href="{% url 'edit_note' pk=note.pk %}">Edit Note  <span class="glyphicon glyphicon-cog"></span></a>
+     <a role="button" class="btn btn-danger" href="{% url 'delete_note' pk=note.pk %}">Delete Note  <span class="glyphicon glyphicon-cog"></span></a>
+
+    {% else %}{% endif %}
+{% endblock %}
+
+</div>
