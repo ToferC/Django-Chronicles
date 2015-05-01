@@ -360,6 +360,7 @@ class Scene(models.Model):
     creator = models.ForeignKey(User, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True)
     time = models.DateTimeField(auto_now=True)
+    order = models.PositiveSmallIntegerField(default=1)
     characters = models.ManyToManyField(Character, blank=True)
     chapter = models.ForeignKey("Chapter")
 

@@ -49,9 +49,8 @@ def collections(request):
 
 
 def about(request):
-    return HttpResponse(
-        "<h1>Welcome to the about page!</h1> <a href='/personas/'>Main</a>")
-
+    context_dict = {}
+    return render(request, 'personas/about.html', context_dict)
 
 def location(request, location_name_slug):
 
@@ -422,7 +421,7 @@ def chapter(request, chapter_name_slug):
     try:
         chapter = Chapter.objects.get(slug=chapter_name_slug)
         scenes = Scene.objects.filter(chapter__title=chapter.title).order_by(
-            'time')
+            'order')
 
         context_dict['chapter_title'] = chapter.title
         context_dict['chapter'] = chapter
@@ -491,7 +490,7 @@ def story(request, story_name_slug):
         context_dict['notes'] = Note.objects.filter(
             story__title=story.title)
 
-        scenes = Scene.objects.filter(chapter__story__title=story.title).distinct()
+        scenes = Scene.objects.filter(chapter__story__title=story.title).distinct().order_by("order")
 
         context_dict['scenes'] = scenes
 
