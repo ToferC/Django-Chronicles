@@ -10,7 +10,6 @@
 
  html, body {
   height: 100%;
-  background-color: black;
  }
 
  .wrapper {
@@ -34,18 +33,21 @@
   background-repeat: repeat-x;
  }
 
-@media screen and (max-width: 480px) {
+ .push {
+  height: 4em;
+  width: 100%;
+ }
+
+ @media screen and (max-width: 480px) {
   .footer {
     display: none;
     visibility: hidden;
 }
-}
-
- .push {
-  clear: both;
-  height: 4em;
-  width: 100%;
+  .push {
+    display: none;
+    visibility: hidden;
  }
+}
 
 
  h3, h1, p, header, li, ul {
@@ -107,8 +109,8 @@ tr:hover {
  }
 
  .leaflet-container {
-  height: 600px;
-  width: 600px;
+  height: 800px;
+  width: 800px;
   color: black;
  }
 

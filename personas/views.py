@@ -1566,7 +1566,9 @@ def edit_membership(request, pk, template_name='personas/edit_membership.html'):
     form = MembershipForm(request.POST or None, instance=membership)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+        return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#details'.format(
+            character.slug)})
     return render(request, template_name, {'form': form, 'character':character, 'membership': membership,
         'story':story})
 

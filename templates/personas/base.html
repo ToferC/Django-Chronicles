@@ -18,12 +18,11 @@
             <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
             <!-- Bootstrap -->
             <link href="{% static 'personas/css/bootstrap.min.css' %}" rel="stylesheet">
-        
+            
             <!-- JQuery -->
             <script src="{% static 'personas/js/jquery-2.1.3.min.js' %}"></script>
             <!-- Include all compiled plugins (below), or include individual files as needed -->
             <script src="{% static 'personas/js/bootstrap.min.js' %}"></script>
-
             <!-- fancyBox -->
             <link rel="stylesheet" href="{% static 'personas/js/fancybox/source/jquery.fancybox.css' %}" type="text/css" media="screen" />
             <script type="text/javascript" src="{% static 'personas/js/fancybox/source/jquery.fancybox.pack.js' %}"></script>
@@ -35,130 +34,135 @@
     {% endblock %}
     {% if story.colour_theme == 'Light' %}
         <body style="background:gray">
-    {% else %}
-        <body style="background-color:#2A362A">
-    {% endif %}
-    <!--
-    {% if story %}
-        <body background='{{ story.background.url }}'>
         {% else %}
-            <body style="background:black">
-            {% endif %} -->
-            
-            <div class="wrapper" style="background-color:#2A362A">
+            <body style="background-color:#2A362A">
+            {% endif %}
+            <!--
+            {% if story %}
+                <body background='{{ story.background.url }}'>
+                {% else %}
+                    <body style="background:black">
+                    {% endif %} -->
+                    
+                    <div class="wrapper" style="background-color:#2A362A">
+                        {% block title %}
+                            <header>
+                                <h1>PERSONA</h1>
+                            </header>
+                        {% endblock %}
+                        {% block navbar %}
+                            <div class="main_navbar">
+                                <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+                                    <div class="navbar-header">
+                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        </button>
+                                        <a class="navbar-brand" href="/personas/">Home</a>
+                                    </div>
+                                    <!-- Collection of links, forms and other content for toggling -->
+                                    <div class="collapse navbar-collapse" id="MyNavBar">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="/personas/story/{{ story.slug }}">{{ story.title }}</a></li>
+                                            <li class="dropdown">
+                                                {% if story %}
+                                                    <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Story Elements</a>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a href="/personas/story/{{ story.slug }}/#chapters">Chapters</a></li>
+                                                        <li><a href="/personas/story/{{ story.slug }}/#geography">Geography</a></li>
+                                                        <li><a href="/personas/story/{{ story.slug }}/#chapters">Political</a></li>
+                                                        <li><a href="/personas/story/{{ story.slug }}/#characters">Characters</a></li>
+                                                        <li><a href="/personas/story/{{ story.slug }}/#maps">Maps</a></li>
+                                                        <li><a href="/personas/story/{{ story.slug }}/#notes">Notes</a></li>
+                                                    </ul>
+                                                    <li class="dropdown">
+                                                        <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Add Content</a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a href="/personas/add_chapter/{{ story.slug }}">Add Chapter</a></li>
+                                                            <li><a href="/personas/add_scene/{{ story.slug }}">Add Scene</a></li>
+                                                            <li><a href="/personas/add_location/{{ story.slug }}">Add Location</a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="/personas/add_nation/{{ story.slug }}">Add Nation</a></li>
+                                                            <li><a href="/personas/add_organization/{{ story.slug }}">Add Organization</a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="/personas/add_character/{{ story.slug }}">
+                                                            Add Character</a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="/personas/add_artifact/{{ story.slug }}">Add Artifact</a></li>
+                                                        </ul></li>
+                                                    {% else %}
+                                                        <a href="/personas/" class="dropdown-toggle" data-toggle="dropdown">Choose a Story</a>
+                                                        <ul class="dropdown-menu">
+                                                        {% if stories %}
+                                                            {% for story in stories %}
+                                                                <li><a href="/personas/story/{{ story.slug }}">{{ story.title }}</a></li>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                        {% endif %}
+                                                        </ul>
+                                                    {% endif %}
 
-                {% block title %}
-                    <header>
-                        <h1>PERSONA</h1>
-                    </header>
-                {% endblock %}
-                {% block navbar %}
-                    <div class="main_navbar">
-                        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                </button>
-                                <a class="navbar-brand" href="/personas/">Home</a>
+                                                </ul>
+                                                <form class="navbar-form navbar-right" role="search">
+                                                    {% if user.is_authenticated %}
+                                                        <a class="btn btn-inverse" style="font-size:70%; background-color:darkslategray" href="/personas/logout" role="button">Logged in as {{ user.username }}</a>
+                                                    {% else %}
+                                                        <a class="btn btn-inverse" href="/personas/register" role="button">Register</a>
+                                                        <a class="btn btn-inverse" href="/personas/login" role="button">Log In</a>
+                                                    {% endif %}
+                                                </form>
+                                            </div>
+                                        </nav>
+                                    </div>
+                                {% endblock %}
+                                {% block content %}
+                                    <div class="row">
+                                        {% block l_content %}
+                                        {% endblock %}
+                                        {% block column1 %}
+                                        {% endblock %}
+                                        
+                                        {% block column2 %}
+                                        {% endblock %}
+                                        
+                                        {% block column3 %}
+                                        {% endblock %}
+                                        {% block column4 %}
+                                        {% endblock %}
+                                        {% block column5 %}
+                                        {% endblock %}
+                                        {% block column6 %}
+                                        {% endblock %}
+                                        {% block r_content %}
+                                        {% endblock %}
+                                    </div>
+                                {% endblock content %}
+                                <div class="push" style="background-color:#2A362A"></div>
                             </div>
-                            <!-- Collection of links, forms and other content for toggling -->
-                            <div class="collapse navbar-collapse" id="MyNavBar">
-                                <ul class="nav navbar-nav">
-                                <li><a href="/personas/story/{{ story.slug }}">{{ story.title }}</a></li>
-                                    <li class="dropdown">
-                                        {% if story %}
-                                        <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Story Elements</a>
-                                            <ul class="dropdown-menu">
-
-                                        <li><a href="/personas/story/{{ story.slug }}/#chapters">Chapters</a></li>
-                                        <li><a href="/personas/story/{{ story.slug }}/#geography">Geography</a></li>
-                                        <li><a href="/personas/story/{{ story.slug }}/#chapters">Political</a></li>
-                                        <li><a href="/personas/story/{{ story.slug }}/#characters">Characters</a></li>
-                                        <li><a href="/personas/story/{{ story.slug }}/#maps">Maps</a></li>
-                                        <li><a href="/personas/story/{{ story.slug }}/#notes">Notes</a></li>
-                                        </ul>
-                                        <li class="dropdown">
-                                            <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Add Content</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="/personas/add_chapter/{{ story.slug }}">Add Chapter</a></li>
-                                                <li><a href="/personas/add_scene/{{ story.slug }}">Add Scene</a></li>
-                                                <li><a href="/personas/add_location/{{ story.slug }}">Add Location</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="/personas/add_nation/{{ story.slug }}">Add Nation</a></li>
-                                                <li><a href="/personas/add_organization/{{ story.slug }}">Add Organization</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="/personas/add_character/{{ story.slug }}">
-                                                Add Character</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="/personas/add_artifact/{{ story.slug }}">Add Artifact</a></li>
-
-                                            </ul></li>
-                                        {% else %}
-                                            <a href="/personas/" class="dropdown-toggle" data-toggle="dropdown">Choose a Story</a>
-                                        {% endif %}
-                                </ul>
-
-                                <form class="navbar-form navbar-right" role="search">
-                                    {% if user.is_authenticated %}
-                                        <a class="btn btn-inverse" style="font-size:70%; background-color:darkslategray" href="/personas/logout" role="button">Logged in as {{ user.username }}</a>
-                                    {% else %}
-                                        <a class="btn btn-inverse" href="/personas/register" role="button">Register</a>
-                                        <a class="btn btn-inverse" href="/personas/login" role="button">Log In</a>
-                                    {% endif %}
-                                </form>
-                            </div>
-                        </nav>
-                    </div>
-                {% endblock %}
-                {% block content %}
-                    <div class="row">
-                        {% block l_content %}
-                        {% endblock %}
-                        {% block column1 %}
-                        {% endblock %}
-                        
-                        {% block column2 %}
-                        {% endblock %}
-                        
-                        {% block column3 %}
-                        {% endblock %}
-                        {% block column4 %}
-                        {% endblock %}
-                        {% block column5 %}
-                        {% endblock %}
-                        {% block column6 %}
-                        {% endblock %}
-                        {% block r_content %}
-                        {% endblock %}
-                    </div>
-                {% endblock content %}
-                <div class="push" style="background:#2A362A"></div>
-            </div>
-            {% block footer %}
-                <div class="footer">
-                    <a href="/personas/">Main Page</a>
-                </div>
-            {% endblock %}
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $(".fancybox").fancybox({
-                        maxWidth    : 800,
-                        maxHeight   : 600,
-                        fitToView   : false,
-                        width       : '70%',
-                        height      : '70%',
-                        autoSize    : false,
-                        closeClick  : false,
-                        openEffect  : 'none',
-                        closeEffect : 'none',
-                        'afterClose': function() {
+                            {% block footer %}
+                                <div class="footer">
+                                    <a href="/personas/">Main Page</a>
+                                </div>
+                            {% endblock %}
+                            <script type="text/javascript">
+                            $(document).ready(function() {
+                            $(".fancybox").fancybox({
+                            maxWidth    : 800,
+                            maxHeight   : 600,
+                            fitToView   : false,
+                            width       : '70%',
+                            height      : '70%',
+                            autoSize    : false,
+                            closeClick  : false,
+                            openEffect  : 'none',
+                            closeEffect : 'none',
+                            'afterClose': function() {
                             window.location.reload();
-                        },
-                        });
-                });
-            </script>
-        </body>
-    </html>
+                            },
+                            });
+                            });
+                            </script>
+                        </body>
+                    </html>
