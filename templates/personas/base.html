@@ -36,7 +36,7 @@
     {% if story.colour_theme == 'Light' %}
         <body style="background:gray">
     {% else %}
-        <body style="background:#2A362A">
+        <body style="background-color:#2A362A">
     {% endif %}
     <!--
     {% if story %}
@@ -45,7 +45,7 @@
             <body style="background:black">
             {% endif %} -->
             
-            <div class="wrapper">
+            <div class="wrapper" style="background-color:#2A362A">
 
                 {% block title %}
                     <header>
@@ -83,11 +83,11 @@
                                         <li class="dropdown">
                                             <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Add Content</a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="/personas/story/{{ story.slug }}">Add Content</a></li>
-                                                <li class="divider"></li>
                                                 <li><a href="/personas/add_chapter/{{ story.slug }}">Add Chapter</a></li>
                                                 <li><a href="/personas/add_scene/{{ story.slug }}">Add Scene</a></li>
                                                 <li><a href="/personas/add_location/{{ story.slug }}">Add Location</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="/personas/add_nation/{{ story.slug }}">Add Nation</a></li>
                                                 <li><a href="/personas/add_organization/{{ story.slug }}">Add Organization</a></li>
                                                 <li class="divider"></li>
                                                 <li><a href="/personas/add_character/{{ story.slug }}">
@@ -135,7 +135,7 @@
                         {% endblock %}
                     </div>
                 {% endblock content %}
-                <div class="push"></div>
+                <div class="push" style="background:#2A362A"></div>
             </div>
             {% block footer %}
                 <div class="footer">

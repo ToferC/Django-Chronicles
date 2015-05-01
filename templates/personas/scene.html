@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block column2 %}
-    <div class="col-md-2 col-sm-4 col-lg-2" id="col2">
+    <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
     <div class="row">
         <h3>Time:</h3>
         {{ time }}
@@ -50,7 +50,7 @@
         <h3>Characters:</h3>
         {% if characters %}
                 {% for character in characters %}
-                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:black" href="/personas/character/{{ character.slug }}"><img src="{{ character.image.url }}" style="max-height:40px; float:left">  {{ character.name }}</a><br><br>
+                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:#335C33" href="/personas/character/{{ character.slug }}"><img src="{{ character.image.url }}" style="max-height:40px; float:left">  {{ character.name }}</a><br><br>
                 {% endfor %}
         {% else %}
             <strong>{{ scene_title }} has no characters.</strong>
@@ -68,7 +68,7 @@
 {% endblock %}
 
 {% block column3 %}
-    <div class="col-md-3 col-sm-4 col-lg-3" id="cole">
+    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
     <div id="BBoard">
     <h3>Notes:</h3>
     {% if notes %}
