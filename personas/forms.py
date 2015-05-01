@@ -343,7 +343,7 @@ class SceneForm(forms.ModelForm):
         model = Scene
 
         fields = "__all__"
-        exclude = ["slug",]
+        exclude = ["slug", "creator"]
 
     def __init__(self, *args, **kwargs):
         try:

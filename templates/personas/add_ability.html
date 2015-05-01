@@ -18,10 +18,6 @@
             <h3>Abilities</h3>
             <p>Abilities are special ways that your character can break the rules of a game system or do things beyond what can be captured by simple skills.</p>
             <p>Different systems capture this differently, and you could call abilities by an array of different names: powers, advantages, talents, stunts, etc.  Just use what works for you and your story.</p>
-            {% thumbnail character.image "400" crop="center" as im %}
-                <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" align="middle">{% empty %}
-                <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
-            {% endthumbnail %}
         </div>
     {% endblock %}
     {% block column2 %}

@@ -16,11 +16,6 @@
         <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
             <h3>Artifacts</h3>
             <p>Artifacts are items or equipment that are important to either a character or the setting as a whole.</p>
-            {% if artifact.image %}
-            <img src="{{ artifact.image.url }}" alt="Artifact Image" width="100%" height="100%">
-            {% else %}
-            <img src="{% static 'images/229.jpg' %}" alt="Warrior" width="100%" height="100%">
-            {% endif %}
         </div>
     {% endblock %}
 

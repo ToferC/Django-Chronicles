@@ -70,7 +70,7 @@
         {% endif %}
         <a href="/personas/add_location/{{ story.slug }}" style="color:gray">Add Location <span class="glyphicon glyphicon-pencil"></span></a>
             <hr>
-            {% if user == nation.creator %}
+            {% if user == nation.creator or user == story.author %}
             <a role="button" class="btn btn-primary" href="{% url 'edit_nation' pk=nation.pk %}">Edit Nation<span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
         </div>
     </div>
@@ -82,7 +82,7 @@
             {% if notes %}
                 
                 {% for note in notes %}
-                    <div class="note" style="color:black">{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Read more.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
+                    <div class="note" style="color:black">{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
                 {% endfor %}
                 
             {% else %}

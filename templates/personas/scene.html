@@ -60,7 +60,7 @@
         <hr>
     </div>
     <div class="row">
-    {% if user == scene.creator %}
+    {% if user == scene.creator or user == story.author %}
     <a role="button" class="btn btn-primary" href="{% url 'edit_scene' pk=scene.pk %}">Edit Scene  <span class="glyphicon glyphicon-cog"></span></a>
     {% else %}{% endif %}
     </div>
@@ -74,7 +74,7 @@
     {% if notes %}
         
         {% for note in notes %}
-            <div class="note" style="color:black">{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Read more.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
+            <div class="note" style="color:black">{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
         {% endfor %}
         
     {% else %}

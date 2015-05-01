@@ -12,13 +12,9 @@
     </div>
 {% endblock %}
 {% block column1 %}
-<div class="col-md-6 col-sm-6 col-lg-6" id="col1">
+<div class="col-md-8 col-sm-8 col-lg-8" id="col1">
     {% crispy form %}
-</div>
-{% endblock %}
-
-{% block column2 %}
-<div class="col-md-2 col-sm-2 col-lg-2">
+<hr>
  <a href="{% url 'delete_ability' pk=ability.pk %}" class="btn btn-danger">Delete Ability.</a>
 </div>
 {% endblock %}

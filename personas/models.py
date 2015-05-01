@@ -13,6 +13,7 @@ import collections
 class Nation(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
+    creator = models.ForeignKey(User, default=1)
     might = models.PositiveSmallIntegerField(default=0)
     intrigue = models.PositiveSmallIntegerField(default=0)
     magic = models.PositiveSmallIntegerField(default=0)
@@ -35,7 +36,7 @@ class Nation(models.Model):
 
 class Location(models.Model):
     name = models.CharField(max_length=128)
-    creator = models.ForeignKey(User, unique=False)
+    creator = models.ForeignKey(User, blank=True, null=True)
     image = models.ImageField(upload_to='location_images/%Y/%m/%d', default='location_images/nowhere.jpg')
     terrain = models.CharField(max_length=128)
     features = models.CharField(max_length=500)
@@ -243,13 +244,17 @@ class Character(models.Model):
     SUPPORTING = "Supporting"
     CREATURE = "Creature"
     CONSTRUCT = "Construct"
+    THING = "Thing"
+    ABSTRACT = "Abstract"
 
     CHAR_CHOICES = (
         (PROTAGONIST, "Protagonist"),
         (ANTAGONIST, "Antagonist"),
         (SUPPORTING, "Supporting"),
         (CREATURE, "Creature"),
-        (CONSTRUCT, "Construct"))
+        (CONSTRUCT, "Construct"),
+        (THING, "Thing"),
+        (ABSTRACT, "Abstract"))
 
     creator = models.ForeignKey(User, unique=False, blank=True)
     name = models.CharField(max_length=128, unique=False)
@@ -319,6 +324,7 @@ class Relationship(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=128)
+    creator = models.ForeignKey(User, blank=True, null=True)
     description = models.TextField(blank=True)
     members = models.ManyToManyField(Character, through='Membership', blank=True)
     purpose = models.CharField(max_length=128)
@@ -351,6 +357,7 @@ class Membership(models.Model):
 class Scene(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(blank=True)
+    creator = models.ForeignKey(User, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True)
     time = models.DateTimeField(auto_now=True)
     characters = models.ManyToManyField(Character, blank=True)
@@ -369,6 +376,7 @@ class Scene(models.Model):
 class Chapter(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(blank=True)
+    creator = models.ForeignKey(User, blank=True, null=True)
     story = models.ForeignKey("Story")
     number = models.PositiveSmallIntegerField(default=1,
         verbose_name="Chapter Number")

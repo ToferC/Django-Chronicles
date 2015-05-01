@@ -1004,7 +1004,8 @@ def add_chapter(request, story_title_slug):
                 chapter_slug = slugify("{}-{}".format(story.title,
                     chapter_data.get('title')))
                 chapter = Chapter(title=title, story=story, number=number,
-                    description=chapter_description, slug=chapter_slug)
+                    description=chapter_description, slug=chapter_slug,
+                    creator=request.user)
 
                 chapter.save()
                 chapter_form = ChapterForm()
@@ -1038,6 +1039,7 @@ def add_scene(request, story_title_slug):
         if scene_form.is_valid():
             scene = scene_form.save(commit=False)
             scene.slug = slugify("{}-{}".format(story.title, scene.title))
+            scene.creator = request.user
             scene.save()
             scene_form.save_m2m()
 

@@ -33,11 +33,17 @@
             {% leaflet_css %}
         </head>
     {% endblock %}
+    {% if story.colour_theme == 'Light' %}
+        <body style="background:gray">
+    {% else %}
+        <body style="background:#2A362A">
+    {% endif %}
+    <!--
     {% if story %}
         <body background='{{ story.background.url }}'>
         {% else %}
             <body style="background:black">
-            {% endif %}
+            {% endif %} -->
             
             <div class="wrapper">
 

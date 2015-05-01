@@ -18,7 +18,7 @@
     {{ note|markdown }}
 
     <hr>
-    {% if user == note.creator %}
+    {% if user == note.creator or user == story.author %}
     <a role="button" class="btn btn-primary" href="{% url 'edit_note' pk=note.pk %}">Edit Note  <span class="glyphicon glyphicon-cog"></span></a>
      <a role="button" class="btn btn-danger" href="{% url 'delete_note' pk=note.pk %}">Delete Note  <span class="glyphicon glyphicon-cog"></span></a>
 

@@ -64,7 +64,7 @@
         {% endif %}
         <hr>
     </div>
-    {% if user == organization.creator %}
+    {% if user == organization.creator or user == story.author %}
     <a role="button" class="btn btn-primary" href="{% url 'edit_organization' pk=organization.pk %}">Edit Organization  <span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
     </div>
 {% endblock %}
