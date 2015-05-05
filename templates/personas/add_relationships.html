@@ -28,7 +28,8 @@
                                 {% for relationship in relationships %}
                                     <li>
                                 <a href="/personas/character/{{ relationship.to_character.slug }}">{{ relationship.to_character }}</a> - {{ relationship.relationship_class }} of <a href="/personas/character/{{ relationship.from_character.slug }}">{{ relationship.from_character }}</a> ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
-                                    <a href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    | <a class="fancybox" data-fancybox-type="iframe" href="{% url 'delete_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a>
                                 </li>
                                     {% endfor %}
                                 </ul>

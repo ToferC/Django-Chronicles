@@ -963,8 +963,7 @@ def add_relationships(request, character_name_slug):
                 relationship.save()
                 relationship_form = RelationshipForm(story=story)
 
-            
-            relationship_form = RelationshipForm(story=story)
+            HttpResponseRedirect("")
 
         else:
             print (relationship_form.errors)
@@ -1170,7 +1169,7 @@ def add_membership(request, character_name_slug):
             membership.character = character
             membership.save()
 
-            return HttpResponseRedirect("/personas/character/{}".format(character.slug))
+            return HttpResponseRedirect("")
 
         else:
             print (membership_form.errors)
@@ -1232,7 +1231,8 @@ def delete_skill(request, pk, template_name='personas/delete_skill.html'):
     if request.user == character.creator:
         if request.method=='POST':
             skill.delete()
-            return HttpResponseRedirect('/personas/character/{}/#skills'.format(character.slug))
+            return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#skills'.format(character.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': skill})
@@ -1551,7 +1551,9 @@ def delete_membership(request, pk, template_name='personas/delete_membership.htm
     if request.user == character.creator:
         if request.method=='POST':
             membership.delete()
-            return HttpResponseRedirect('/personas/character/{}/#details'.format(character.slug))
+            return TemplateResponse(request, 'personas/redirect_template.html',
+         {'redirect_url':'/personas/character/{}/#details'.format(
+            character.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': membership})

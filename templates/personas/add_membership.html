@@ -32,11 +32,15 @@
     <div class="col-md-3 col-sm-4 col-lg-2" id="col2">
 <h3>Current Memberships</h3>
     {% if memberships %}
-    {% for membership in memberships %}
     <ul>
-        <li>{{ membership }}</li>
-    </ul>
+    {% for membership in memberships %}
+        <li>
+            <a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }}</a> - Rank {{ membership.rank }} - ({{ membership.role }}) | 
+            <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_membership' pk=membership.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+            | <a class="fancybox" data-fancybox-type="iframe" href="{% url 'delete_membership' pk=membership.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a>
+        </li>
     {% endfor %}
+    </ul>
     {% else %}
     <strong>{{ character.name }} has no memberships.</strong>
     {% endif %}

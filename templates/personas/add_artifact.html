@@ -25,7 +25,7 @@
             {% if artifacts %}
             <ul>
             {% for artifact in artifacts %}
-                <li>{{ artifact }} | <a href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> | <a href="{% url 'delete_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></li>
+                <li>{{ artifact }} | <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> | <a class="fancybox" data-fancybox-type="iframe" href="{% url 'delete_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></li>
             {% endfor %}
                         </ul>
             {% endif %}

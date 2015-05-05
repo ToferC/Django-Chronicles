@@ -28,7 +28,7 @@
                                         <tr>
                                             <td> {{ element.title }}</td>
                                             <td> {{ element.data }}</td>
-                                            <td><a href="{% url 'edit_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> | <a href="{% url 'delete_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                            <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a> | <a class="fancybox" data-fancybox-type="iframe" href="{% url 'delete_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-remove"></span></a></td>
                                         </tr>
                                     {% endfor %}
                                 {% else %}

@@ -1,0 +1,36 @@
+Change Log
+-----------------------------------------------------------------------
+
+Modify Story model
+- Add Setting field (Charfield)
+- Add Themes field (Charfield)
+
+Modify Character model:
+- Change model name to StoryObject & change throughout project
+- Modify c_type
+-- types = "Character, Creature, Thing, Abstract"
+- add Role field (Charfield)
+
+Rename Trait model >> Aspect
+
+Rename Item model >> Artifact OR Eliminate Item model
+- need to fix edit_artifact view - character not required.
+
+- Add boolean field toggles for:
+-- skill_toggle
+-- stats_toggle
+-- ability_toggle
+-- combat_info_toggle
+-- gallery_images_toggle
+-- social_toggle
+
+Modify Character templates so that boolean toggles hide/reveal tabs and tab pages
+
+Modify Relationship through template:
+- types = "Loves, Hates, Fears, Envies, Distrusts, Trusts, Desires, Respect, Dislike, Disgusted by, Angry at, Jealous of, Resents, Proud of, "
+
+Modify Scenes model:
+- Rename time field >> publication date
+- Add Purpose field >> Charfield
+- Add Resolution field >> choicefield - "Up, Down, Neutral"
+- Add Scene_Type field >> "Procedural, Action, Suspense, Question, Reveal, Dramatic, "

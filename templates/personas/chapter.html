@@ -33,7 +33,7 @@
         {% if scenes %}
             <ul>
                 {% for scene in scenes %}
-                    <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
+                    <li>{{ scene.order }} - <a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
