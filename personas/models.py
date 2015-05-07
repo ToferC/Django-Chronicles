@@ -119,7 +119,7 @@ class Note(models.Model):
 
 
 class GalleryImage(models.Model):
-    creator = models.ForeignKey(User, default=0)
+    creator = models.ForeignKey(User)
     image = models.ImageField(upload_to='content_images/%Y/%m/%d', default='content_images/nothing.jpg')
     title = models.CharField(max_length=64)
     date = models.DateTimeField(auto_now=True)

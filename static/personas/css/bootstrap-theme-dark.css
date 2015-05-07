@@ -70,16 +70,17 @@ a:visited {
 
 /* mouse over link */
 a:hover {
-    color: #FF00FF;
+    color: #33ffcc;
 }
 
 /* selected link */
 a:active {
-    color: #0000FF;
+    color: #ccffff;
 }
 
  table, label {
   color: white;
+  background: black;
  }
 
 tr:hover {
@@ -89,7 +90,7 @@ tr:hover {
 
  #col1 {
   color: white;
-  padding-left: 55px;
+  padding-left: 25px;
   padding-right: 25px;
  }
 
@@ -115,8 +116,8 @@ tr:hover {
  }
 
  #smallmap {
-  height: 250px;
-  width: 250px;
+  height: 300px;
+  width: 400px;
   padding-left: 0px;
  }
 

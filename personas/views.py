@@ -1227,6 +1227,7 @@ def add_gallery_image(request, character_slug):
 
 
     character = get_object_or_404(Character, slug=character_slug)
+    story = character.story
 
     if request.method == 'POST':
         image_form = GalleryImageForm(request.POST, request.FILES)
@@ -1234,9 +1235,11 @@ def add_gallery_image(request, character_slug):
         creator = request.user
 
         if image_form.is_valid():
-            slug = slugify(image_form.cleaned_data['title'])
+            image = image_form.save(commit=False)
+            image.creator = creator
+            image.character = character
 
-            image_form.save(commit=True)
+            image.save()
 
             return HttpResponseRedirect("")
 
@@ -1248,7 +1251,7 @@ def add_gallery_image(request, character_slug):
         image_form = GalleryImageForm()
 
     return render(request, 'personas/add_gallery_image.html',
-        {'image_form': image_form, 'character':character})
+        {'image_form': image_form, 'character':character, 'story':story})
 
 
 

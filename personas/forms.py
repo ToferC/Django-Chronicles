@@ -266,7 +266,7 @@ class ItemForm(forms.ModelForm):
 class GalleryImageForm(forms.ModelForm):
     class Meta:
         model = GalleryImage
-        fields = ["creator", "image", "title", "character"]
+        fields = ["image", "title"]
 
     def __init__(self, *args, **kwargs):
         super(GalleryImageForm, self).__init__(*args, **kwargs)

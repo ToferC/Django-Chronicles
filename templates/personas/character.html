@@ -360,10 +360,10 @@
 <h3>Images:</h3>
 {% if gallery_images %}
     {% for g_image in gallery_images %}
-            {% thumbnail g_image.image "300x200" crop="center" as im %}
+            {% thumbnail g_image.image "300x300" crop="center" as im %}
             <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}
-        <p align="center">{{ g_image.title }}</p>
+        <p>{{ g_image.title }}</p>
 {% endfor %}
 {% else %}
 <strong>{{ character_name }} has no images.</strong><br />

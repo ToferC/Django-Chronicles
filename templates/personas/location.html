@@ -111,11 +111,8 @@
         <h3>Organizations:</h3>
         {% if organizations %}
             <ul>
-                {% for organization in organizations %}
-                    <div class="btn-group-vertical">
-                        
+                {% for organization in organizations %}                        
                         <li><a href="/personas/organization/{{ organization.slug }}">{{ organization.name }}</a></li>
-                    </div>
                 {% endfor %}
             </ul>
         {% else %}
