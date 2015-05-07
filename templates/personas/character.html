@@ -360,14 +360,19 @@
 <h3>Images:</h3>
 {% if gallery_images %}
     {% for g_image in gallery_images %}
-            {% thumbnail g_image.image "400x400" crop="center" as im %}
+            {% thumbnail g_image.image "300x200" crop="center" as im %}
             <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}
+        <p align="center">{{ g_image.title }}</p>
 {% endfor %}
 {% else %}
 <strong>{{ character_name }} has no images.</strong><br />
 <br />
 {% endif %}
+<hr>
+{% if user == character.creator or user == story.author %}
+    <a role="button" class="btn btn-primary" href="{% url 'add_gallery_image' character_slug=character.slug %}">Add Gallery Image   <span class="glyphicon glyphicon-cog"></span></a>
+{% else %}{% endif %}
 </div>
 </div>
 <div class="tab-pane fade in" id="social"> <!-- Tab Six Starts -->

@@ -14,7 +14,7 @@ from crispy_forms.helper import FormHelper
 from personas.models import Nation, Location, Character, Organization, Relationship, Membership, Trait, SpecialAbility, Item, Story, MainMap, Chapter, Scene, Skill, Note, Communique
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
 from personas.forms import CharacterForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, TraitForm, TraitFormSetHelper, SkillFormSetHelper, ItemForm, SpecialAbilityForm, RelationshipForm
-from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm
+from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm
 
 from datetime import datetime
 
@@ -1220,6 +1220,36 @@ def add_artifact(request, slug, *args, **kwargs):
     return render(request, 'personas/add_artifact.html', {
         'story':story, 'artifacts': artifacts,
         'artifact_form':artifact_form, 'character':character})
+
+
+@login_required
+def add_gallery_image(request, character_slug):
+
+
+    character = get_object_or_404(Character, slug=character_slug)
+
+    if request.method == 'POST':
+        image_form = GalleryImageForm(request.POST, request.FILES)
+
+        creator = request.user
+
+        if image_form.is_valid():
+            slug = slugify(image_form.cleaned_data['title'])
+
+            image_form.save(commit=True)
+
+            return HttpResponseRedirect("")
+
+        else:
+            print (image_form.errors)
+
+    else:
+
+        image_form = GalleryImageForm()
+
+    return render(request, 'personas/add_gallery_image.html',
+        {'image_form': image_form, 'character':character})
+
 
 
 # Edit and Delete Views

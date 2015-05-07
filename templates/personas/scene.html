@@ -2,19 +2,16 @@
 {% load crispy_forms_tags %}
 {% load django_markdown %}
 
+{% block content %}
+
 {% block title %}
     <header>
         <h1>{{ scene_title }}</h1>
     </header>
 {% endblock %}
 
-{% block l_content %}
-<div class="col-md-2 col-sm-0 col-lg-2" id="col1">
-</div>
-{% endblock %}
-
 {% block column1 %}
-    <div class="col-md-4 col-sm-4 col-lg-3" id="col1">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
 
     <div class="row">
         <h3>Story:</h3>
@@ -35,7 +32,7 @@
 {% endblock %}
 
 {% block column2 %}
-    <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
     <div class="row">
         <h3>Time:</h3>
         {{ time }}
@@ -68,7 +65,7 @@
 {% endblock %}
 
 {% block column3 %}
-    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
     <div id="BBoard">
     <h3>Notes:</h3>
     {% if notes %}
@@ -89,8 +86,4 @@
     </div>
     </div>
 {% endblock %}
-
-{% block r_content %}
-<div class="col-md-3 col-sm-0 col-lg-2 col-lg-3" id="col1">
-</div>
-{% endblock %}
+{% endblock content %}

@@ -8,6 +8,9 @@
         <h1>{{ location_name }}</h1>
     </header>
 {% endblock %}
+
+{% block content %}
+
 {% block l_content %}
     <div class="col-md-1 col-sm-0 col-lg-1" id="col1">
     </div>
@@ -150,7 +153,4 @@
     </div>
 {% endblock %}
 
-{% block r_content %}
-<div class="col-md-1 col-sm-0 col-lg-1">
-</div>
-{% endblock %}
+{% endblock content %}

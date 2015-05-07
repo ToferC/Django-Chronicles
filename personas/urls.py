@@ -72,6 +72,8 @@ urlpatterns = patterns('',
     url(r'^delete_note/(?P<pk>\d+)/$', views.delete_note, name='delete_note'),
     url(r'^edit_note/(?P<pk>\d+)/$', views.edit_note, name='edit_note'),
 
+    url(r'^add_gallery_image/(?P<character_slug>[\w\-]+)/$', views.add_gallery_image, name='add_gallery_image'),
+
     url(r'^register/$', views.register, name='register'),
     url(r'^collections/$', views.collections, name='collections'),
     url(r'^login/$', views.user_login, name='login'),

@@ -3,7 +3,7 @@ from django.forms import widgets
 from django.forms.models import modelform_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from personas.models import Nation, Location, Character, Organization, Relationship, Membership, Trait, SpecialAbility, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile
+from personas.models import Nation, Location, Character, Organization, Relationship, Membership, Trait, SpecialAbility, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage
 from personas.models import Statistic, CombatInfo, ScratchPad
 from django_markdown.widgets import MarkdownWidget
 from django_markdown.fields import MarkdownFormField
@@ -260,6 +260,22 @@ class ItemForm(forms.ModelForm):
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
                         href="/personas/character/{{ character.slug }}/#abilities">Cancel</a>"""),
+                Submit('save', 'Submit'),))
+
+
+class GalleryImageForm(forms.ModelForm):
+    class Meta:
+        model = GalleryImage
+        fields = ["creator", "image", "title", "character"]
+
+    def __init__(self, *args, **kwargs):
+        super(GalleryImageForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.layout = Layout(InlineField('title','data'))
+        self.helper.layout.append(
+            FormActions(
+                HTML("""<a role="button" class="btn btn-default"
+                        href="/personas/character/{{ character.slug }}/#combat">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 

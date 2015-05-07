@@ -1,0 +1,38 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load thumbnail %}
+
+{% block title %}
+    <header>
+        <h1>Add Image</h1>
+    </header>
+{% endblock %}
+<div class="row">
+    {% block l_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+    {% endblock %}
+    {% block column1 %}
+        <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
+            <h3>Gallery Images</h3>
+            <p>Gallery images are visuals and pictures of significance to or related to a character, locatation, scene or story.</p>
+        </div>
+    {% endblock %}
+    
+    {% block column3 %}
+        <div class="col-md-3 col-sm-4 col-lg-3" id="col3">
+            <h3>Add Image</h3>
+            {% crispy image_form %}
+            <h4>Finished adding gallery images?</h4>
+            <hr>
+            <div tyle="padding-left:50px">
+                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}/#images">Take me straight<br>to my character.</a>
+            </div>
+        </div>
+    {% endblock %}
+    {% block r_content %}
+        <div class="col-md-2 col-sm-0 col-lg-2">
+        </div>
+    {% endblock %}
+</div>
