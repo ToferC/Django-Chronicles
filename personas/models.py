@@ -239,22 +239,14 @@ class Item(models.Model):
 
 class StoryObject(models.Model):
 
-    PROTAGONIST = "Protagonist"
-    ANTAGONIST = "Antagonist"
-    SUPPORTING = "Supporting"
     CHARACTER = "Character"
     CREATURE = "Creature"
-    CONSTRUCT = "Construct"
     THING = "Thing"
     ABSTRACT = "Abstract"
 
     CHAR_CHOICES = (
-        (PROTAGONIST, "Protagonist"),
-        (ANTAGONIST, "Antagonist"),
-        (SUPPORTING, "Supporting"),
         (CHARACTER, "Character"),
         (CREATURE, "Creature"),
-        (CONSTRUCT, "Construct"),
         (THING, "Thing"),
         (ABSTRACT, "Abstract"))
 
