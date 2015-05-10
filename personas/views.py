@@ -1292,7 +1292,8 @@ def edit_skill(request, pk, template_name='personas/edit_skill.html'):
     skill = Skill.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(skill=skill)
     story = storyobject.story
-    form = SkillForm(request.POST or None, instance=skill, storyobject=storyobject)
+    form = SkillForm(request.POST or None, instance=skill, storyobject=storyobject,
+        story=story)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1349,7 +1350,7 @@ def edit_relationship(request, pk, template_name='personas/edit_relationship.htm
     relationship = Relationship.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(id=relationship.from_storyobject_id)
     story = storyobject.story
-    form = RelationshipForm(request.POST or None, instance=relationship)
+    form = RelationshipForm(request.POST or None, instance=relationship, story=story)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1379,7 +1380,8 @@ def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
     statistic = Statistic.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(statistic=statistic)
     story = storyobject.story
-    form = StatisticForm(request.POST or None, instance=statistic, storyobject=storyobject)
+    form = StatisticForm(request.POST or None, instance=statistic, storyobject=storyobject,
+        story=story)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1463,7 +1465,8 @@ def edit_storyobject(request, pk, template_name='personas/edit_storyobject.html'
     storyobject = StoryObject.objects.get(pk=pk)
     story = storyobject.story
     user = request.user
-    form = StoryObjectForm(request.POST or None, request.FILES or None, instance=storyobject)
+    form = StoryObjectForm(request.POST or None, request.FILES or None, instance=storyobject,
+        story=story)
     if form.is_valid():
         form.save(creator=storyobject.creator, story=story)
         return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
@@ -1512,7 +1515,7 @@ def edit_location(request, pk, template_name='personas/edit_location.html'):
     location = Location.objects.get(pk=pk)
     story = location.story
     user = request.user
-    form = LocationForm(request.POST or None, request.FILES or None, instance=location)
+    form = LocationForm(request.POST or None, request.FILES or None, instance=location, story=story)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/location/{}'.format(location.slug))
@@ -1537,7 +1540,7 @@ def edit_organization(request, pk, template_name='personas/edit_organization.htm
     organization = Organization.objects.get(pk=pk)
     story = organization.story
     user = request.user
-    form = OrganizationForm(request.POST or None, request.FILES or None, instance=organization)
+    form = OrganizationForm(request.POST or None, request.FILES or None, instance=organization, story=story)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/organization/{}'.format(organization.slug))
@@ -1562,7 +1565,7 @@ def edit_chapter(request, pk, template_name='personas/edit_chapter.html'):
     chapter = Chapter.objects.get(pk=pk)
     story = chapter.story
     user = request.user
-    form = ChapterForm(request.POST or None, request.FILES or None, instance=chapter)
+    form = ChapterForm(request.POST or None, request.FILES or None, instance=chapter, story=story)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/chapter/{}'.format(chapter.slug))
@@ -1614,7 +1617,7 @@ def edit_membership(request, pk, template_name='personas/edit_membership.html'):
     membership = Membership.objects.get(pk=pk)
     storyobject = membership.storyobject
     story = storyobject.story
-    form = MembershipForm(request.POST or None, instance=membership)
+    form = MembershipForm(request.POST or None, instance=membership, story=story)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1693,7 +1696,7 @@ def edit_nation(request, pk, template_name='personas/edit_nation.html'):
     nation = Nation.objects.get(pk=pk)
     story = Story.objects.get(nation=nation)
     user = request.user
-    form = NationForm(request.POST or None, request.FILES or None, instance=nation)
+    form = NationForm(request.POST or None, request.FILES or None, instance=nation, story=story)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/nation/{}'.format(nation.slug))
