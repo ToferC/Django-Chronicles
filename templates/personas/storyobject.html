@@ -431,7 +431,7 @@
 </div> <!-- Tab Content Ends -->
 {% endblock column1 %}
 </div> <!-- Container content ends -->
-
+{% endblock content %}
 <script>
 var url = document.location.toString();
 if (url.match('#')) {
@@ -442,4 +442,3 @@ $('#char_tabs a').on('shown.bs.tab', function (e) {
 window.location.hash = e.target.hash;
 })
 </script>
-{% endblock content %}

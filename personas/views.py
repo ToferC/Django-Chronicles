@@ -1292,8 +1292,7 @@ def edit_skill(request, pk, template_name='personas/edit_skill.html'):
     skill = Skill.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(skill=skill)
     story = storyobject.story
-    form = SkillForm(request.POST or None, instance=skill, storyobject=storyobject,
-        story=story)
+    form = SkillForm(request.POST or None, instance=skill, storyobject=storyobject)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1380,8 +1379,7 @@ def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
     statistic = Statistic.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(statistic=statistic)
     story = storyobject.story
-    form = StatisticForm(request.POST or None, instance=statistic, storyobject=storyobject,
-        story=story)
+    form = StatisticForm(request.POST or None, instance=statistic, storyobject=storyobject)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
