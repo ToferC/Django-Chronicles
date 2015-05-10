@@ -304,6 +304,7 @@ class Relationship(models.Model):
     MEMBER = 'Member'
     OWNER = "Owner"
 
+    LIKES = "Likes"
     LOVES = "Loves"
     HATES = "Hates"
     FEARS = "Fears"
@@ -339,6 +340,7 @@ class Relationship(models.Model):
         (PARTNER, 'Business Partner'),
         (MEMBER, 'Co-member'),
         (OWNER, "Owner"),
+        (LIKES, "Likes"),
         (LOVES, "Loves"),
         (HATES, "Hates"),
         (FEARS, "Fears"),

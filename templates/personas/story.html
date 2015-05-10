@@ -30,7 +30,7 @@
             </a>
         </li>
         <li>
-            <a href="#characters" role="tab" data-toggle="tab">
+            <a href="#story_objects" role="tab" data-toggle="tab">
                 <i class="fa fa-cog"></i> Story Objects
             </a>
         </li>
@@ -153,7 +153,7 @@
                     </div>
                     </div>
                     </div> <!-- End Tab Three -->
-                    <div class="tab-pane fade in" id="characters"> <!-- Start Tab Four -->
+                    <div class="tab-pane fade in" id="story_objects"> <!-- Start Tab Four -->
                 <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
                     <div class="row">
                         <h3>Characters:</h3>
@@ -175,7 +175,7 @@
                         {% if artifacts %}
                             <ul>
                                 {% for artifact in artifacts %}
-                                    <li><a href="/personas/artifact/{{ artifact.slug }}">{{ artifact.name }}</a></li>
+                                    <li><a href="/personas/storyobject/{{ artifact.slug }}">{{ artifact.name }}</a></li>
                                 {% endfor %}
                             </ul>
                         {% else %}
