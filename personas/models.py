@@ -58,39 +58,39 @@ class Location(models.Model):
         return self.name
 
 
-class Trait(models.Model):
+class Aspect(models.Model):
     CORE = "CO"
     VALUES = "VA"
     BACKGROUND = "BA"
     FLAW = "FL"
 
-    TRAIT_TYPE_CHOICES = (
+    ASPECT_TYPE_CHOICES = (
         (CORE, "Core"),
         (VALUES, "Values"),
         (BACKGROUND, "Background"),
         (FLAW, "Flaw")
         )
 
-    label = models.CharField(max_length=12, choices=TRAIT_TYPE_CHOICES, default="CO", blank=True)
+    label = models.CharField(max_length=12, choices=ASPECT_TYPE_CHOICES, default="CO", blank=True)
     name = models.CharField(max_length=128)
-    character = models.ForeignKey('Character')
+    storyobject = models.ForeignKey('StoryObject')
 
     def save(self, *args, **kwargs):
-        super(Trait, self).save(*args, **kwargs)
+        super(Aspect, self).save(*args, **kwargs)
 
 
     def __str__(self):
         return self.name
 
 
-class SpecialAbility(models.Model):
+class Ability(models.Model):
     name = models.CharField(max_length=32)
     description = models.TextField(blank=True)
-    character = models.ForeignKey('Character', null=True, blank=True)
+    storyobject = models.ForeignKey('StoryObject', null=True, blank=True)
     item = models.ForeignKey('Item', null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        super(SpecialAbility, self).save(*args, **kwargs)
+        super(Ability, self).save(*args, **kwargs)
 
 
     def __str__(self):
@@ -101,7 +101,7 @@ class Note(models.Model):
     creator = models.ForeignKey(User, default=0)
     content = MarkdownField()
     date = models.DateTimeField(auto_now=True)
-    character = models.ForeignKey("Character", blank=True, null=True)
+    storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
     location = models.ForeignKey("Location", blank=True, null=True)
     item = models.ForeignKey("Item", blank=True, null=True)
     organization = models.ForeignKey("Organization", blank=True, null=True)
@@ -123,7 +123,7 @@ class GalleryImage(models.Model):
     image = models.ImageField(upload_to='content_images/%Y/%m/%d', default='content_images/nothing.jpg')
     title = models.CharField(max_length=64)
     date = models.DateTimeField(auto_now=True)
-    character = models.ForeignKey("Character", blank=True, null=True)
+    storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
     location = models.ForeignKey("Location", blank=True, null=True)
     item = models.ForeignKey("Item", blank=True, null=True)
     organization = models.ForeignKey("Organization", blank=True, null=True)
@@ -144,15 +144,15 @@ class ScratchPad(models.Model):
     creator = models.ForeignKey(User, default=0)
     content = MarkdownField()
     date = models.DateTimeField(auto_now=True)
-    character = models.ForeignKey("Character", blank=True, null=True)
+    storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
 
     def __str__(self):
         return self.content
 
 
 class Communique(models.Model):
-    author = models.ForeignKey("Character", related_name="Author")
-    receiver = models.ForeignKey("Character", related_name="Receiver")
+    author = models.ForeignKey("StoryObject", related_name="Author")
+    receiver = models.ForeignKey("StoryObject", related_name="Receiver")
     date = models.DateTimeField(auto_now=True)
     content = models.CharField(max_length=140)
     rating = models.PositiveSmallIntegerField(default=0)
@@ -180,7 +180,7 @@ class Skill(models.Model):
     name = models.CharField(max_length=32)
     value = models.CharField(max_length=32, default=0)
     s_type = models.CharField(max_length=32, choices=SKILL_TYPES, verbose_name="Skill Type", default="Type_1")
-    character = models.ForeignKey('Character')
+    storyobject = models.ForeignKey('StoryObject')
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -204,7 +204,7 @@ class Statistic(models.Model):
     stat_type = models.CharField(
         max_length=32, choices=STAT_TYPES, verbose_name="Statistic Type",
          default="Type_1")
-    character = models.ForeignKey('Character')
+    storyobject = models.ForeignKey('StoryObject')
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -214,7 +214,7 @@ class Statistic(models.Model):
 class CombatInfo(models.Model):
     title = models.CharField(max_length=32)
     data = models.CharField(max_length=128, default=0)
-    character = models.ForeignKey('Character')
+    storyobject = models.ForeignKey('StoryObject')
 
     def __str__(self):
         return "{}: {}".format(self.title, self.data)
@@ -223,7 +223,7 @@ class CombatInfo(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=32)
     description = models.TextField(blank=True)
-    character = models.ForeignKey('Character', blank=True, null=True)
+    storyobject = models.ForeignKey('StoryObject', blank=True, null=True)
     story = models.ForeignKey('Story', blank=True, null=True)
 
     slug = models.SlugField(unique=True)
@@ -237,11 +237,12 @@ class Item(models.Model):
         return "{}: {}".format(self.name, self.description)
 
 
-class Character(models.Model):
+class StoryObject(models.Model):
 
     PROTAGONIST = "Protagonist"
     ANTAGONIST = "Antagonist"
     SUPPORTING = "Supporting"
+    CHARACTER = "Character"
     CREATURE = "Creature"
     CONSTRUCT = "Construct"
     THING = "Thing"
@@ -251,6 +252,7 @@ class Character(models.Model):
         (PROTAGONIST, "Protagonist"),
         (ANTAGONIST, "Antagonist"),
         (SUPPORTING, "Supporting"),
+        (CHARACTER, "Character"),
         (CREATURE, "Creature"),
         (CONSTRUCT, "Construct"),
         (THING, "Thing"),
@@ -260,20 +262,37 @@ class Character(models.Model):
     name = models.CharField(max_length=128, unique=False)
     story = models.ForeignKey('Story', default=1)
     c_type = models.CharField(choices=CHAR_CHOICES, 
-        max_length=32, default="Supporting", verbose_name="Character Type")
-    xp = models.PositiveSmallIntegerField(blank=True, default=0)
+        max_length=32, default="Character", verbose_name="Story Object Type",
+        help_text="Select a story object category.")
+    role = models.CharField(max_length=256)
     description = MarkdownField(blank=True)
-    age = models.PositiveSmallIntegerField(default=21)
-    nationality = models.ForeignKey(Nation, default=1)
-    birthplace = models.ForeignKey(Location, related_name='place_of_birth', default=1)
-    base_of_operations = models.ForeignKey(Location, related_name='active_in', default=2)
+    nationality = models.ForeignKey(Nation, blank=True, null=True)
+    base_of_operations = models.ForeignKey(Location, related_name='active_in', 
+        blank=True, null=True )
 
-    image = models.ImageField(upload_to='profile_images/%Y/%m/%d', default='profile_images/nobody.jpg')
+    image = models.ImageField(
+        upload_to='profile_images/%Y/%m/%d', default='profile_images/nobody.jpg')
     slug = models.SlugField(unique=True)
+
+    stats_toggle = models.BooleanField(default=True,
+     help_text="Check to enable statistics for this story object.",
+        verbose_name="Enable Statistics?")
+    skill_toggle = models.BooleanField(default=True,
+     help_text="Check to enable skills for this story object.",
+        verbose_name="Enable Skills?")
+    combat_toggle = models.BooleanField(default=True,
+     help_text="Check to enable combat info for this story object.",
+        verbose_name="Enable Combat Info?")
+    gallery_toggle = models.BooleanField(default=True,
+     help_text="Check to enable gallery images for this story object.",
+        verbose_name="Enable Gallery Images?")
+    social_toggle = models.BooleanField(default=True,
+     help_text="Check to enable social functionality for this story object.",
+        verbose_name="Enable Social Functions?")
 
     def save(self, slug=None, creator=None, *args, **kwargs):
         slug = slugify("{}-{}".format(self.story.title, self.name))
-        super(Character, self).save(*args, **kwargs)
+        super(StoryObject, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -293,6 +312,28 @@ class Relationship(models.Model):
     MEMBER = 'Member'
     OWNER = "Owner"
 
+    LOVES = "Loves"
+    HATES = "Hates"
+    FEARS = "Fears"
+    ENVIES = "Envies"
+    DISTRUSTS = "Distrusts"
+    TRUSTS = "Trusts"
+    DESIRES = "Desires"
+    RESPECTS = "Respects"
+    DISLIKES = "Dislikes"
+    DISGUSTED = "Is disgusted by"
+    ANGRY = "Is angry at"
+    JEALOUS = "Is jealous of"
+    RESENTS = "Resents"
+    PROUD = "Is proud of"
+    WORSHIPS = "Worships"
+    REVERES = "Reveres"
+    RULES = "Rules"
+    LEADS = "Leads"
+    OWNS = "Owns"
+    BELONGS_TO = "Belongs to"
+    CREWS = "Crews"
+
     RELATIONSHIP_CLASS_CHOICES = (
         (ALLY, 'Ally'),
         (ENEMY, 'Enemy'),
@@ -306,27 +347,52 @@ class Relationship(models.Model):
         (PARTNER, 'Business Partner'),
         (MEMBER, 'Co-member'),
         (OWNER, "Owner"),
+        (LOVES, "Loves"),
+        (HATES, "Hates"),
+        (FEARS, "Fears"),
+        (ENVIES, "Envies"),
+        (DISTRUSTS, "Distrusts"),
+        (TRUSTS, "Trusts"),
+        (DESIRES, "Desires"),
+        (RESPECTS, "Respects"),
+        (DISLIKES, "Dislikes"),
+        (DISGUSTED, "Is disgusted by"),
+        (ANGRY, "Is angry at"),
+        (JEALOUS, "Is jealous of"),
+        (RESENTS, "Resents"),
+        (PROUD, "Is proud of"),
+        (WORSHIPS, "Worships"),
+        (REVERES, "Reveres"),
+        (RULES, "Rules"),
+        (LEADS, "Leads"),
+        (OWNS, "Owns"),
+        (BELONGS_TO, "Belongs to"),
+        (CREWS, "Crews"),
     )
 
-    from_character = models.ForeignKey(Character, related_name="from_character")
-    to_character = models.ForeignKey(Character, related_name="to_character")
+    from_storyobject = models.ForeignKey(StoryObject, related_name="from_storyobject",
+        verbose_name="Subject of Relationship")
+    to_storyobject = models.ForeignKey(StoryObject, related_name="to_storyobject",
+        verbose_name="Object of Relationship")
 
     relationship_class = models.CharField(max_length=32,
-        choices=RELATIONSHIP_CLASS_CHOICES, default='Ally')
+        choices=RELATIONSHIP_CLASS_CHOICES, default='Ally',
+        verbose_name="Defining Emotion")
 
-    weight = models.PositiveSmallIntegerField(default=50, verbose_name="Strength of the relationship %")
+    weight = models.CharField(default="50", max_length=64,
+        verbose_name="Strength of the relationship")
 
     relationship_description = models.CharField(max_length=128, unique=False)
 
     def __str__(self):
-        return '{} - {} of {} - ({}: {}%)'.format(self.from_character, self.relationship_class, self.to_character, self.relationship_description, self.weight)
+        return '{} - {} of {} - ({}: {})'.format(self.from_storyobject, self.relationship_class, self.to_storyobject, self.relationship_description, self.weight)
 
 
 class Organization(models.Model):
     name = models.CharField(max_length=128)
     creator = models.ForeignKey(User, blank=True, null=True)
     description = models.TextField(blank=True)
-    members = models.ManyToManyField(Character, through='Membership', blank=True)
+    members = models.ManyToManyField(StoryObject, through='Membership', blank=True)
     purpose = models.CharField(max_length=128)
     region = models.CharField(max_length=128)
     location = models.ForeignKey(Location)
@@ -344,9 +410,9 @@ class Organization(models.Model):
 
 
 class Membership(models.Model):
-    character = models.ForeignKey(Character)
+    storyobject = models.ForeignKey(StoryObject)
     organization = models.ForeignKey(Organization)
-    date_joined = models.DateField(default="2014-01-01")
+    date_joined = models.DateField(auto_now=True)
     role = models.CharField(max_length=128)
     rank = models.PositiveSmallIntegerField(default=1)
 
@@ -355,13 +421,42 @@ class Membership(models.Model):
 
 
 class Scene(models.Model):
+
+    PROCEDURAL = "Prodecural"
+    ACTION = "Action"
+    SUSPENSE = "Suspense"
+    QUESTION = "Question"
+    REVEAL = "Reveal"
+    DRAMATIC = "Dramatic"
+
+    SCENE_TYPE_CHOICES = (
+        (DRAMATIC, "Dramatic"),
+        (ACTION, "Action"),
+        (SUSPENSE, "Suspense"),
+        (QUESTION, "Question"),
+        (REVEAL, "Reveal"),
+        (PROCEDURAL, "Procedural"))
+
+    UP = "Up"
+    DOWN = "Down"
+    NEUTRAL = "Neutral"
+
+    RESOLUTION_CHOICES = (
+        (UP, "Up"),
+        (DOWN, "Down"),
+        (NEUTRAL, "Neutral"))
+
     title = models.CharField(max_length=128)
+    scene_type = models.CharField(max_length=32, choices=SCENE_TYPE_CHOICES, default="Dramatic")
+    purpose = models.CharField(max_length=128, blank=True)
     description = models.TextField(blank=True)
+    resolution = models.CharField(
+        max_length=8, choices=RESOLUTION_CHOICES, default="Neutral")
     creator = models.ForeignKey(User, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True)
-    time = models.DateTimeField(auto_now=True)
+    publication_date = models.DateTimeField(auto_now=True)
     order = models.PositiveSmallIntegerField(default=1)
-    characters = models.ManyToManyField(Character, blank=True)
+    storyobjects = models.ManyToManyField(StoryObject, blank=True)
     chapter = models.ForeignKey("Chapter")
 
     slug = models.SlugField(unique=True, blank=True)
@@ -429,6 +524,8 @@ class Story(models.Model):
     title = models.CharField(max_length=128)
     author = models.ForeignKey(User)
     publication_date = models.DateField(auto_now=True)
+    setting = models.CharField(max_length=256)
+    themes = models.CharField(max_length=256)
     description = models.TextField(blank=True)
     genre = models.CharField(
         max_length=128, choices=GENRE_CHOICES, default='Fantasy')

@@ -1,6 +1,7 @@
 {% extends "personas/base.html" %}
 {% load crispy_forms_tags %}
 {% load django_markdown %}
+{% load thumbnail %}
 
 {% block content %}
 
@@ -14,13 +15,14 @@
     <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
 
     <div class="row">
-        <h3>Story:</h3>
-        <a href="/personas/story/{{ story.slug }}">{{ story }}</a>
-        <hr>
-    </div>
-    <div class="row">
-        <h3>Chapter:</h3>
-        <a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a>
+        <h3>Scene Information:</h3>
+        <ul>
+            <li>Story: <a href="/personas/story/{{ story.slug }}">{{ story }}</a></li>
+            <li>Chapter: <a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a></li>
+            <li>Publication Date: {{ publication_date }}</li>
+            <li>Purpose: {{ purpose }}</li>
+            <li>Resolution: {{ resolution }}</li>
+        </ul>
         <hr>
     </div>
     <div class="row">
@@ -34,26 +36,25 @@
 {% block column2 %}
     <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
     <div class="row">
-        <h3>Time:</h3>
-        {{ time }}
-        <hr>
-    </div>
-    <div class="row">
         <h3>Location:</h3>
         <a href="/personas/location/{{ location.slug }}">{{ location }}</a>
         <hr>
     </div>
     <div class="row">
         <h3>Characters:</h3>
-        {% if characters %}
-                {% for character in characters %}
-                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:#335C33" href="/personas/character/{{ character.slug }}"><img src="{{ character.image.url }}" style="max-height:40px; float:left">  {{ character.name }}</a><br><br>
+        {% if storyobjects %}
+                {% for storyobject in storyobjects %}
+
+                    <a class="btn btn-success btn-md" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                    {% thumbnail storyobject.image "40x40" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+
                 {% endfor %}
         {% else %}
             <strong>{{ scene_title }} has no characters.</strong>
         {% endif %}
-        <br>
-        <a href="/personas/add_character/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+        <br><br>
+        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
     </div>
     <div class="row">

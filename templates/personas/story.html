@@ -31,7 +31,7 @@
         </li>
         <li>
             <a href="#characters" role="tab" data-toggle="tab">
-                <i class="fa fa-cog"></i> Characters
+                <i class="fa fa-cog"></i> Story Objects
             </a>
         </li>
         <li>
@@ -48,21 +48,24 @@
     
     {% block column1 %}
     <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
+                    <div class="row">
+                    <br>
                         {% thumbnail image "400" crop="center" as im %}
                             <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %} 
                         {% endthumbnail %}
                         <p align="center">
                             Created by {{ author }}
                         </p>
-        
-                    <div class="row">
-                        <h3>Publication Date:</h3>
-                        {{ publication_date }}
-                        <hr>
+                    <hr>
                     </div>
                     <div class="row">
-                        <h3>Genre:</h3>
-                        {{ genre }}
+                        <h3>Story Info:</h3>
+                        <ul>
+                            <li>Publication Date: {{ publication_date }}</li>
+                            <li>Genre: {{ genre }}</li>
+                            <li>Setting: {{ setting }}</li>
+                            <li>Themes: {{ themes }}</li>
+                        </ul>
                         <hr>
                     </div>
                     <div class="row">
@@ -157,13 +160,13 @@
                         {% if characters %}
                             <ul>
                                 {% for character in characters %}
-                                    <li><a href="/personas/character/{{ character.slug }}">{{ character }}</a></li>
+                                    <li><a href="/personas/storyobject/{{ character.slug }}">{{ character }}</a></li>
                                 {% endfor %}
                             </ul>
                         {% else %}
                             <strong>{{ story.title }} has no Characters.</strong><br><br>
                         {% endif %}
-                        <a href="/personas/add_character/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
                         <br><br>
                         <hr>
                     </div>
@@ -172,13 +175,44 @@
                         {% if artifacts %}
                             <ul>
                                 {% for artifact in artifacts %}
-                                    <li><a href="/personas/artifact/{{ artifact.slug }}">{{ artifact.name }}</a>: {{ artifact.description }}</li>
+                                    <li><a href="/personas/artifact/{{ artifact.slug }}">{{ artifact.name }}</a></li>
                                 {% endfor %}
                             </ul>
                         {% else %}
                             <strong>{{ story.title }} has no Artifacts.</strong><br><br>
                         {% endif %}
-                        <a href="/personas/add_artifact/{{ story.slug }}" style="color:gray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
+                        <hr>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+                    <div class="row">
+                        <h3>Creatures:</h3>
+                        {% if creatures %}
+                            <ul>
+                                {% for creature in creatures %}
+                                    <li><a href="/personas/storyobject/{{ creature.slug }}">{{ creature }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <strong>{{ story.title }} has no Creatures.</strong><br><br>
+                        {% endif %}
+                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Creature <span class="glyphicon glyphicon-pencil"></span></a>
+                        <br><br>
+                        <hr>
+                    </div>
+                    <div class="row">
+                        <h3>Forces:</h3>
+                        {% if forces %}
+                            <ul>
+                                {% for force in forces %}
+                                    <li><a href="/personas/storyobject/{{ force.slug }}">{{ force.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <strong>{{ story.title }} has no Forces.</strong><br><br>
+                        {% endif %}
+                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Force <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
                 </div>

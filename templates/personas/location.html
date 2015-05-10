@@ -93,18 +93,20 @@
     </div>
     <div class="row">
         <h3>Characters:</h3>
-        {% if characters %}
+        {% if storyobjects %}
             <ul>
-                {% for character in characters %}
+                {% for storyobject in storyobjects %}
                     
-                    <li><a href="/personas/character/{{ character.slug }}">{{ character.name }}</a></li>
+                    <a class="btn btn-success btn-md" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                    {% thumbnail storyobject.image "40x40" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                 {% endfor %}
             </ul>
         {% else %}
             <strong>{{ location_name }} has no characters.</strong>
         {% endif %}
         <br>
-        <a href="/personas/add_character/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Story Objects <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
     </div>
     <div class="row">

@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% block title %}
     <header>
-        <h1>{{ character }} - Adding Skills</h1>
+        <h1>{{ storyobject }} - Adding Skills</h1>
     </header>
 {% endblock %}
 <div class="row">
@@ -14,7 +14,7 @@
     {% block column1 %}
         <div class="col-md-2 col-sm-3 col-lg-2" id="col1">
             <h3>Skills</h3>
-            <p>Skills are ways to explain what your character can do.  Each game system treats skills differently, but most of them tend to both designate a skill and designate a skill value that tells you <i>how good you are</i> at using the skill.</p>
+            <p>Skills are ways to explain what your story object can do.  Each game system treats skills differently, but most of them tend to both designate a skill and designate a skill value that tells you <i>how good you are</i> at using the skill.</p>
             <p>For each Skill, choose a name that describes the skill or talent or choose from a pre-prepared skill list for your game.</p>
             <p>You will also need to choose a skill type, which defaults to "Genral".  Because this is set up for a GUMSHOE game, we've included an "Investigative" option as well.  More options still to come!</p>
         </div>
@@ -83,10 +83,10 @@
             <br><br><br>
             <h4>Finished adding skills?</h4>
             <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/add_ability/{{ character.slug }}">I'm done. Next Step!</a>
+                <a role="button" class="btn btn-primary" href="/personas/add_ability/{{ storyobject.slug }}">I'm done. Next Step!</a>
             </div><br>
             <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}/#skills">Take me straight<br>to my character.</a>
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#skills">Take me straight<br>to my character.</a>
             </div>
         </div>
     {% endblock %}

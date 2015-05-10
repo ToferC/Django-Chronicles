@@ -11,9 +11,9 @@ from django.db.models.base import ObjectDoesNotExist
 from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateView
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
-from personas.models import Nation, Location, Character, Organization, Relationship, Membership, Trait, SpecialAbility, Item, Story, MainMap, Chapter, Scene, Skill, Note, Communique
+from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, MainMap, Chapter, Scene, Skill, Note, Communique
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
-from personas.forms import CharacterForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, TraitForm, TraitFormSetHelper, SkillFormSetHelper, ItemForm, SpecialAbilityForm, RelationshipForm
+from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, ItemForm, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm
 
 from datetime import datetime
@@ -38,11 +38,11 @@ def index(request):
 
 
 def collections(request):
-    character_list = Character.objects.all()
+    storyobject_list = StoryObject.objects.all()
     location_list = Location.objects.all()
     organization_list = Organization.objects.all()
 
-    context_dict = {'boldmessage': "Personas", 'characters': character_list,
+    context_dict = {'boldmessage': "Personas", 'storyobjects': storyobject_list,
         'locations': location_list, 'organizations': organization_list}
 
     return render(request, 'personas/collections.html', context_dict)
@@ -77,7 +77,7 @@ def location(request, location_name_slug):
             location__name=location.name)
         context_dict['organizations'] = Organization.objects.filter(
             location__name=location.name).distinct()
-        context_dict['characters'] = Character.objects.filter(
+        context_dict['storyobjects'] = StoryObject.objects.filter(
             base_of_operations__name=location.name)
 
         context_dict['notes'] = Note.objects.filter(location__name=location.name)
@@ -114,9 +114,11 @@ def scene(request, scene_name_slug):
         context_dict['scene_title'] = scene.title
         context_dict['slug'] = scene_name_slug
         context_dict['location'] = scene.location
+        context_dict['purpose'] = scene.purpose
+        context_dict['resolution'] = scene.resolution
         context_dict['description'] = scene.description
-        context_dict['time'] = scene.time
-        context_dict['characters'] = Character.objects.filter(scene__title=scene.title)
+        context_dict['publication_date'] = scene.publication_date
+        context_dict['storyobjects'] = StoryObject.objects.filter(scene__title=scene.title)
 
         context_dict['story'] = Story.objects.get(chapter__scene__title=scene.title)
         context_dict['chapter'] = Chapter.objects.get(scene__title=scene.title)
@@ -154,17 +156,17 @@ def artifact(request, artifact_name_slug):
     try:
         artifact = Item.objects.get(slug=artifact_name_slug)
         story = artifact.story
-        character = artifact.character
+        storyobject = artifact.storyobject
 
         context_dict['artifact'] = artifact
         context_dict['description'] = artifact.description
-        context_dict['character'] = character
+        context_dict['storyobject'] = storyobject
         context_dict['story'] = story
         try:
             context_dict['image'] = GalleryImage.objects.get(item=artifact)
         except GalleryImage.DoesNotExist:
             pass
-        context_dict['abilities'] = SpecialAbility.objects.filter(item__name=artifact.name)
+        context_dict['abilities'] = Ability.objects.filter(item__name=artifact.name)
 
         context_dict['notes'] = Note.objects.filter(
             item__name=artifact.name)[0:10]
@@ -270,80 +272,84 @@ def nation(request, nation_name_slug):
     return render(request, 'personas/nation.html', context_dict)
 
 
-def character(request, character_name_slug):
+def storyobject(request, storyobject_name_slug):
 
     context_dict = {}
 
     try:
-        character = Character.objects.get(slug=character_name_slug)
+        storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
-        context_dict['character_name'] = character.name
-        context_dict['character'] = character
-        context_dict['creator'] = character.creator
-        context_dict['story'] = character.story
-        context_dict['c_type'] = character.c_type
-        context_dict['xp'] = character.xp
-        context_dict['description'] = character.description
+        context_dict['storyobject_name'] = storyobject.name
+        context_dict['storyobject'] = storyobject
+        context_dict['creator'] = storyobject.creator
+        context_dict['story'] = storyobject.story
+        context_dict['role'] = storyobject.role
+        context_dict['c_type'] = storyobject.c_type
+        context_dict['description'] = storyobject.description
 
-        # Set up ScratchPad for character
+        # Set up ScratchPad for storyobject
         try:
             scratchpad = ScratchPad.objects.get(
-                character__name=character.name)
+                storyobject__name=storyobject.name)
         except ScratchPad.DoesNotExist:
-            scratchpad = ScratchPad(character=character, creator=request.user,
+            scratchpad = ScratchPad(storyobject=storyobject, creator=request.user,
                 content="Enter info here and save to update", date=datetime.now())
 
         context_dict['scratchpad'] = scratchpad
 
-        context_dict['aspects'] = Trait.objects.filter(
-            character__name=character.name)
+        context_dict['aspects'] = Aspect.objects.filter(
+            storyobject__name=storyobject.name)
 
         context_dict['type_1_statistics'] = Statistic.objects.filter(
-            character__name=character.name).filter(stat_type="Type_1")
+            storyobject__name=storyobject.name).filter(stat_type="Type_1")
         context_dict['type_2_statistics'] = Statistic.objects.filter(
-            character__name=character.name).filter(stat_type="Type_2")
+            storyobject__name=storyobject.name).filter(stat_type="Type_2")
         context_dict['type_3_statistics'] = Statistic.objects.filter(
-            character__name=character.name).filter(stat_type="Type_3")
+            storyobject__name=storyobject.name).filter(stat_type="Type_3")
         context_dict['type_4_statistics'] = Statistic.objects.filter(
-            character__name=character.name).filter(stat_type="Type_4")
+            storyobject__name=storyobject.name).filter(stat_type="Type_4")
 
         context_dict['type_1_skills'] = Skill.objects.filter(
-            character__name=character.name).filter(s_type="Type_1")
+            storyobject__name=storyobject.name).filter(s_type="Type_1")
         context_dict['type_2_skills'] = Skill.objects.filter(
-            character__name=character.name).filter(s_type="Type_2")
+            storyobject__name=storyobject.name).filter(s_type="Type_2")
         context_dict['type_3_skills'] = Skill.objects.filter(
-            character__name=character.name).filter(s_type="Type_3")
+            storyobject__name=storyobject.name).filter(s_type="Type_3")
         context_dict['type_4_skills'] = Skill.objects.filter(
-            character__name=character.name).filter(s_type="Type_4")
+            storyobject__name=storyobject.name).filter(s_type="Type_4")
 
         context_dict['combat_info'] = CombatInfo.objects.filter(
-            character__name=character.name)
+            storyobject__name=storyobject.name)
 
         context_dict['artifacts'] = Item.objects.filter(
-            character__name=character.name)
+            storyobject__name=storyobject.name)
         context_dict['relationships'] = Relationship.objects.filter(
-            Q(from_character__name=character.name) |
-            Q(to_character__name=character.name))
+            Q(from_storyobject__name=storyobject.name) |
+            Q(to_storyobject__name=storyobject.name))
 
-        context_dict['abilities'] = SpecialAbility.objects.filter(
-            character__name=character.name)
+        context_dict['abilities'] = Ability.objects.filter(
+            storyobject__name=storyobject.name)
         context_dict['notes'] = Note.objects.filter(
-            character__name=character.name)
+            storyobject__name=storyobject.name)
 
         context_dict['gallery_images'] = GalleryImage.objects.filter(
-            character=character)
+            storyobject=storyobject)
 
         context_dict['communiques'] = Communique.objects.filter(
-            Q(author__name=character.name) |
-            Q(receiver__name=character.name))
+            Q(author__name=storyobject.name) |
+            Q(receiver__name=storyobject.name))
 
-        context_dict['nationality'] = character.nationality
-        context_dict['birthplace'] = character.birthplace
-        context_dict['base_of_operations'] = character.base_of_operations
-        context_dict['c_type'] = character.c_type
-        context_dict['memberships'] = Membership.objects.filter(character=character)
+        context_dict['nationality'] = storyobject.nationality
+        context_dict['base_of_operations'] = storyobject.base_of_operations
+        context_dict['memberships'] = Membership.objects.filter(storyobject=storyobject)
 
-        context_dict['image'] = character.image
+        context_dict['image'] = storyobject.image
+
+        context_dict['stats_toggle'] = storyobject.stats_toggle
+        context_dict['skill_toggle'] = storyobject.skill_toggle
+        context_dict['combat_toggle'] = storyobject.combat_toggle
+        context_dict['gallery_toggle'] = storyobject.gallery_toggle
+        context_dict['social_toggle'] = storyobject.social_toggle
 
         # Note Form Section
         noteform = NoteForm(request.POST, prefix="note")
@@ -353,50 +359,50 @@ def character(request, character_name_slug):
 
             if 'save' in request.POST:
                 creator = request.user
-                note_subject = character
+                note_subject = storyobject
 
                 noteform = NoteForm(request.POST)
 
                 if noteform.is_valid():
                     noteform.save(
-                        creator=creator, character=note_subject, commit=True)
+                        creator=creator, storyobject=note_subject, commit=True)
 
-                    return HttpResponseRedirect("/personas/character/{}/#notes".format(character_name_slug))
+                    return HttpResponseRedirect("/personas/storyobject/{}/#notes".format(storyobject_name_slug))
 
                 else:
                     print (context_dict['noteform'].errors)
 
             elif 'send' in request.POST:
-                post_creator = character
+                post_creator = storyobject
 
                 communique_form = CommuniqueForm(request.POST)
 
-                if request.user == character.creator:
+                if request.user == storyobject.creator:
 
                     if communique_form.is_valid():
                         communique_form.save(author=post_creator, commit=True)
 
-                        return HttpResponseRedirect("/personas/character/{}/#social".format(character_name_slug))
+                        return HttpResponseRedirect("/personas/storyobject/{}/#social".format(storyobject_name_slug))
 
                     else:
                         print (context_dict['communique_form'].errors)
 
                 else:
-                    print("You do not have permission to send a communique from this character.")
-                    return HttpResponseRedirect("/personas/character/{}/#social".format(character_name_slug))
+                    print("You do not have permission to send a communique from this storyobject.")
+                    return HttpResponseRedirect("/personas/storyobject/{}/#social".format(storyobject_name_slug))
 
             if 'snapshot' in request.POST:
 
                 scratchpadform = ScratchPadForm(request.POST or None, instance=scratchpad)
 
                 if scratchpadform.is_valid():
-                    scratchpadform.character = character
+                    scratchpadform.storyobject = storyobject
 
                     scratchpad.save()
 
                     context_dict['scratchpadform'] = ScratchPadForm(instance=scratchpad)
 
-                    return HttpResponseRedirect("/personas/character/{}/#combat".format(character_name_slug))
+                    return HttpResponseRedirect("/personas/storyobject/{}/#combat".format(storyobject_name_slug))
 
                 else:
                     print (context_dict['scratchpadform'].errors)
@@ -404,14 +410,14 @@ def character(request, character_name_slug):
         else:
 
             context_dict['noteform'] = NoteForm()
-            context_dict['communique_form'] = CommuniqueForm(story=character.story)
+            context_dict['communique_form'] = CommuniqueForm(story=storyobject.story)
             context_dict['scratchpadform'] = ScratchPadForm(instance=scratchpad)
 
 
-    except Character.DoesNotExist:
+    except storyobject.DoesNotExist:
         pass
 
-    return render(request, 'personas/character.html', context_dict)
+    return render(request, 'personas/storyobject.html', context_dict)
 
 
 def chapter(request, chapter_name_slug):
@@ -431,7 +437,7 @@ def chapter(request, chapter_name_slug):
 
         context_dict['scenes'] = scenes
 
-        context_dict['characters'] = Character.objects.filter(
+        context_dict['storyobjects'] = StoryObject.objects.filter(
             scene__chapter__title=chapter.title).distinct()
         context_dict['locations'] = Location.objects.filter(
             scene__chapter__title=chapter.title).distinct()
@@ -475,16 +481,17 @@ def story(request, story_name_slug):
 
         context_dict['story'] = story
         context_dict['author'] = story.author
+        context_dict['setting'] = story.setting
+        context_dict['themes'] = story.themes
         context_dict['publication_date'] = story.publication_date
         context_dict['image'] = story.image
         context_dict['genre'] = story.genre
-        context_dict['artifacts'] = Item.objects.filter(story=story).distinct()
+        #context_dict['artifacts'] = Item.objects.filter(story=story).distinct()
 
         mainmaps = MainMap.objects.filter(
             story__title=story.title)
         context_dict['mainmaps'] = mainmaps
 
-        #context_dict['slug'] = story_name_slug
         context_dict['description'] = story.description
 
         context_dict['notes'] = Note.objects.filter(
@@ -494,8 +501,18 @@ def story(request, story_name_slug):
 
         context_dict['scenes'] = scenes
 
-        context_dict['characters'] = Character.objects.filter(
-                story=story).distinct().order_by('name')
+        context_dict['characters'] = StoryObject.objects.filter(
+                story=story).filter(c_type="Character").distinct().order_by('name')
+
+        context_dict['artifacts'] = StoryObject.objects.filter(
+                story=story).filter(c_type="Thing").distinct().order_by('name')
+        
+        context_dict['creatures'] = StoryObject.objects.filter(
+                story=story).filter(c_type="Creature").distinct().order_by('name')
+ 
+        context_dict['forces'] = StoryObject.objects.filter(
+                story=story).filter(c_type="Abstract").distinct().order_by('name')
+ 
         context_dict['locations'] = Location.objects.filter(
                 story__title=story.title).distinct().order_by('name')
         context_dict['organizations'] = Organization.objects.filter(
@@ -631,32 +648,32 @@ def user_logout(request):
 # Add content Views
 
 @login_required
-def add_character(request, story_title_slug):
+def add_storyobject(request, story_title_slug):
 
     story = Story.objects.get(slug=story_title_slug)
 
     if request.method == 'POST':
-        character_form = CharacterForm(request.POST, request.FILES)
+        storyobject_form = StoryObjectForm(request.POST, request.FILES)
 
         creator = request.user
 
-        if character_form.is_valid():
+        if storyobject_form.is_valid():
             slug = slugify("{}-{}".format(
-                story.title, character_form.cleaned_data['name']))
+                story.title, storyobject_form.cleaned_data['name']))
 
-            character_form.save(creator=creator, story=story, commit=True)
+            storyobject_form.save(creator=creator, story=story, commit=True)
 
-            return HttpResponseRedirect("/personas/add_trait/{}".format(slug))
+            return HttpResponseRedirect("/personas/add_aspect/{}".format(slug))
 
         else:
-            print (character_form.errors)
+            print (storyobject_form.errors)
 
     else:
 
-        character_form = CharacterForm(story=story)
+        storyobject_form = StoryObjectForm(story=story)
 
-    return render(request, 'personas/add_character.html',
-        {'character_form': character_form, 'story':story})
+    return render(request, 'personas/add_storyobject.html',
+        {'storyobject_form': storyobject_form, 'story':story})
 
 
 @login_required
@@ -686,19 +703,19 @@ def create_story(request):
 
 
 @login_required
-def add_trait(request, character_name_slug):
+def add_aspect(request, storyobject_name_slug):
 
-    traits = Trait.objects.filter(character__slug=character_name_slug)
+    aspects = Aspect.objects.filter(storyobject__slug=storyobject_name_slug)
 
-    character = Character.objects.get(slug=character_name_slug)
-    story = character.story
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
+    story = storyobject.story
 
     if request.method == 'POST':
 
-        form = TraitForm(request.POST)
+        form = AspectForm(request.POST)
 
         if form.is_valid():
-            trait_character = character
+            aspect_storyobject = storyobject
 
             #for f in formset:
             cd = form.cleaned_data
@@ -707,12 +724,12 @@ def add_trait(request, character_name_slug):
             else:
                 name = cd.get('name')
                 label = cd.get('label')
-                trait = Trait(
+                aspect = Aspect(
                     name=name, label=label,
-                    character=trait_character)
+                    storyobject=aspect_storyobject)
 
-                trait.save()
-                form = TraitForm()
+                aspect.save()
+                form = AspectForm()
 
             return HttpResponseRedirect("")
 
@@ -721,40 +738,40 @@ def add_trait(request, character_name_slug):
 
     else:
 
-        form = TraitForm()
+        form = AspectForm()
 
-    return render(request, 'personas/add_trait.html', {'form': form,
-        'slug': character_name_slug, 'character': character,
-        'traits': traits, 'story':story})
+    return render(request, 'personas/add_aspect.html', {'form': form,
+        'slug': storyobject_name_slug, 'storyobject': storyobject,
+        'aspects': aspects, 'story':story})
 
 
 @login_required
-def add_skills(request, character_name_slug):
+def add_skills(request, storyobject_name_slug):
 
     #SkillFormSet = formset_factory(SkillForm, extra=10, max_num=10)
     #helper = SkillFormSetHelper()
 
-    skills = Skill.objects.filter(character__slug=character_name_slug)
+    skills = Skill.objects.filter(storyobject__slug=storyobject_name_slug)
 
-    character = Character.objects.get(slug=character_name_slug)
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
-    story = character.story
+    story = storyobject.story
 
     type_1_skills = Skill.objects.filter(
-            character__slug=character_name_slug).filter(s_type="Type_1")
+            storyobject__slug=storyobject_name_slug).filter(s_type="Type_1")
     type_2_skills = Skill.objects.filter(
-            character__slug=character_name_slug).filter(s_type="Type_2")
+            storyobject__slug=storyobject_name_slug).filter(s_type="Type_2")
     type_3_skills = Skill.objects.filter(
-            character__slug=character_name_slug).filter(s_type="Type_3")
+            storyobject__slug=storyobject_name_slug).filter(s_type="Type_3")
     type_4_skills = Skill.objects.filter(
-            character__slug=character_name_slug).filter(s_type="Type_4")
+            storyobject__slug=storyobject_name_slug).filter(s_type="Type_4")
 
     if request.method == 'POST':
 
-        form = SkillForm(request.POST or None, character=character)
+        form = SkillForm(request.POST or None, storyobject=storyobject)
 
         if form.is_valid():
-            skill_character = character
+            skill_storyobject = storyobject
 
             #for f in formset:
             cd = form.cleaned_data
@@ -765,10 +782,10 @@ def add_skills(request, character_name_slug):
                 value = cd.get('value')
                 s_type = cd.get('s_type')
                 skill = Skill(
-                    name=name, value=value, character=skill_character, s_type=s_type)
+                    name=name, value=value, storyobject=skill_storyobject, s_type=s_type)
 
                 skill.save()
-                form = SkillForm(character=character)
+                form = SkillForm(storyobject=storyobject)
 
             HttpResponseRedirect("")
 
@@ -776,46 +793,46 @@ def add_skills(request, character_name_slug):
             print (form.errors)
 
     else:
-        form = SkillForm(character=character)
+        form = SkillForm(storyobject=storyobject)
 
         #helper = SkillFormSetHelper()
         #helper.add_input(Submit("submit", "Save"))
         #helper.add_input(Submit("cancel", "Cancel"))
 
     return render(request, 'personas/add_skills.html', {'form': form,
-        'slug': character_name_slug, 'character': character,
+        'slug': storyobject_name_slug, 'storyobject': storyobject,
         'type_1_skills': type_1_skills, 'type_2_skills': type_2_skills,
         'type_3_skills': type_3_skills, 'type_4_skills': type_4_skills,
         'story':story})
 
 
 @login_required
-def add_statistics(request, character_name_slug):
+def add_statistics(request, storyobject_name_slug):
 
     #StatisticFormSet = formset_factory(StatisticForm, extra=10, max_num=10)
     #helper = StatisticFormSetHelper()
 
-    statistics = Statistic.objects.filter(character__slug=character_name_slug)
+    statistics = Statistic.objects.filter(storyobject__slug=storyobject_name_slug)
 
-    character = Character.objects.get(slug=character_name_slug)
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
-    story = character.story
+    story = storyobject.story
 
     type_1_statistics = Statistic.objects.filter(
-            character__slug=character_name_slug).filter(stat_type="Type_1")
+            storyobject__slug=storyobject_name_slug).filter(stat_type="Type_1")
     type_2_statistics = Statistic.objects.filter(
-            character__slug=character_name_slug).filter(stat_type="Type_2")
+            storyobject__slug=storyobject_name_slug).filter(stat_type="Type_2")
     type_3_statistics = Statistic.objects.filter(
-            character__slug=character_name_slug).filter(stat_type="Type_3")
+            storyobject__slug=storyobject_name_slug).filter(stat_type="Type_3")
     type_4_statistics = Statistic.objects.filter(
-            character__slug=character_name_slug).filter(stat_type="Type_4")
+            storyobject__slug=storyobject_name_slug).filter(stat_type="Type_4")
 
     if request.method == 'POST':
 
-        form = StatisticForm(request.POST or None, character=character)
+        form = StatisticForm(request.POST or None, storyobject=storyobject)
 
         if form.is_valid():
-            statistic_character = character
+            statistic_storyobject = storyobject
 
             #for f in formset:
             cd = form.cleaned_data
@@ -826,10 +843,10 @@ def add_statistics(request, character_name_slug):
                 value = cd.get('value')
                 s_type = cd.get('stat_type')
                 statistic = Statistic(
-                    name=name, value=value, character=statistic_character, stat_type=s_type)
+                    name=name, value=value, storyobject=statistic_storyobject, stat_type=s_type)
 
                 statistic.save()
-                form = StatisticForm(character=character)
+                form = StatisticForm(storyobject=storyobject)
 
             HttpResponseRedirect("")
 
@@ -837,30 +854,30 @@ def add_statistics(request, character_name_slug):
             print (form.errors)
 
     else:
-        form = StatisticForm(character=character)
+        form = StatisticForm(storyobject=storyobject)
 
     return render(request, 'personas/add_statistics.html', {'form': form,
-        'slug': character_name_slug, 'character': character,
+        'slug': storyobject_name_slug, 'storyobject': storyobject,
         'type_1_statistics': type_1_statistics, 'type_2_statistics': type_2_statistics,
         'type_3_statistics': type_3_statistics, 'type_4_statistics': type_4_statistics,
         'story':story})
 
 
 @login_required
-def add_combat_info(request, character_name_slug):
+def add_combat_info(request, storyobject_name_slug):
 
-    combat_info_list = CombatInfo.objects.filter(character__slug=character_name_slug)
+    combat_info_list = CombatInfo.objects.filter(storyobject__slug=storyobject_name_slug)
 
-    character = Character.objects.get(slug=character_name_slug)
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
-    story = character.story
+    story = storyobject.story
 
     if request.method == 'POST':
 
         form = CombatInfoForm(request.POST or None)
 
         if form.is_valid():
-            combat_info_character = character
+            combat_info_storyobject = storyobject
 
             cd = form.cleaned_data
             if cd.get('title') == None:
@@ -869,7 +886,7 @@ def add_combat_info(request, character_name_slug):
                 title = cd.get('title')
                 data = cd.get('data')
                 combat_info = CombatInfo(
-                    title=title, data=data, character=combat_info_character)
+                    title=title, data=data, storyobject=combat_info_storyobject)
 
                 combat_info.save()
                 form = CombatInfoForm()
@@ -883,21 +900,21 @@ def add_combat_info(request, character_name_slug):
         form = CombatInfoForm()
 
     return render(request, 'personas/add_combat_info.html', {'form': form,
-        'slug': character_name_slug, 'character': character, 'story':story,
+        'slug': storyobject_name_slug, 'storyobject': storyobject, 'story':story,
         'combat_info':combat_info_list})
 
 
 @login_required
-def add_ability(request, character_name_slug):
+def add_ability(request, storyobject_name_slug):
 
-    abilities = SpecialAbility.objects.filter(character__slug=character_name_slug)
+    abilities = Ability.objects.filter(storyobject__slug=storyobject_name_slug)
 
-    character = Character.objects.get(slug=character_name_slug)
-    story = character.story
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
+    story = storyobject.story
 
     if request.method == 'POST':
 
-        ability_form = SpecialAbilityForm(request.POST)
+        ability_form = AbilityForm(request.POST)
 
         if ability_form.is_valid():
 
@@ -908,11 +925,11 @@ def add_ability(request, character_name_slug):
             else:
                 name = ability_data.get('name')
                 description = ability_data.get('description')
-                ability = SpecialAbility(
-                    name=name, description=description, character=character)
+                ability = Ability(
+                    name=name, description=description, storyobject=storyobject)
 
                 ability.save()
-                ability_form = SpecialAbilityForm()
+                ability_form = AbilityForm()
 
             HttpResponseRedirect("")
 
@@ -920,24 +937,24 @@ def add_ability(request, character_name_slug):
             print (ability_form.errors)
 
     else:
-        ability_form = SpecialAbilityForm()
+        ability_form = AbilityForm()
 
     return render(request, 'personas/add_ability.html', {
-        'slug': character_name_slug, 'character': character,
+        'slug': storyobject_name_slug, 'storyobject': storyobject,
         'abilities': abilities, 'story':story,
         'ability_form':ability_form})
 
 
 @login_required
-def add_relationships(request, character_name_slug):
+def add_relationships(request, storyobject_name_slug):
 
-    relationships = Relationship.objects.filter(Q(to_character__slug=character_name_slug) |
-        Q(from_character__slug=character_name_slug))
+    relationships = Relationship.objects.filter(Q(to_storyobject__slug=storyobject_name_slug) |
+        Q(from_storyobject__slug=storyobject_name_slug))
 
-    character = Character.objects.get(slug=character_name_slug)
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
-    story = character.story
-    data = {"from_character": character}
+    story = storyobject.story
+    data = {"from_storyobject": storyobject}
 
     if request.method == 'POST':
 
@@ -947,16 +964,16 @@ def add_relationships(request, character_name_slug):
 
             relationship_data = relationship_form.cleaned_data
 
-            if relationship_data.get('to_character') == None:
+            if relationship_data.get('to_storyobject') == None:
                 pass
             else:
-                to_character = relationship_data.get('to_character')
+                to_storyobject = relationship_data.get('to_storyobject')
                 relationship_description = relationship_data.get('relationship_description')
                 weight = relationship_data.get('weight')
                 relationship_class = relationship_data.get('relationship_class')
                 relationship = Relationship(
-                    from_character=character,
-                    to_character=to_character,
+                    from_storyobject=storyobject,
+                    to_storyobject=to_storyobject,
                     relationship_description=relationship_description,
                     relationship_class=relationship_class, weight=weight)
 
@@ -972,7 +989,7 @@ def add_relationships(request, character_name_slug):
         relationship_form = RelationshipForm(story=story)
 
     return render(request, 'personas/add_relationships.html', {
-        'slug': character_name_slug, 'character': character, 'story':story,
+        'slug': storyobject_name_slug, 'storyobject': storyobject, 'story':story,
         'relationships': relationships, 'relationship_form':relationship_form})
 
 
@@ -983,7 +1000,7 @@ def add_chapter(request, story_title_slug):
 
     chapters = Chapter.objects.filter(story__slug=story_title_slug).order_by("-number")
 
-    characters = Character.objects.filter(story=story)
+    storyobjects = StoryObject.objects.filter(story=story)
 
     if request.method == 'POST':
 
@@ -1028,7 +1045,7 @@ def add_scene(request, story_title_slug):
 
     scenes = Scene.objects.filter(chapter__story__slug=story_title_slug).order_by("-number")
 
-    characters = Character.objects.filter(story=story)
+    storyobjects = StoryObject.objects.filter(story=story)
 
     if request.method == 'POST':
 
@@ -1051,7 +1068,7 @@ def add_scene(request, story_title_slug):
 
     return render(request, 'personas/add_scene.html', {
         'slug': story_title_slug, 'story':story, 'scenes': scenes,
-        'scene_form':scene_form, 'characters':characters})
+        'scene_form':scene_form, 'storyobjects':storyobjects})
 
 
 @login_required
@@ -1152,13 +1169,13 @@ def add_nation(request, story_title_slug):
 
 
 @login_required
-def add_membership(request, character_name_slug):
+def add_membership(request, storyobject_name_slug):
 
-    character = Character.objects.get(slug=character_name_slug)
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
-    story = Story.objects.get(character=character)
+    story = Story.objects.get(storyobject=storyobject)
 
-    memberships = Membership.objects.filter(character=character)
+    memberships = Membership.objects.filter(storyobject=storyobject)
 
     if request.method == 'POST':
 
@@ -1166,7 +1183,7 @@ def add_membership(request, character_name_slug):
 
         if membership_form.is_valid():
             membership = membership_form.save(commit=False)
-            membership.character = character
+            membership.storyobject = storyobject
             membership.save()
 
             return HttpResponseRedirect("")
@@ -1178,8 +1195,8 @@ def add_membership(request, character_name_slug):
         membership_form = MembershipForm(story=story)
 
     return render(request, 'personas/add_membership.html', {
-        'slug': character_name_slug, 'story':story, 'memberships': memberships,
-        'membership_form':membership_form, 'character': character})
+        'slug': storyobject_name_slug, 'story':story, 'memberships': memberships,
+        'membership_form':membership_form, 'storyobject': storyobject})
 
 
 @login_required
@@ -1187,10 +1204,10 @@ def add_artifact(request, slug, *args, **kwargs):
 
     try:
         story = Story.objects.get(slug=slug)
-        character = None
+        storyobject = None
     except ObjectDoesNotExist:
-        character = Character.objects.get(slug=slug)
-        story = Story.objects.get(character=character)
+        storyobject = StoryObject.objects.get(slug=slug)
+        story = Story.objects.get(storyobject=storyobject)
 
     artifacts = Item.objects.filter(story=story)
 
@@ -1202,8 +1219,8 @@ def add_artifact(request, slug, *args, **kwargs):
             artifact = artifact_form.save(commit=False)
             artifact.slug = slugify(
                 "{}-{}".format(story.title, artifact.name))
-            if character:
-                artifact.character = character
+            if storyobject:
+                artifact.storyobject = storyobject
             else:
                 pass
             artifact.story = story
@@ -1219,15 +1236,15 @@ def add_artifact(request, slug, *args, **kwargs):
 
     return render(request, 'personas/add_artifact.html', {
         'story':story, 'artifacts': artifacts,
-        'artifact_form':artifact_form, 'character':character})
+        'artifact_form':artifact_form, 'storyobject':storyobject})
 
 
 @login_required
-def add_gallery_image(request, character_slug):
+def add_gallery_image(request, storyobject_slug):
 
 
-    character = get_object_or_404(Character, slug=character_slug)
-    story = character.story
+    storyobject = get_object_or_404(storyobject, slug=storyobject_slug)
+    story = storyobject.story
 
     if request.method == 'POST':
         image_form = GalleryImageForm(request.POST, request.FILES)
@@ -1237,7 +1254,7 @@ def add_gallery_image(request, character_slug):
         if image_form.is_valid():
             image = image_form.save(commit=False)
             image.creator = creator
-            image.character = character
+            image.storyobject = storyobject
 
             image.save()
 
@@ -1251,7 +1268,7 @@ def add_gallery_image(request, character_slug):
         image_form = GalleryImageForm()
 
     return render(request, 'personas/add_gallery_image.html',
-        {'image_form': image_form, 'character':character, 'story':story})
+        {'image_form': image_form, 'storyobject':storyobject, 'story':story})
 
 
 
@@ -1260,12 +1277,12 @@ def add_gallery_image(request, character_slug):
 @login_required
 def delete_skill(request, pk, template_name='personas/delete_skill.html'):
     skill = Skill.objects.get(pk=pk)
-    character = Character.objects.get(skill=skill)
-    if request.user == character.creator:
+    storyobject = StoryObject.objects.get(skill=skill)
+    if request.user == storyobject.creator:
         if request.method=='POST':
             skill.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#skills'.format(character.slug)})
+         {'redirect_url':'/personas/storyobject/{}/#skills'.format(storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': skill})
@@ -1273,27 +1290,27 @@ def delete_skill(request, pk, template_name='personas/delete_skill.html'):
 @login_required
 def edit_skill(request, pk, template_name='personas/edit_skill.html'):
     skill = Skill.objects.get(pk=pk)
-    character = Character.objects.get(skill=skill)
-    story = character.story
-    form = SkillForm(request.POST or None, instance=skill, character=character)
+    storyobject = StoryObject.objects.get(skill=skill)
+    story = storyobject.story
+    form = SkillForm(request.POST or None, instance=skill, storyobject=storyobject)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#skills'.format(character.slug)})
-    return render(request, template_name, {'form': form, 'character': character,
+         {'redirect_url':'/personas/storyobject/{}/#skills'.format(storyobject.slug)})
+    return render(request, template_name, {'form': form, 'storyobject': storyobject,
         'skill': skill, 'story':story})
 
 
 @login_required
 def delete_combat_info(request, pk, template_name='personas/delete_combat_info.html'):
     combat_info = CombatInfo.objects.get(pk=pk)
-    character = Character.objects.get(combatinfo=combat_info)
-    if request.user == character.creator:
+    storyobject = StoryObject.objects.get(combatinfo=combat_info)
+    if request.user == storyobject.creator:
         if request.method=='POST':
             combat_info.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/character/{}/#skills'.format(
-                character.slug)})
+             {'redirect_url':'/personas/storyobject/{}/#skills'.format(
+                storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to edit this.")
     return render(request, template_name, {'object': combat_info})
@@ -1301,27 +1318,27 @@ def delete_combat_info(request, pk, template_name='personas/delete_combat_info.h
 @login_required
 def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'):
     combat_info = CombatInfo.objects.get(pk=pk)
-    character = Character.objects.get(combatinfo=combat_info)
-    story = character.story
+    storyobject = StoryObject.objects.get(combatinfo=combat_info)
+    story = storyobject.story
     form = CombatInfoForm(request.POST or None, instance=combat_info)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#combat'.format(character.slug)})
-    return render(request, template_name, {'form': form, 'character': character,
+         {'redirect_url':'/personas/storyobject/{}/#combat'.format(storyobject.slug)})
+    return render(request, template_name, {'form': form, 'storyobject': storyobject,
         'combat_info': combat_info, 'story':story})
 
 
 @login_required
 def delete_relationship(request, pk, template_name='personas/delete_relationship.html'):
     relationship = Relationship.objects.get(pk=pk)
-    character = Character.objects.get(id=relationship.from_character_id)
-    if request.user == character.creator:
+    storyobject = StoryObject.objects.get(id=relationship.from_storyobject_id)
+    if request.user == storyobject.creator:
         if request.method=='POST':
             relationship.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/character/{}/#details'.format(
-                character.slug)})
+             {'redirect_url':'/personas/storyobject/{}/#details'.format(
+                storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': relationship})
@@ -1330,28 +1347,28 @@ def delete_relationship(request, pk, template_name='personas/delete_relationship
 @login_required
 def edit_relationship(request, pk, template_name='personas/edit_relationship.html'):
     relationship = Relationship.objects.get(pk=pk)
-    character = Character.objects.get(id=relationship.from_character_id)
-    story = character.story
+    storyobject = StoryObject.objects.get(id=relationship.from_storyobject_id)
+    story = storyobject.story
     form = RelationshipForm(request.POST or None, instance=relationship)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#details'.format(
-            character.slug)})
-    return render(request, template_name, {'form': form, 'from_character':character,
+         {'redirect_url':'/personas/storyobject/{}/#details'.format(
+            storyobject.slug)})
+    return render(request, template_name, {'form': form, 'from_storyobject':storyobject,
         'relationship': relationship, 'story':story})
 
 
 @login_required
 def delete_statistic(request, pk, template_name='personas/delete_statistic.html'):
     statistic = Statistic.objects.get(pk=pk)
-    character = Character.objects.get(statistic=statistic)
-    if request.user == character.creator:
+    storyobject = StoryObject.objects.get(statistic=statistic)
+    if request.user == storyobject.creator:
         if request.method=='POST':
             statistic.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/character/{}/#abilities'.format(
-                character.slug)})
+             {'redirect_url':'/personas/storyobject/{}/#abilities'.format(
+                storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': statistic})
@@ -1360,97 +1377,97 @@ def delete_statistic(request, pk, template_name='personas/delete_statistic.html'
 @login_required
 def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
     statistic = Statistic.objects.get(pk=pk)
-    character = Character.objects.get(statistic=statistic)
-    story = character.story
-    form = StatisticForm(request.POST or None, instance=statistic, character=character)
+    storyobject = StoryObject.objects.get(statistic=statistic)
+    story = storyobject.story
+    form = StatisticForm(request.POST or None, instance=statistic, storyobject=storyobject)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#abilities'.format(character.slug)})
-    return render(request, template_name, {'form': form, 'character':character,
+         {'redirect_url':'/personas/storyobject/{}/#abilities'.format(storyobject.slug)})
+    return render(request, template_name, {'form': form, 'storyobject':storyobject,
         'statistic': statistic, 'story':story})
 
 
 @login_required
 def delete_ability(request, pk, template_name='personas/delete_ability.html'):
-    specialability = SpecialAbility.objects.get(pk=pk)
-    character = Character.objects.get(specialability=specialability)
-    if request.user == character.creator:
+    ability = Ability.objects.get(pk=pk)
+    storyobject = StoryObject.objects.get(ability=ability)
+    if request.user == storyobject.creator:
         if request.method=='POST':
-            specialability.delete()
+            ability.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/character/{}/#details'.format(
-                character.slug)})
+             {'redirect_url':'/personas/storyobject/{}/#details'.format(
+                storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
-    return render(request, template_name, {'object': specialability})
+    return render(request, template_name, {'object': ability})
 
 
 @login_required
 def edit_ability(request, pk, template_name='personas/edit_ability.html'):
-    specialability = SpecialAbility.objects.get(pk=pk)
-    character = Character.objects.get(specialability=specialability)
-    story = character.story
-    form = SpecialAbilityForm(request.POST or None, instance=specialability)
+    ability = Ability.objects.get(pk=pk)
+    storyobject = StoryObject.objects.get(ability=ability)
+    story = storyobject.story
+    form = AbilityForm(request.POST or None, instance=ability)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#abilities'.format(character.slug)})
-    return render(request, template_name, {'form': form, 'character': character,
-        'ability': specialability, 'story':story})
+         {'redirect_url':'/personas/storyobject/{}/#abilities'.format(storyobject.slug)})
+    return render(request, template_name, {'form': form, 'storyobject': storyobject,
+        'ability': ability, 'story':story})
 
 
 @login_required
-def delete_trait(request, pk, template_name='personas/delete_trait.html'):
-    trait = Trait.objects.get(pk=pk)
-    character = Character.objects.get(trait=trait)
-    if request.user == character.creator:
+def delete_aspect(request, pk, template_name='personas/delete_aspect.html'):
+    aspect = Aspect.objects.get(pk=pk)
+    storyobject = StoryObject.objects.get(aspect=aspect)
+    if request.user == storyobject.creator:
         if request.method=='POST':
-            trait.delete()
+            aspect.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/character/{}/#details'.format(
-                character.slug)})
+             {'redirect_url':'/personas/storyobject/{}/#details'.format(
+                storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
-    return render(request, template_name, {'object': trait})
+    return render(request, template_name, {'object': aspect})
 
 
 @login_required
-def edit_trait(request, pk, template_name='personas/edit_trait.html'):
-    trait = Trait.objects.get(pk=pk)
-    character = Character.objects.get(trait=trait)
-    story = character.story
-    form = TraitForm(request.POST or None, instance=trait)
+def edit_aspect(request, pk, template_name='personas/edit_aspect.html'):
+    aspect = Aspect.objects.get(pk=pk)
+    storyobject = StoryObject.objects.get(aspect=aspect)
+    story = storyobject.story
+    form = AspectForm(request.POST or None, instance=aspect)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#details'.format(character.slug)})
-    return render(request, template_name, {'form': form, 'character':character, 'trait': trait,
+         {'redirect_url':'/personas/storyobject/{}/#details'.format(storyobject.slug)})
+    return render(request, template_name, {'form': form, 'storyobject':storyobject, 'aspect': aspect,
         'story':story})
 
 
 @login_required
-def delete_character(request, pk, template_name='personas/delete_character.html'):
-    character = Character.objects.get(pk=pk)
-    if request.user == character.creator:
+def delete_storyobject(request, pk, template_name='personas/delete_storyobject.html'):
+    storyobject = StoryObject.objects.get(pk=pk)
+    if request.user == storyobject.creator:
         if request.method=='POST':
-            character.delete()
+            storyobject.delete()
             return HttpResponseRedirect('/personas/')
     else:
         return HttpResponse("You do not have permission to delete this.")
-    return render(request, template_name, {'object': character})
+    return render(request, template_name, {'object': storyobject})
 
 
 @login_required
-def edit_character(request, pk, template_name='personas/edit_character.html'):
-    character = Character.objects.get(pk=pk)
-    story = character.story
+def edit_storyobject(request, pk, template_name='personas/edit_storyobject.html'):
+    storyobject = StoryObject.objects.get(pk=pk)
+    story = storyobject.story
     user = request.user
-    form = CharacterForm(request.POST or None, request.FILES or None, instance=character)
+    form = StoryObjectForm(request.POST or None, request.FILES or None, instance=storyobject)
     if form.is_valid():
-        form.save(creator=character.creator, story=story)
-        return HttpResponseRedirect('/personas/character/{}'.format(character.slug))
-    return render(request, template_name, {'form': form, 'character':character,
+        form.save(creator=storyobject.creator, story=story)
+        return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
+    return render(request, template_name, {'form': form, 'storyobject':storyobject,
         'story':story})
 
 
@@ -1580,13 +1597,13 @@ def edit_scene(request, pk, template_name='personas/edit_scene.html'):
 @login_required
 def delete_membership(request, pk, template_name='personas/delete_membership.html'):
     membership = Membership.objects.get(pk=pk)
-    character = membership.character
-    if request.user == character.creator:
+    storyobject = membership.storyobject
+    if request.user == storyobject.creator:
         if request.method=='POST':
             membership.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#details'.format(
-            character.slug)})
+         {'redirect_url':'/personas/storyobject/{}/#details'.format(
+            storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': membership})
@@ -1595,28 +1612,28 @@ def delete_membership(request, pk, template_name='personas/delete_membership.htm
 @login_required
 def edit_membership(request, pk, template_name='personas/edit_membership.html'):
     membership = Membership.objects.get(pk=pk)
-    character = membership.character
-    story = character.story
+    storyobject = membership.storyobject
+    story = storyobject.story
     form = MembershipForm(request.POST or None, instance=membership)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#details'.format(
-            character.slug)})
-    return render(request, template_name, {'form': form, 'character':character, 'membership': membership,
+         {'redirect_url':'/personas/storyobject/{}/#details'.format(
+            storyobject.slug)})
+    return render(request, template_name, {'form': form, 'storyobject':storyobject, 'membership': membership,
         'story':story})
 
 
 @login_required
 def delete_artifact(request, pk, template_name='personas/delete_artifact.html'):
     artifact = Item.objects.get(pk=pk)
-    character = Character.objects.get(item=artifact)
-    if request.user == character.creator:
+    storyobject = StoryObject.objects.get(item=artifact)
+    if request.user == storyobject.creator:
         if request.method=='POST':
             artifact.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/character/{}/#abilities'.format(
-                character.slug)})
+             {'redirect_url':'/personas/storyobject/{}/#abilities'.format(
+                storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': artifact})
@@ -1625,15 +1642,15 @@ def delete_artifact(request, pk, template_name='personas/delete_artifact.html'):
 @login_required
 def edit_artifact(request, pk, template_name='personas/edit_artifact.html'):
     artifact = Item.objects.get(pk=pk)
-    character = Character.objects.get(item=artifact)
-    story= character.story
+    storyobject = StoryObject.objects.get(item=artifact)
+    story= storyobject.story
     form = ItemForm(request.POST or None, instance=artifact)
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/character/{}/#abilities'.format(
-            character.slug)})
-    return render(request, template_name, {'form': form, 'character':character, 'artifact': artifact, 'story':story})
+         {'redirect_url':'/personas/storyobject/{}/#abilities'.format(
+            storyobject.slug)})
+    return render(request, template_name, {'form': form, 'storyobject':storyobject, 'artifact': artifact, 'story':story})
 
 
 @login_required

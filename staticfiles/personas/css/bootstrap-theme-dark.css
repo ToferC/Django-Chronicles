@@ -70,6 +70,7 @@ a:active {
 
  table, label {
   color: white;
+  background: black;
  }
 
 tr:hover {

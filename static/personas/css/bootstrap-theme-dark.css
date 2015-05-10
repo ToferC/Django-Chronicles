@@ -80,8 +80,11 @@ a:active {
 
  table, label {
   color: white;
-  background: black;
  }
+
+tr {
+  background: black;
+}
 
 tr:hover {
   background: black;

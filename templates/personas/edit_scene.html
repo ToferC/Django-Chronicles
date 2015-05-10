@@ -8,10 +8,12 @@
     </header>
 {% endblock %}
 
+{% block content %}
 {% block content_l %}
 <div class="col-md-2 col-sm-2 col-lg-2" id="col1">
     </div>
 {% endblock %}
+
 {% block column1 %}
 <div class="col-md-6 col-sm-6 col-lg-6" id="col1">
     {% crispy form %}
@@ -28,4 +30,5 @@
 {% block content_r %}
 <div class="col-md-2 col-sm-2 col-lg-2">
     </div>
+{% endblock %}
 {% endblock %}

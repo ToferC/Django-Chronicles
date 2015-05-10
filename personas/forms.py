@@ -3,7 +3,7 @@ from django.forms import widgets
 from django.forms.models import modelform_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from personas.models import Nation, Location, Character, Organization, Relationship, Membership, Trait, SpecialAbility, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage
+from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage
 from personas.models import Statistic, CombatInfo, ScratchPad
 from django_markdown.widgets import MarkdownWidget
 from django_markdown.fields import MarkdownFormField
@@ -16,9 +16,9 @@ from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, Inl
 import datetime
 
 
-class CharacterForm(forms.ModelForm):
+class StoryObjectForm(forms.ModelForm):
     class Meta:
-        model = Character
+        model = StoryObject
         fields = "__all__"
         exclude = ['slug', 'creator', 'story']
 
@@ -28,9 +28,8 @@ class CharacterForm(forms.ModelForm):
         except KeyError:
             self.story = None
 
-        super(CharacterForm, self).__init__(*args, **kwargs)
+        super(StoryObjectForm, self).__init__(*args, **kwargs)
         if self.story:
-            self.fields['birthplace'].queryset = Location.objects.filter(story=self.story)
             self.fields['base_of_operations'].queryset = Location.objects.filter(story=self.story)
             self.fields['nationality'].queryset = Nation.objects.filter(story=self.story)
 
@@ -39,11 +38,11 @@ class CharacterForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/story/{{ story.slug }}/#characters">Cancel</a>"""),
+                        href="/personas/story/{{ story.slug }}/#storyobjects">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
     def save(self, creator, story=None, commit=True):
-        instance = super(CharacterForm, self).save(commit=False)
+        instance = super(StoryObjectForm, self).save(commit=False)
         instance.slug = slugify("{}-{}".format(story.title, instance.name))
         instance.creator = creator
         instance.story = story
@@ -59,11 +58,11 @@ class SkillForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         try:
-            self.character = kwargs.pop('character')
+            self.storyobject = kwargs.pop('storyobject')
         except KeyError:
-            self.character = None
+            self.storyobject = None
 
-        choice_story = Story.objects.get(character=self.character)
+        choice_story = Story.objects.get(storyobject=self.storyobject)
 
         context_choices = [('Type_1', getattr(choice_story, 'skill_type_name_1')),
             ('Type_2', getattr(choice_story, 'skill_type_name_2')),
@@ -85,7 +84,7 @@ class SkillForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#skills">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#skills">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -97,11 +96,11 @@ class StatisticForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
 
         try:
-            self.character = kwargs.pop('character')
+            self.storyobject = kwargs.pop('storyobject')
         except KeyError:
-            self.character = None
+            self.storyobject = None
 
-        choice_story = Story.objects.get(character=self.character)
+        choice_story = Story.objects.get(storyobject=self.storyobject)
 
         context_choices = [('Type_1', getattr(choice_story, 'statistic_type_name_1')),
             ('Type_2', getattr(choice_story, 'statistic_type_name_2')),
@@ -123,7 +122,7 @@ class StatisticForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#abilities">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#abilities">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -139,7 +138,7 @@ class CombatInfoForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#combat">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#combat">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -158,7 +157,7 @@ class ScratchPadForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#combat">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#combat">Cancel</a>"""),
                 Submit('snapshot', 'Submit'),))
 
 
@@ -172,24 +171,24 @@ class SkillFormSetHelper(FormHelper):
         self.render_required_fields = True,
 
 
-class TraitForm(forms.ModelForm):
+class AspectForm(forms.ModelForm):
     class Meta:
-        model = Trait
+        model = Aspect
         fields = ['name', 'label']
 
     def __init__(self, *args, **kwargs):
-        super(TraitForm, self).__init__(*args, **kwargs)
+        super(AspectForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#details">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#details">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
-class TraitFormSetHelper(FormHelper):
+class AspectFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
-        super(TraitFormSetHelper, self).__init__(*args, **kwargs)
+        super(AspectFormSetHelper, self).__init__(*args, **kwargs)
         self.form_method = 'post'
         self.layout = Layout(
             'label',
@@ -198,13 +197,13 @@ class TraitFormSetHelper(FormHelper):
         self.render_required_fields = True,
 
 
-class SpecialAbilityForm(forms.ModelForm):
+class AbilityForm(forms.ModelForm):
     class Meta:
-        model = SpecialAbility
+        model = Ability
         fields = ["name", "description",]
 
     def __init__(self, *args, **kwargs):
-        super(SpecialAbilityForm, self).__init__(*args, **kwargs)
+        super(AbilityForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.layout = Layout(
             'name',
@@ -213,7 +212,7 @@ class SpecialAbilityForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#abilities">
+                        href="/personas/storyobject/{{ storyobject.slug }}/#abilities">
                         Cancel</a>"""),
                 Submit('save', 'Submit'),)
             )
@@ -222,7 +221,7 @@ class SpecialAbilityForm(forms.ModelForm):
 class MembershipForm(forms.ModelForm):
     class Meta:
         model = Membership
-        fields = ["organization", "date_joined",
+        fields = ["organization",
         "role", "rank"]
 
     def __init__(self, *args, **kwargs):
@@ -240,7 +239,7 @@ class MembershipForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#details">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#details">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -259,7 +258,7 @@ class ItemForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#abilities">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#abilities">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -275,14 +274,14 @@ class GalleryImageForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#combat">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#combat">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
 class RelationshipForm(forms.ModelForm):
     class Meta:
         model = Relationship
-        fields = ["to_character", "relationship_class",
+        fields = ["to_storyobject", "relationship_class",
         "relationship_description", "weight"]
 
     def __init__(self, *args, **kwargs):
@@ -294,7 +293,7 @@ class RelationshipForm(forms.ModelForm):
         super(RelationshipForm, self).__init__(*args, **kwargs)
 
         if self.story:
-            self.fields['to_character'].queryset = Character.objects.filter(
+            self.fields['to_storyobject'].queryset = StoryObject.objects.filter(
                 story=self.story).order_by('name')
 
         self.helper = FormHelper(self)
@@ -305,7 +304,7 @@ class RelationshipForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#details">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#details">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -353,13 +352,13 @@ class ChapterForm(forms.ModelForm):
 
 
 class SceneForm(forms.ModelForm):
-    characters = forms.ModelMultipleChoiceField(queryset = Character.objects.all())
+    storyobjects = forms.ModelMultipleChoiceField(queryset = StoryObject.objects.all())
 
     class Meta:
         model = Scene
 
         fields = "__all__"
-        exclude = ["slug", "creator"]
+        exclude = ["slug", "creator", "publication_date"]
 
     def __init__(self, *args, **kwargs):
         try:
@@ -372,9 +371,9 @@ class SceneForm(forms.ModelForm):
         if self.story:
             self.fields['location'].queryset = Location.objects.filter(
                 story=self.story)
-            self.fields['characters'].queryset = Character.objects.filter(
+            self.fields['storyobjects'].queryset = StoryObject.objects.filter(
                 story=self.story)
-            self.fields['characters'].widget = forms.widgets.CheckboxSelectMultiple()
+            self.fields['storyobjects'].widget = forms.widgets.CheckboxSelectMultiple()
             self.fields['chapter'].queryset = Chapter.objects.filter(
                 story=self.story)
 
@@ -495,7 +494,7 @@ class NoteForm(forms.ModelForm):
     def save(self, commit=False, *args, **kwargs):
         instance = super(NoteForm, self).save(commit=False)
         try:
-            instance.character = kwargs.pop('character')
+            instance.storyobject = kwargs.pop('storyobject')
         except KeyError:
             pass
         try:
@@ -547,7 +546,7 @@ class CommuniqueForm(forms.ModelForm):
         super(CommuniqueForm, self).__init__(*args, **kwargs)
 
         if self.story:
-            self.fields['receiver'].queryset = Character.objects.filter(
+            self.fields['receiver'].queryset = StoryObject.objects.filter(
                 story=self.story).order_by('name')
 
 
@@ -556,7 +555,7 @@ class CommuniqueForm(forms.ModelForm):
         self.helper.layout.append(
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/character/{{ character.slug }}/#social">Cancel</a>"""),
+                        href="/personas/storyobject/{{ storyobject.slug }}/#social">Cancel</a>"""),
                 Submit('send', 'Submit'),))
 
     def save(self, author, commit):

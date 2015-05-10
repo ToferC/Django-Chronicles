@@ -5,7 +5,7 @@
 
 {% block title %}
 <header>
-    <h1>Add Character</h1>
+    <h1>Add Story Object</h1>
 </header>
 {% endblock %}
 
@@ -18,15 +18,15 @@
 
 {% block column1 %}
     <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
-    <h3>Creating a Character</h3>
-    <p>Creating your character is a three step process.  First, on this page, you will create your character's core information, including their name, description and image.  When you've finished, you can click submit and you'll be taken to the second page where you can enter your character's skills and competencies.  More about that when we get there.</p><br><br>
+    <h3>Creating a Story Object</h3>
+    <p>Creating your story object is a three step process.  First, on this page, you will create your object's core information, including their name, description and image.  When you've finished, you can click submit and you'll be taken to the second page where you can enter your story_object's skills and competencies.  More about that when we get there.</p><br><br>
     </div>
 {% endblock %}
 
 {% block column2 %}
     <div class="col-md-4 col-sm-8 col-lg-4" id="col3">
-    <h3>Create a Character</h3>
-    {% crispy character_form %}
+    <h3>Create a Story Object</h3>
+    {% crispy storyobject_form %}
     <br><br><br>
     </div>
 {% endblock %}

@@ -57,7 +57,7 @@
         {% if members %}
             <ul>
                 {% for member in members %}
-                    <li><a href="/personas/character/{{ member.character.slug }}">{{ member.character }}</a> - Rank {{ member.rank }} - {{ member.role }}</li>
+                    <li><a href="/personas/storyobject/{{ member.storyobject.slug }}">{{ member.storyobject }}</a> - Rank {{ member.rank }} - {{ member.role }}</li>
                 {% endfor %}
             </ul>
         {% else %}

@@ -4,7 +4,7 @@
 
 {% block title %}
 <header>
-    <h1>{{ character }} - Adding Aspects</h1>
+    <h1>{{ storyobject.name }} - Adding Aspects</h1>
 </header>
 {% endblock %}
 
@@ -26,14 +26,18 @@
 {% block column2 %}
     <div class="col-md-3 col-sm-4 col-lg-2" id="col2">
 <h3>Current Aspects</h3>
-    {% if traits %}
-    {% for trait in traits %}
+    {% if aspects %}
+    {% for aspect in aspects %}
     <ul>
-        <li>{{ trait }}</li>
+        <li>{{ aspect }}
+        {% if user == storyobject.creator or user == story.author %}
+        <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_aspect' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+        {% else %}{% endif %}
+        </li>
     </ul>
     {% endfor %}
     {% else %}
-    <strong>{{ character.name }} has no Aspects.</strong>
+    <strong>{{ storyobject.name }} has no Aspects.</strong>
     {% endif %}
     </div>
 {% endblock %}
@@ -45,11 +49,11 @@
     <br><br><br>
     <h4>Finished adding Aspects?</h4>
             <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/add_statistics/{{ character.slug }}">I'm done. Next Step!</a>
+                <a role="button" class="btn btn-primary" href="/personas/add_statistics/{{ storyobject.slug }}">I'm done. Next Step!</a>
             </div>
         <hr>
         <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}/#details">Take me straight<br>to my character.</a>
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#details">Take me straight<br>to my character.</a>
             </div>
     </div>
 {% endblock %}

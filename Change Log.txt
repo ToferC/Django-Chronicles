@@ -2,14 +2,15 @@ Change Log
 -----------------------------------------------------------------------
 
 Modify Story model
-- Add Setting field (Charfield)
-- Add Themes field (Charfield)
+- Add Setting field (Charfield) -- ADDED
+- Add Themes field (Charfield) -- ADDED
 
 Modify Character model:
-- Change model name to StoryObject & change throughout project
+- Change model name to StoryObject & change throughout project -- ADDED
 - Modify c_type
--- types = "Character, Creature, Thing, Abstract"
-- add Role field (Charfield)
+-- types = "Character, Creature, Thing, Abstract" -- ADDED
+- add Role field (Charfield) -- ADDED
+- Remove XP, Birthplace, Age -- REMOVED
 
 Rename Trait model >> Aspect
 
@@ -17,20 +18,25 @@ Rename Item model >> Artifact OR Eliminate Item model
 - need to fix edit_artifact view - character not required.
 
 - Add boolean field toggles for:
--- skill_toggle
--- stats_toggle
--- ability_toggle
--- combat_info_toggle
--- gallery_images_toggle
--- social_toggle
+-- skill_toggle - ADDED
+-- stats_toggle - ADDED
+-- ability_toggle - ADDED
+-- combat_info_toggle - ADDED
+-- gallery_images_toggle - ADDED
+-- social_toggle - ADDED
 
 Modify Character templates so that boolean toggles hide/reveal tabs and tab pages
 
 Modify Relationship through template:
-- types = "Loves, Hates, Fears, Envies, Distrusts, Trusts, Desires, Respect, Dislike, Disgusted by, Angry at, Jealous of, Resents, Proud of, "
+- types = "Loves, Hates, Fears, Envies, Distrusts, Trusts, Desires, Respect, Dislike, Disgusted by, Angry at, Jealous of, Resents, Proud of, Owns, Belongs to, Crews"
 
 Modify Scenes model:
-- Rename time field >> publication date
-- Add Purpose field >> Charfield
-- Add Resolution field >> choicefield - "Up, Down, Neutral"
-- Add Scene_Type field >> "Procedural, Action, Suspense, Question, Reveal, Dramatic, "
+- Rename time field >> publication date -- CHANGED
+- Add Purpose field >> Charfield - ADDED
+- Add Resolution field >> choicefield - "Up, Down, Neutral" -- ADDED
+- Add Scene_Type field >> "Procedural, Action, Suspense, Question, Reveal, Dramatic, " -- ADDED
+
+Set up Transition model - scene to scene
+- Add from_scene field
+- Add to_scene field
+- Add transition Charfield

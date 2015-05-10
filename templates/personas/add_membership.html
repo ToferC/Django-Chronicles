@@ -4,7 +4,7 @@
 
 {% block title %}
 <header>
-    <h1>{{ character }} - Adding Aspects</h1>
+    <h1>{{ storyobject }} - Adding Aspects</h1>
 </header>
 {% endblock %}
 
@@ -18,10 +18,10 @@
 {% block column1 %}
     <div class="col-md-2 col-sm-4 col-lg-3" id="col1">
     <h3>Memberships</h3>
-    <p>Membership denotes that the character both belongs to an organization and has a role within that organization.</p>
+    <p>Membership denotes that the story object both belongs to an organization and has a role within that organization.</p>
 
-    {% if character.image %}
-    <img src="{{ character.image.url }}" alt="Character Image" width="100%" height="100%">
+    {% if storyobject.image %}
+    <img src="{{ storyobject.image.url }}" alt="storyobject Image" width="100%" height="100%">
     {% else %}
     <img src="{% static 'images/035.jpg' %}" alt="Cthulhu" width="100%" height="100%">
     {% endif %}
@@ -42,7 +42,7 @@
     {% endfor %}
     </ul>
     {% else %}
-    <strong>{{ character.name }} has no memberships.</strong>
+    <strong>{{ storyobject.name }} has no memberships.</strong>
     {% endif %}
     </div>
 {% endblock %}
@@ -54,7 +54,7 @@
     <br><br><br>
     <h4>Finished adding membership?</h4>
             <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/character/{{ character.slug }}">I'm done. Take me to my character page!</a>
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}">I'm done. Take me to my character page!</a>
             </div>
     </div>
 {% endblock %}

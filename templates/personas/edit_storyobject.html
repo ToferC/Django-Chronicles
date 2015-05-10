@@ -4,9 +4,12 @@
 {% load crispy_forms_tags %}
 {% block title %}
     <header>
-        <h1>Edit Character {{ character.name }}</h1>
+        <h1>Edit Character {{ storyobject.name }}</h1>
     </header>
 {% endblock %}
+
+{% block content %}
+
 {% block content_l %}
     <div class="col-md-2 col-sm-2 col-lg-2" id="col1">
     </div>
@@ -19,18 +22,19 @@
 {% block column2 %}
     <div class="col-md-2 col-sm-2 col-lg-2">
         <div class="img-responsive">
-            {% thumbnail character.image "175" crop="center" as im %}
+            {% thumbnail storyobject.image "175" crop="center" as im %}
             <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
-            <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
         {% endthumbnail %}
         <p>
             Created by {{ character.creator }}
         </p>
     </div>
-    <a href="{% url 'delete_character' pk=character.pk %}" class="btn btn-danger">Delete Character.</a>
+    <a href="{% url 'delete_storyobject' pk=storyobject.pk %}" class="btn btn-danger">Delete Character.</a>
 </div>
 {% endblock %}
 {% block content_r %}
 <div class="col-md-2 col-sm-2 col-lg-2">
 </div>
+{% endblock %}
+
 {% endblock %}

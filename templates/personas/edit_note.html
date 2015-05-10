@@ -9,6 +9,8 @@
     </header>
 {% endblock %}
 
+{% block content %}
+
 {% block column1 %}
 <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
     {% crispy form %}
@@ -16,4 +18,6 @@
 <hr>
  <a href="{% url 'delete_note' pk=object.pk %}" class="btn btn-danger">Delete Note</a>
  </div>
+{% endblock %}
+
 {% endblock %}

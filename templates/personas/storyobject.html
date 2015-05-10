@@ -5,7 +5,7 @@
 {% load thumbnail %}
 {% block title %}
     <header>
-        <h1 style="text-justify:centre">{{ character_name }} <span style="color: gray">({{ c_type }})</span></h1>
+        <h1 style="text-justify:centre">{{ storyobject_name }} <span style="color: gray">({{ c_type }})</span></h1>
     </header>
 {% endblock %}
 {% block content %}
@@ -18,41 +18,54 @@
                     <icon class="fa fa-home"></icon> Details
                 </a>
             </li>
+        {% if stats_toggle %}
             <li><a href="#abilities" role="tab" data-toggle="tab">
                 <i class="fa fa-user"></i> Stats & Abilities
             </a>
         </li>
+        {% else %}{% endif %}
+        {% if skill_toggle %}
         <li>
             <a href="#skills" role="tab" data-toggle="tab">
                 <i class="fa fa-envelope"></i> Skills
             </a>
         </li>
+        {% else %}{% endif %}
+        {% if combat_toggle %}
         <li>
             <a href="#combat" role="tab" data-toggle="tab">
                 <i class="fa fa-envelope"></i> Combat
             </a>
         </li>
+        {% else %}{% endif %}
+
         <li>
             <a href="#notes" role="tab" data-toggle="tab">
                 <i class="fa fa-cog"></i> Notes
             </a>
         </li>
+
+        {% if gallery_toggle %}
         <li>
             <a href="#images" role="tab" data-toggle="tab">
                 <i class="fa fa-cog"></i> Images
             </a>
         </li>
+        {% else %}{% endif %}
+        {% if social_toggle %}
         <li>
             <a href="#social" role="tab" data-toggle="tab">
                 <i class="fa fa-cog"></i> Social
             </a>
         </li>
+        {% else %}{% endif %}
     </ul>
     
     {% block column1 %}
 
     <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
-        {% if character_name %}
+        {% if storyobject_name %}
+        <div class="row">
             <br>
                 {% thumbnail image "400" crop="center" as im %}
                 <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" align="middle">{% empty %}
@@ -62,6 +75,7 @@
                 Created by {{ creator }}
             </p>
             <hr>
+        </div>
         <div class="row">
             <h3>Description</h3>
             <p>{{ description }}</p>
@@ -74,9 +88,9 @@
                 <div class="row">
                     <h3>Details:</h3>
                     <ul>
-                        <li>Nationality/Tribe: <a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a></li>
-                        <li>Birthplace: <a href="/personas/location/{{ birthplace.slug }}">{{ birthplace }}</a></li>
-                        <li>Home: <a href="/personas/location/{{ base_of_operations.slug }}">{{ base_of_operations }}</a></li>
+                        <li>Role: {{ role }}</li>
+                        <li>Nationality/Tribe: {% if nationality %}<a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a>{% else %}None{% endif %}</li>
+                        <li>Location: {% if base_of_operations %}<a href="/personas/location/{{ base_of_operations.slug }}">{{ base_of_operations }}</a>{% else %}None{% endif %}</li>
                     </ul>
                     <hr>
                 </div>
@@ -86,8 +100,8 @@
                         <ul>
                             {% for aspect in aspects %}
                                 <li>{{ aspect }}
-                                    {% if user == character.creator or user == story.author %}
-                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_trait' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    {% if user == storyobject.creator or user == story.author %}
+                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_aspect' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                     {% else %}{% endif %}
                                 </li>
                             {% endfor %}
@@ -95,8 +109,8 @@
                         <div tyle="padding-left:50px">
                         </div>
                     {% endif %}
-                    {% if user == character.creator or user == story.author %}
-                    <a href="/personas/add_trait/{{ character.slug }}" style="color:lightgray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+                    {% if user == storyobject.creator or user == story.author %}
+                    <a href="/personas/add_aspect/{{ storyobject.slug }}" style="color:lightgray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
                     <hr>
                 </div>
             </div>
@@ -107,15 +121,15 @@
                         <ul>
                             {% for membership in memberships %}
                                 <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }}</a> - Rank {{ membership.rank }} - ({{ membership.role }}) | 
-                                {% if user == character.creator or user == story.author %}
+                                {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_membership' pk=membership.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
                                 </li>
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    {% if user == character.creator or user == story.author %}
-                    <a href="/personas/add_membership/{{ character.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+                    {% if user == storyobject.creator or user == story.author %}
+                    <a href="/personas/add_membership/{{ storyobject.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
                     <hr>
                 </div>
                 <div class="row">
@@ -124,38 +138,41 @@
                     <ul>
                         {% for relationship in relationships %}
                             <li>
-                                 <a href="/personas/character/{{ relationship.from_character.slug }}">{{ relationship.from_character }}</a> >> {{ relationship.relationship_class }} >> <a href="/personas/character/{{ relationship.to_character.slug }}">{{ relationship.to_character }}</a>
-                                 ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
-                                {% if user == character.creator or user == story.author %}
+                                 <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> >> {{ relationship.relationship_class }} >> <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}: {{ relationship.weight }}) |
+                                {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% endif %}
-                {% if user == character.creator or user == story.author %}
-                <a href="/personas/add_relationships/{{ character.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
+                {% if user == storyobject.creator or user == story.author %}
+                <a href="/personas/add_relationships/{{ storyobject.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
                 {% else %}{% endif %}
                 <hr>
-                {% if user == character.creator or user == story.author %}
-                <a role="button" class="btn btn-primary" href="{% url 'edit_character' pk=character.pk %}">Edit Character  <span class="glyphicon glyphicon-cog"></span></a>
+                {% if user == storyobject.creator or user == story.author %}
+                <a role="button" class="btn btn-primary" href="{% url 'edit_storyobject' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
                 {% else %}{% endif %}
                 </div>
             </div>
         {% else %}
-            <strong>No characters exist in the database right now.</strong>
+            <strong>No story objects exist in the database right now.</strong>
         {% endif %}
+
         </div> <!-- First Tab Ends -->
+        {% if stats_toggle %}
         <div class="tab-pane fade in" id="abilities"> <!-- Second Tab Starts -->
         <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
+            <h3>Statistics</h3>
             {% if type_1_statistics %}
                 <h3>{{ story.statistic_type_name_1 }}:</h3>
-                <table class="table table-condensed table-hover table-responsive">
+                <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for stat in type_1_statistics %}
                         <tr>
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
@@ -164,12 +181,12 @@
             </table>
             {% if type_2_statistics %}
                 <h3>{{ story.statistic_type_name_2 }}:</h3>
-                <table class="table table-condensed table-hover table-responsive">
+                <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for stat in type_2_statistics %}
                         <tr>
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
@@ -178,12 +195,12 @@
             </table>
             {% if type_3_statistics %}
                 <h3>{{ story.statistic_type_name_3 }}:</h3>
-                <table class="table table-condensed table-hover table-responsive">
+                <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for stat in type_3_statistics %}
                         <tr>
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
@@ -192,20 +209,20 @@
             </table>
             {% if type_4_statistics %}
                 <h3>{{ story.statistic_type_name_4 }}:</h3>
-                <table class="table table-condensed table-hover table-responsive">
+                <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for stat in type_4_statistics %}
                         <tr>
                             <td> {{ stat.name }}</td>
                             <td> {{ stat.value }}</td>
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_statistic' pk=stat.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                 {% endif %}
             </table>
             <div tyle="padding-left:50px">
-                {% if user == character.creator or user == story.author %}
-                <a href="/personas/add_statistics/{{ character.slug }}" style="color:lightgray">Add Stat <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+                {% if user == storyobject.creator or user == story.author %}
+                <a href="/personas/add_statistics/{{ storyobject.slug }}" style="color:lightgray">Add Stat <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
         </div>
         <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
@@ -216,15 +233,15 @@
                         {% for ability in abilities %}
                             <li>
                                 {{ ability }}
-                                {% if user == character.creator or user == story.author %}
+                                {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_ability' pk=ability.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% endif %}
                 <div tyle="padding-left:50px">
-                {% if user == character.creator or user == story.author %}
-                    <a href="/personas/add_ability/{{ character.slug }}" style="color:lightgray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+                {% if user == storyobject.creator or user == story.author %}
+                    <a href="/personas/add_ability/{{ storyobject.slug }}" style="color:lightgray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
                 </div>
             </div>
             <hr>
@@ -235,28 +252,31 @@
                     <ul>
                         {% for artifact in artifacts %}
                             <li><a href="/personas/artifact/{{ artifact.slug }}">  {{ artifact.name }}</a>: {{ artifact.description }}
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% endif %}
-                {% if user == character.creator or user == story.author %}
-                <a href="/personas/add_artifact/{{ character.slug }}" style="color:lightgray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+                {% if user == storyobject.creator or user == story.author %}
+                <a href="/personas/add_artifact/{{ storyobject.slug }}" style="color:lightgray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
             <hr>
         </div>
     </div>
+    {% else %}{% endif %}
+    {% if skill_toggle %}
     <div class="tab-pane fade in" id="skills">
         <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
+        <h3>Skills</h3>
             {% if type_1_skills %}
                 <h3>{{ story.skill_type_name_1}}:</h3>
-                <table class="table table-condensed table-hover table-responsive">
+                <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for skill in type_1_skills %}
                         <tr>
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
@@ -264,31 +284,31 @@
             {% endif %}
             {% if type_2_skills %}
                 <h3>{{ story.skill_type_name_2}}:</h3>
-                <table class="table table-condensed table-hover table-responsive">
+                <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for skill in type_2_skills %}
                         <tr>
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
                 </table>
             {% endif %}
             <div tyle="padding-left:50px">
-            {% if user == character.creator or user == story.author %}
-                <a href="/personas/add_skills/{{ character.slug }}" style="color:lightgray">Add Skill <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+            {% if user == storyobject.creator or user == story.author %}
+                <a href="/personas/add_skills/{{ storyobject.slug }}" style="color:lightgray">Add Skill <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
         </div>
         <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
             {% if type_3_skills %}
                 <h3>{{ story.skill_type_name_3}}:</h3>
-                <table class="table table-condensed table-hover table-responsive">
+                <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for skill in type_3_skills %}
                         <tr>
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
@@ -296,12 +316,12 @@
             {% endif %}
             {% if type_4_skills %}
                 <h3>{{ story.skill_type_name_4}}:</h3>
-                <table class="table table-condensed table-hover table-responsive">
+                <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for skill in type_4_skills %}
                         <tr>
                             <td> {{ skill.name }}</td>
                             <td> {{ skill.value }}</td>
-                            {% if user == character.creator or user == story.author %}
+                            {% if user == storyobject.creator or user == story.author %}
                             <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_skill' pk=skill.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                         </tr>
                     {% endfor %}
@@ -309,6 +329,8 @@
             {% endif %}
         </div>
     </div>
+    {% else %}{% endif %}
+    {% if combat_toggle %}
     <div class="tab-pane fade in" id="combat"> <!-- Tab Four Starts -->
         <div class="col-md-8 col-sm-8 col-lg-8" id="col2">
             <h3>Combat Info:</h3>
@@ -318,35 +340,36 @@
                     <tr>
                         <td> {{ element.title }}</td>
                         <td> {{ element.data }}</td>
-                        {% if user == character.creator or user == story.author %}
+                        {% if user == storyobject.creator or user == story.author %}
                         <td><a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_combat_info' pk=element.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></td>{% else %}{% endif %}
                     </tr>
                 {% endfor %}
             </table>
                 {% endif %}
             <div tyle="padding-left:50px">
-            {% if user == character.creator or user == story.author %}
-                <a href="/personas/add_combat_info/{{ character.slug }}" style="color:lightgray">Add Combat Info <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+            {% if user == storyobject.creator or user == story.author %}
+                <a href="/personas/add_combat_info/{{ storyobject.slug }}" style="color:lightgray">Add Combat Info <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
             <hr>
             <h3>Scratchpad:</h3>
-            {% if user == character.creator or user == story.author %}
+            {% if user == storyobject.creator or user == story.author %}
                 {% crispy scratchpadform %}
-                {% markdown_media %} 
                 {% else %}
                     {{ scratchpad }}
                 {% endif %}         
         </div>
 </div>
+{% else %}{% endif %}
 <div class="tab-pane fade in" id="notes"> <!-- Tab Four Starts -->
 <div class="col-md-8 col-sm-8" id="BBoard">
+<br>
     <h3>Notes:</h3>
     {% if notes %}
         {% for note in notes %}
             <div class="note" style="color:black">{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
         {% endfor %}
     {% else %}
-        <strong>{{ character_name }} has no notes.</strong><br />
+        <strong>{{ storyobject_name }} has no notes.</strong><br />
         <br />
     {% endif %}
     <div>
@@ -355,6 +378,8 @@
     </div>
 </div>
 </div>
+
+{% if gallery_toggle %}
 <div class="tab-pane fade in" id="images"> <!-- Tab Five Starts -->
 <div class="col-md-8 col-sm-8" id="col4">
 <h3>Images:</h3>
@@ -366,17 +391,20 @@
         <p>{{ g_image.title }}</p>
 {% endfor %}
 {% else %}
-<strong>{{ character_name }} has no images.</strong><br />
+<strong>{{ storyobject_name }} has no images.</strong><br />
 <br />
 {% endif %}
 <hr>
-{% if user == character.creator or user == story.author %}
-    <a role="button" class="btn btn-primary" href="{% url 'add_gallery_image' character_slug=character.slug %}">Add Gallery Image   <span class="glyphicon glyphicon-cog"></span></a>
+{% if user == storyobject.creator or user == story.author %}
+    <a role="button" class="btn btn-primary" href="{% url 'add_gallery_image' storyobject_slug=storyobject.slug %}">Add Gallery Image   <span class="glyphicon glyphicon-cog"></span></a>
 {% else %}{% endif %}
 </div>
 </div>
+{% else %}{% endif %}
+{% if social_toggle %}
 <div class="tab-pane fade in" id="social"> <!-- Tab Six Starts -->
 <div class="col-md-8 col-sm-8" id="BBoard">
+<br>
 <div class="row">
 <h3>Communiques:</h3>
 {% if communiques %}
@@ -384,12 +412,12 @@
     <div class="note">{{ communique }} -- {{ communique.date }}</div><br>
 {% endfor %}
 {% else %}
-<strong>{{ character_name }} has no messages.</strong><br />
+<strong>{{ storyobject_name }} has no messages.</strong><br />
 <br />
 {% endif %}
 <div>
-{% if user == character.creator or user == story.author %}
-<label>Send a message from {{ character_name }}:</label>
+{% if user == storyobject.creator or user == story.author %}
+<label>Send a message from {{ storyobject_name }}:</label>
 <form class="uniForm" method="post">
     {% crispy communique_form %}
     {% else %}{% endif %}
@@ -399,6 +427,7 @@
 </div>
 </div>
 </div> <!-- Tab six Ends -->
+{% else %}{% endif %}
 </div> <!-- Tab Content Ends -->
 {% endblock column1 %}
 </div> <!-- Container content ends -->
