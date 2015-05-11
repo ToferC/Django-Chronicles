@@ -1,7 +1,6 @@
 {% extends 'personas/base.html' %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
-{% load django_markdown %}
 {% load thumbnail %}
 {% block title %}
     <header>
@@ -103,8 +102,6 @@
                                 </li>
                             {% endfor %}
                         </ul>
-                        <div style="padding-left:50px">
-                        </div>
                     {% endif %}
                     {% if user == storyobject.creator or user == story.author %}
                     <a href="/personas/add_aspect/{{ storyobject.slug }}" style="color:lightgray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
@@ -136,7 +133,7 @@
                         {% for relationship in relationships %}
                             <li>
                                  <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> >> {{ relationship.relationship_class }} >> <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
-                                 ({{ relationship.relationship_description }}: {{ relationship.weight }}%) |
+                                 ({{ relationship.relationship_description }}: {{ relationship.weight }}) |
                                 {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
@@ -216,10 +213,8 @@
                     {% endfor %}
                 {% endif %}
             </table>
-            <div style="padding-left:50px">
                 {% if user == storyobject.creator or user == story.author %}
                 <a href="/personas/add_statistics/{{ storyobject.slug }}" style="color:lightgray">Add Stat <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
-            </div>
         </div>
         <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
             <div class="row">
@@ -235,10 +230,8 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
-                <div tyle="padding-left:50px">
                 {% if user == storyobject.creator or user == story.author %}
                     <a href="/personas/add_ability/{{ storyobject.slug }}" style="color:lightgray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
-                </div>
             </div>
             <hr>
             
@@ -264,6 +257,7 @@
     {% if skill_toggle %}
     <div class="tab-pane fade in" id="skills">
         <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+        <h3>Skills</h3>
             {% if type_1_skills %}
                 <h3>{{ story.skill_type_name_1}}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
@@ -290,10 +284,8 @@
                     {% endfor %}
                 </table>
             {% endif %}
-            <div style="padding-left:50px">
             {% if user == storyobject.creator or user == story.author %}
                 <a href="/personas/add_skills/{{ storyobject.slug }}" style="color:lightgray">Add Skill <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
-            </div>
         </div>
         <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
             {% if type_3_skills %}
@@ -341,15 +333,12 @@
                 {% endfor %}
             </table>
                 {% endif %}
-            <div style="padding-left:50px">
             {% if user == storyobject.creator or user == story.author %}
                 <a href="/personas/add_combat_info/{{ storyobject.slug }}" style="color:lightgray">Add Combat Info <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
-            </div>
             <hr>
             <h3>Scratchpad:</h3>
             {% if user == storyobject.creator or user == story.author %}
                 {% crispy scratchpadform %}
-                {% markdown_media %} 
                 {% else %}
                     {{ scratchpad }}
                 {% endif %}         
@@ -375,7 +364,7 @@
 </div> <!-- End of Tab Four -->
 {% if gallery_toggle %}
 <div class="tab-pane fade in" id="images"> <!-- Tab Five Starts -->
-<div class="col-md-8 col-sm-8" id="col4">
+<div class="col-md-8 col-sm-8" id="col1">
 <h3>Images:</h3>
 {% if gallery_images %}
     {% for g_image in gallery_images %}

@@ -99,7 +99,7 @@ class Ability(models.Model):
 
 class Note(models.Model):
     creator = models.ForeignKey(User, default=0)
-    content = MarkdownField()
+    content = models.TextField()
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
     location = models.ForeignKey("Location", blank=True, null=True)
@@ -142,7 +142,7 @@ class GalleryImage(models.Model):
 
 class ScratchPad(models.Model):
     creator = models.ForeignKey(User, default=0)
-    content = MarkdownField()
+    content = models.TextField()
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
 
@@ -379,7 +379,9 @@ class Relationship(models.Model):
     relationship_description = models.CharField(max_length=128, unique=False)
 
     def __str__(self):
-        return '{} - {} of {} - ({}: {})'.format(self.from_storyobject, self.relationship_class, self.to_storyobject, self.relationship_description, self.weight)
+        return '{} >> {} >> {} ({}: {})'.format(
+            self.from_storyobject, self.relationship_class,
+            self.to_storyobject, self.relationship_description, self.weight)
 
 
 class Organization(models.Model):

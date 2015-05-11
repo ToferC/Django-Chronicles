@@ -398,7 +398,7 @@ def storyobject(request, storyobject_name_slug):
                 if scratchpadform.is_valid():
                     scratchpadform.storyobject = storyobject
 
-                    scratchpad.save()
+                    scratchpadform.save()
 
                     context_dict['scratchpadform'] = ScratchPadForm(instance=scratchpad)
 

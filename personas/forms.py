@@ -150,7 +150,7 @@ class ScratchPadForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ScratchPadForm, self).__init__(*args, **kwargs)
 
-        self.fields['content'] = forms.CharField(widget=MarkdownWidget())
+        #self.fields['content'] = forms.CharField(widget=MarkdownWidget())
 
         self.helper = FormHelper(self)
         self.layout = Layout(InlineField('content',))
