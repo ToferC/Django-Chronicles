@@ -3,7 +3,6 @@
 {% load django_markdown %}
 {% load thumbnail %}
 
-{% block content %}
 
 {% block title %}
     <header>
@@ -11,8 +10,15 @@
     </header>
 {% endblock %}
 
+{% block content %}
+
+{% block l_content %}
+    <div class="col-md-1 col-sm-1 col-lg-1">
+    </div>
+{% endblock %}
+
 {% block column1 %}
-    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
 
     <div class="row">
         <h3>Scene Information:</h3>
@@ -34,7 +40,7 @@
 {% endblock %}
 
 {% block column2 %}
-    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
     <div class="row">
         <h3>Location:</h3>
         <a href="/personas/location/{{ location.slug }}">{{ location }}</a>
@@ -87,4 +93,10 @@
     </div>
     </div>
 {% endblock %}
+
+{% block r_content %}
+    <div class="col-md-1 col-sm-1 col-lg-1">
+    </div>
+{% endblock %}
+
 {% endblock content %}
