@@ -263,7 +263,7 @@ class StoryObject(models.Model):
         blank=True, null=True )
 
     image = models.ImageField(
-        upload_to='profile_images/%Y/%m/%d', default='profile_images/shadow_figure.jpeg')
+        upload_to='profile_images/%Y/%m/%d/%H/%M/%S', default='profile_images/shadow_figure.jpeg')
     slug = models.SlugField(unique=True)
 
     stats_toggle = models.BooleanField(default=True,
