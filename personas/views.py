@@ -351,8 +351,6 @@ def storyobject(request, storyobject_name_slug):
         context_dict['base_of_operations'] = storyobject.base_of_operations
         context_dict['memberships'] = Membership.objects.filter(storyobject=storyobject)
 
-        context_dict['image'] = storyobject.image
-
         context_dict['stats_toggle'] = storyobject.stats_toggle
         context_dict['skill_toggle'] = storyobject.skill_toggle
         context_dict['combat_toggle'] = storyobject.combat_toggle
