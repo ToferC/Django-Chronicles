@@ -263,7 +263,7 @@ class StoryObject(models.Model):
         blank=True, null=True )
 
     image = models.ImageField(
-        upload_to='profile_images/%Y/%m/%d', default='profile_images/nobody.jpg')
+        upload_to='profile_images/%Y/%m/%d', default='profile_images/shadow_figure.jpeg')
     slug = models.SlugField(unique=True)
 
     stats_toggle = models.BooleanField(default=True,
@@ -291,78 +291,6 @@ class StoryObject(models.Model):
 
 
 class Relationship(models.Model):
-    ALLY = 'Ally'
-    ENEMY = 'Enemy'
-    FRIEND = 'Friend'
-    SPOUSE = 'Spouse'
-    PARENT = 'Parent'
-    CHILD = 'Child'
-    SIBLING = 'Sibling'
-    RIVAL = 'Rival'
-    LOVER = 'Lover'
-    PARTNER = 'Partner'
-    MEMBER = 'Member'
-    OWNER = "Owner"
-
-    LIKES = "Likes"
-    LOVES = "Loves"
-    HATES = "Hates"
-    FEARS = "Fears"
-    ENVIES = "Envies"
-    DISTRUSTS = "Distrusts"
-    TRUSTS = "Trusts"
-    DESIRES = "Desires"
-    RESPECTS = "Respects"
-    DISLIKES = "Dislikes"
-    DISGUSTED = "Is disgusted by"
-    ANGRY = "Is angry at"
-    JEALOUS = "Is jealous of"
-    RESENTS = "Resents"
-    PROUD = "Is proud of"
-    WORSHIPS = "Worships"
-    REVERES = "Reveres"
-    RULES = "Rules"
-    LEADS = "Leads"
-    OWNS = "Owns"
-    BELONGS_TO = "Belongs to"
-    CREWS = "Crews"
-
-    RELATIONSHIP_CLASS_CHOICES = (
-        (ALLY, 'Ally'),
-        (ENEMY, 'Enemy'),
-        (FRIEND, 'Friend'),
-        (SPOUSE, 'Spouse'),
-        (PARENT, 'Parent'),
-        (CHILD, 'Child'),
-        (SIBLING, 'Sibling'),
-        (RIVAL, 'Rival'),
-        (LOVER, 'Lover'),
-        (PARTNER, 'Business Partner'),
-        (MEMBER, 'Co-member'),
-        (OWNER, "Owner"),
-        (LIKES, "Likes"),
-        (LOVES, "Loves"),
-        (HATES, "Hates"),
-        (FEARS, "Fears"),
-        (ENVIES, "Envies"),
-        (DISTRUSTS, "Distrusts"),
-        (TRUSTS, "Trusts"),
-        (DESIRES, "Desires"),
-        (RESPECTS, "Respects"),
-        (DISLIKES, "Dislikes"),
-        (DISGUSTED, "Is disgusted by"),
-        (ANGRY, "Is angry at"),
-        (JEALOUS, "Is jealous of"),
-        (RESENTS, "Resents"),
-        (PROUD, "Is proud of"),
-        (WORSHIPS, "Worships"),
-        (REVERES, "Reveres"),
-        (RULES, "Rules"),
-        (LEADS, "Leads"),
-        (OWNS, "Owns"),
-        (BELONGS_TO, "Belongs to"),
-        (CREWS, "Crews"),
-    )
 
     from_storyobject = models.ForeignKey(StoryObject, related_name="from_storyobject",
         verbose_name="Subject of Relationship")
@@ -370,7 +298,7 @@ class Relationship(models.Model):
         verbose_name="Object of Relationship")
 
     relationship_class = models.CharField(max_length=32,
-        choices=RELATIONSHIP_CLASS_CHOICES, default='Ally',
+        default='Ally',
         verbose_name="Defining Emotion")
 
     weight = models.CharField(default="50", max_length=64,

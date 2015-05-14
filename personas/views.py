@@ -208,7 +208,7 @@ def organization(request, organization_name_slug):
         context_dict['story'] = story
 
         context_dict['notes'] = Note.objects.filter(
-            organization__name=organization.name)[0:10]
+            organization__name=organization.name)
 
         form = NoteForm(request.POST or None)
         context_dict['form'] = form
@@ -301,22 +301,30 @@ def storyobject(request, storyobject_name_slug):
             storyobject__name=storyobject.name)
 
         context_dict['type_1_statistics'] = Statistic.objects.filter(
-            storyobject__name=storyobject.name).filter(stat_type="Type_1")
+            storyobject__name=storyobject.name).filter(stat_type="Type_1").order_by(
+            'name')
         context_dict['type_2_statistics'] = Statistic.objects.filter(
-            storyobject__name=storyobject.name).filter(stat_type="Type_2")
+            storyobject__name=storyobject.name).filter(stat_type="Type_2").order_by(
+            'name')
         context_dict['type_3_statistics'] = Statistic.objects.filter(
-            storyobject__name=storyobject.name).filter(stat_type="Type_3")
+            storyobject__name=storyobject.name).filter(stat_type="Type_3").order_by(
+            'name')
         context_dict['type_4_statistics'] = Statistic.objects.filter(
-            storyobject__name=storyobject.name).filter(stat_type="Type_4")
+            storyobject__name=storyobject.name).filter(stat_type="Type_4").order_by(
+            'name')
 
         context_dict['type_1_skills'] = Skill.objects.filter(
-            storyobject__name=storyobject.name).filter(s_type="Type_1")
+            storyobject__name=storyobject.name).filter(s_type="Type_1").order_by(
+            'name')
         context_dict['type_2_skills'] = Skill.objects.filter(
-            storyobject__name=storyobject.name).filter(s_type="Type_2")
+            storyobject__name=storyobject.name).filter(s_type="Type_2").order_by(
+            'name')
         context_dict['type_3_skills'] = Skill.objects.filter(
-            storyobject__name=storyobject.name).filter(s_type="Type_3")
+            storyobject__name=storyobject.name).filter(s_type="Type_3").order_by(
+            'name')
         context_dict['type_4_skills'] = Skill.objects.filter(
-            storyobject__name=storyobject.name).filter(s_type="Type_4")
+            storyobject__name=storyobject.name).filter(s_type="Type_4").order_by(
+            'name')
 
         context_dict['combat_info'] = CombatInfo.objects.filter(
             storyobject__name=storyobject.name)
