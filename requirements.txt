@@ -12,6 +12,7 @@ django-postgrespool==0.3.0
 django-require==1.0.7
 django-require-s3==1.0.0
 django-s3-folder-storage==0.2
+django-simple-captcha==0.4.5
 django-storages==1.1.8
 django-toolbelt==0.0.1
 gunicorn==19.3.0
