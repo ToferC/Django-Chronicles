@@ -338,6 +338,12 @@ class ChapterForm(forms.ModelForm):
         fields = ["title", "number", "description",]
 
     def __init__(self, *args, **kwargs):
+
+        try:
+            self.story = kwargs.pop('story')
+        except KeyError:
+            self.story = None
+            
         super(ChapterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.layout = Layout(

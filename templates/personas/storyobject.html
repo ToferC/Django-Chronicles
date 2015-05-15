@@ -148,6 +148,7 @@
                 {% if user == storyobject.creator or user == story.author %}
                 <a role="button" class="btn btn-primary" href="{% url 'edit_storyobject' pk=storyobject.pk %}">Edit Character  <span class="glyphicon glyphicon-cog"></span></a>
                 {% else %}{% endif %}
+                <br>
                 </div>
             </div>
         {% else %}

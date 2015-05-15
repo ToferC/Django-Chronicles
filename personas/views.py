@@ -1569,7 +1569,7 @@ def edit_chapter(request, pk, template_name='personas/edit_chapter.html'):
     chapter = Chapter.objects.get(pk=pk)
     story = chapter.story
     user = request.user
-    form = ChapterForm(request.POST or None, request.FILES or None, instance=chapter, story=story)
+    form = ChapterForm(request.POST or None, request.FILES or None, instance=chapter)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/personas/chapter/{}'.format(chapter.slug))
