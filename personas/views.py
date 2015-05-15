@@ -596,13 +596,13 @@ def register(request):
             user.set_password(user.password)
             user.save()
 
-            profile = profile_form.save(commit=False)
-            profile.user = request.user
+            #profile = profile_form.save(commit=False)
+            #profile.user = request.user
 
-            if 'image' in request.FILES:
-                profile.image = request.FILES['image']
+            #if 'image' in request.FILES:
+            #    profile.image = request.FILES['image']
 
-            profile.save()
+            #profile.save()
 
             registered = True
 

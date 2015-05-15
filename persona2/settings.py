@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'djgeojson',
     'sorl.thumbnail',
     'django_markdown',
+    'captcha',
 )
 
 SITE_ID = 1

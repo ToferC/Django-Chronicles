@@ -7,8 +7,7 @@ from personas.models import Nation, Location, StoryObject, Organization, Relatio
 from personas.models import Statistic, CombatInfo, ScratchPad
 from django_markdown.widgets import MarkdownWidget
 from django_markdown.fields import MarkdownFormField
-#from treasuremap.forms import LatLongField
-
+from captcha.fields import CaptchaField
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, InlineField
@@ -343,7 +342,7 @@ class ChapterForm(forms.ModelForm):
             self.story = kwargs.pop('story')
         except KeyError:
             self.story = None
-            
+
         super(ChapterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.layout = Layout(
@@ -573,12 +572,13 @@ class CommuniqueForm(forms.ModelForm):
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
+    captcha = CaptchaField()
     helper = FormHelper()
     helper.form_tag = False
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password')
+        fields = ('username', 'email', 'password', 'captcha')
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
