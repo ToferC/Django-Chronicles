@@ -78,7 +78,7 @@
     {% if notes %}
         
         {% for note in notes %}
-            <div class="note" style="color:black">{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
+            <div class="note" style="color:black"><strong>{{ note.title }}</strong><br>{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
         {% endfor %}
         
     {% else %}

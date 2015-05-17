@@ -154,15 +154,15 @@
                     </div>
                     </div> <!-- End Tab Three -->
                     <div class="tab-pane fade in" id="story_objects"> <!-- Start Tab Four -->
-                <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                     <div class="row">
                         <h3>Characters:</h3>
                         {% if characters %}
-                            <ul>
-                                {% for character in characters %}
-                                    <li><a href="/personas/storyobject/{{ character.slug }}">{{ character }}</a></li>
+                                {% for storyobject in characters %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "40x40" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                                 {% endfor %}
-                            </ul>
                         {% else %}
                             <strong>{{ story.title }} has no Characters.</strong><br><br>
                         {% endif %}
@@ -185,7 +185,7 @@
                         <hr>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                     <div class="row">
                         <h3>Creatures:</h3>
                         {% if creatures %}
@@ -246,7 +246,7 @@
                         {% if notes %}
                             
                             {% for note in notes %}
-                                <div class="note" style="color:black">{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
+                                <div class="note" style="color:black"><strong>{{ note.title }}</strong><br>{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
                             {% endfor %}
                             
                         {% else %}

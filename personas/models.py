@@ -100,6 +100,7 @@ class Ability(models.Model):
 class Note(models.Model):
     creator = models.ForeignKey(User, default=0)
     content = models.TextField()
+    title = models.CharField(max_length=32, blank=True, null=True)
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
     location = models.ForeignKey("Location", blank=True, null=True)

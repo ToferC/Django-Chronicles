@@ -11,11 +11,11 @@
 
 {% block content %}
 {% block l_content %}
-    <div class="col-md-2 col-sm-0 col-lg-2">
+    <div class="col-md-1 col-sm-1 col-lg-1">
     </div>
 {% endblock %}
 {% block column1 %}
-    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
             {% thumbnail nation.image "400" crop="center" as im %}
             <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% empty %}
             <img src="{% static '/images/shadow_figure.jpg' %}" alt="">
@@ -58,7 +58,7 @@
     </div>
 {% endblock %}
 {% block column2 %}
-    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
         <div class="row">
         <h3>Locations</h3>
         {% if locations %}
@@ -77,13 +77,13 @@
     </div>
 {% endblock %}
 {% block column3 %}
-    <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
         <div id="BBoard">
             <h3>Notes:</h3>
             {% if notes %}
                 
                 {% for note in notes %}
-                    <div class="note" style="color:black">{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
+                    <div class="note" style="color:black"><strong>{{ note.title }}</strong><br>{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
                 {% endfor %}
                 
             {% else %}
@@ -101,7 +101,7 @@
     </div>
 {% endblock %}
 {% block r_content %}
-    <div class="col-md-2 col-sm-0 col-lg-2">
+    <div class="col-md-1 col-sm-1 col-lg-1">
     </div>
 {% endblock %}
 {% endblock content %}

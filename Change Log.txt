@@ -12,7 +12,7 @@ Modify Character model:
 - add Role field (Charfield) -- ADDED
 - Remove XP, Birthplace, Age -- REMOVED
 
-Rename Trait model >> Aspect
+Rename Trait model >> Aspect -- CHANGED
 
 Rename Item model >> Artifact OR Eliminate Item model
 - need to fix edit_artifact view - character not required.
@@ -27,7 +27,7 @@ Rename Item model >> Artifact OR Eliminate Item model
 
 Modify Character templates so that boolean toggles hide/reveal tabs and tab pages
 
-Modify Relationship through template:
+Modify Relationship through template: -- Open FIELD CREATED
 - types = "Loves, Hates, Fears, Envies, Distrusts, Trusts, Desires, Respect, Dislike, Disgusted by, Angry at, Jealous of, Resents, Proud of, Owns, Belongs to, Crews"
 
 Modify Scenes model:
@@ -40,3 +40,14 @@ Set up Transition model - scene to scene
 - Add from_scene field
 - Add to_scene field
 - Add transition Charfield
+
+Organize scenes in Chapter
+
+scene_list = []
+starting_scene = Scene.objects.get(from_scene=False)
+other_scenes = Scene.objects.filter(chapter=chapter, from_scene=True)
+scene_list.append(starting_scene)
+while True:
+    scene_list.append()
+    
+

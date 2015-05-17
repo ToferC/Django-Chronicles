@@ -5,7 +5,7 @@
 
 {% block title %}
 <header>
-    <h1>Note from "{{ story.title }}"</h1>
+    <h1>Note "{{ note.title }}" from {{ story.title }}</h1>
 </header>
 {% endblock %}
 
@@ -13,7 +13,7 @@
 
 {% block column1 %}
     <div class="col-md-12 col-sm-12 col-lg-12" id="col1">
-    <h3>Note</h3>
+    <h3>{{ note.title }}</h3>
     <hr>
     {{ note|markdown }}
 
