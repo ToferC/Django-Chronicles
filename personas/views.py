@@ -80,7 +80,7 @@ def location(request, location_name_slug):
         context_dict['organizations'] = StoryObject.objects.filter(
                 base_of_operations=location).filter(c_type="Organization").distinct().order_by('name')
         context_dict['storyobjects'] = StoryObject.objects.filter(
-            base_of_operations__name=location.name)
+            base_of_operations__name=location.name).filter(~Q(c_type="Organization"))
 
         context_dict['notes'] = Note.objects.filter(location__name=location.name)
 
