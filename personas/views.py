@@ -338,7 +338,7 @@ def storyobject(request, storyobject_name_slug):
             Q(from_storyobject__name=storyobject.name),
             ~Q(from_storyobject__c_type="Organization")  |
             Q(to_storyobject__name=storyobject.name),
-            ~Q(to_storyobject__c_type="Organization")).order_by(-'weight')
+            ~Q(to_storyobject__c_type="Organization")).order_by('weight')
 
         context_dict['abilities'] = Ability.objects.filter(
             storyobject__name=storyobject.name)
@@ -360,7 +360,7 @@ def storyobject(request, storyobject_name_slug):
             Q(from_storyobject__name=storyobject.name) |
             Q(to_storyobject__name=storyobject.name)) &
             (Q(from_storyobject__c_type="Organization") |
-            Q(to_storyobject__c_type="Organization"))).order_by(-'weight')
+            Q(to_storyobject__c_type="Organization"))).order_by('weight')
 
         # Membership.objects.filter(storyobject=storyobject)
 
