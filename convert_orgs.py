@@ -8,7 +8,23 @@ django.setup()
 
 from personas.models import Organization, StoryObject, Membership, Relationship
 
-o = Organization.objects.all()
+
+m = Membership.objects.all()
+
+for i in m:
+    r = Relationship(
+        from_storyobject = i.storyobject,
+        to_storyobject = StoryObject.objects.get(name=i.organization.name),
+        relationship_class = "Member of",
+        weight = i.rank,
+        relationship_description = i.role
+    )
+    r.save()
+    print(r)
+
+print("Memberships converted")
+
+'''o = Organization.objects.all()
 
 for i in o:
     s = StoryObject(
@@ -27,7 +43,7 @@ for i in o:
         gallery_toggle = True,
         social_toggle = True,
         )
-    s.save()
+    s.save()'''
 
 
 

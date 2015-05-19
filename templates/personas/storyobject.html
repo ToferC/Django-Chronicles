@@ -139,7 +139,6 @@
                     <!--
                     {% if user == storyobject.creator or user == story.author %}
                     <a href="/personas/add_membership/{{ storyobject.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %} -->
-                    <hr>
                 </div>
                 <div class="row">
                 <h3>Personal Relationships:</h3>
@@ -171,7 +170,7 @@
                 {% else %}{% endif %}
                 <hr>
                 {% if user == storyobject.creator or user == story.author %}
-                <a role="button" class="btn btn-primary" href="{% url 'edit_storyobject' pk=storyobject.pk %}">Edit Character  <span class="glyphicon glyphicon-cog"></span></a>
+                <a role="button" class="btn btn-primary" href="{% url 'edit_storyobject' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
                 {% else %}{% endif %}
                 <br>
                 </div>
