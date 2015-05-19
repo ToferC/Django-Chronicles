@@ -335,10 +335,9 @@ def storyobject(request, storyobject_name_slug):
             storyobject__name=storyobject.name)
 
         context_dict['relationships'] = Relationship.objects.filter(
-            Q(from_storyobject__name=storyobject.name),
-            ~Q(from_storyobject__c_type="Organization")  |
-            Q(to_storyobject__name=storyobject.name),
-            ~Q(to_storyobject__c_type="Organization")).order_by('weight')
+            Q(from_storyobject__name=storyobject.name) &
+            (~Q(to_storyobject__c_type="Organization") &
+            ~Q(from_storyobject__c_type="Organization"))).order_by('weight')
 
         context_dict['abilities'] = Ability.objects.filter(
             storyobject__name=storyobject.name)
@@ -525,13 +524,13 @@ def story(request, story_name_slug):
 
         context_dict['artifacts'] = StoryObject.objects.filter(
                 story=story).filter(c_type="Thing").distinct().order_by('name')
-        
+
         context_dict['creatures'] = StoryObject.objects.filter(
                 story=story).filter(c_type="Creature").distinct().order_by('name')
- 
+
         context_dict['forces'] = StoryObject.objects.filter(
                 story=story).filter(c_type="Abstract").distinct().order_by('name')
- 
+
         context_dict['locations'] = Location.objects.filter(
                 story__title=story.title).distinct().order_by('name')
 

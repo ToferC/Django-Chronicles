@@ -102,9 +102,9 @@
             {% endblock %}
             {% block column2 %}
             <div class="tab-pane fade in" id="organizations"> <!-- Start Tab Two -->
-                <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+                <div class="col-md-8 col-sm-8 col-lg-8" id="col2">
                     <div class="row">
-                        <h3>Organization:</h3>
+                        <h3>Organizations:</h3>
                         {% if organizations %}
                                 {% for storyobject in organizations %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
@@ -122,7 +122,7 @@
                     </div>
                 </div> <!-- End Tab Two -->
                 <div class="tab-pane fade in" id="geography"> <!-- Start Tab Three -->
-                <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+                <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
                     <div class="row">
                         <h3>Areas:</h3>
                         {% if nations %}
@@ -172,21 +172,6 @@
                         <br><br>
                         <hr>
                     </div>
-                    <div class="row">
-                        <h3>Artifacts:</h3>
-                        {% if artifacts %}
-                                {% for storyobject in artifacts %}
-                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
-                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
-                                {% endfor %}
-                        {% else %}
-                            <strong>{{ story.title }} has no Artifacts.</strong><br><br>
-                        {% endif %}
-                        <br><br>
-                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
-                        <hr>
-                    </div>
                 </div>
                 <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                     <div class="row">
@@ -218,6 +203,21 @@
                         {% endif %}
                         <br><br>
                         <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Force <span class="glyphicon glyphicon-pencil"></span></a>
+                        <hr>
+                    </div>
+                    <div class="row">
+                        <h3>Artifacts:</h3>
+                        {% if artifacts %}
+                                {% for storyobject in artifacts %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>{{ story.title }} has no Artifacts.</strong><br><br>
+                        {% endif %}
+                        <br><br>
+                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
                 </div>

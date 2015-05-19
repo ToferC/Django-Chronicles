@@ -110,7 +110,8 @@
             </div>
             <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                 <div class="row">
-                    <h3>Organizational Relationships:</h3>
+                    <h3>Relationships:</h3>
+                    <h3>Organizational:</h3>
                     {% if memberships %}
                         <ul>
                             {% for relationship in memberships %}
@@ -122,7 +123,7 @@
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
                             {% else %}
-                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a>
+                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} 
                                  ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
                                 
                                 {% if user == storyobject.creator or user == story.author %}
@@ -141,7 +142,7 @@
                     <a href="/personas/add_membership/{{ storyobject.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %} -->
                 </div>
                 <div class="row">
-                <h3>Personal Relationships:</h3>
+                <h3>Personal:</h3>
                 {% if relationships %}
                     <ul>
                         {% for relationship in relationships %}
