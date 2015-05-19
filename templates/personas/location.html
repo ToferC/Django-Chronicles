@@ -38,7 +38,7 @@
         <strong>{{ features }}</strong>
     </div>
     <div class="row">
-        <h3>Nation:</h3>
+        <h3>Area:</h3>
         <a href="/personas/nation/{{ nation.slug }}"><strong>{{ nation }}</strong></a>
     </div>
     <div class="row">
@@ -87,41 +87,39 @@
         {% else %}
             <strong>{{ location_name }} has no scenes.</strong>
         {% endif %}
-        <br>
+        <br><br>
         <a href="/personas/add_scene/{{ story.slug }}" style="color:gray">Add Scene <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
     </div>
     <div class="row">
         <h3>Characters:</h3>
         {% if storyobjects %}
-            <ul>
                 {% for storyobject in storyobjects %}
-                    
-                    <a class="btn btn-success btn-md" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
-                    {% thumbnail storyobject.image "40x40" crop="center" as im %}
+                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                 {% endfor %}
-            </ul>
         {% else %}
             <strong>{{ location_name }} has no characters.</strong>
         {% endif %}
-        <br>
+        <br><br>
         <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Story Objects <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
     </div>
     <div class="row">
         <h3>Organizations:</h3>
         {% if organizations %}
-            <ul>
-                {% for organization in organizations %}                        
-                        <li><a href="/personas/organization/{{ organization.slug }}">{{ organization.name }}</a></li>
+                {% for storyobject in organizations %}
+                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                 {% endfor %}
-            </ul>
         {% else %}
-            <strong>{{ location_name }} has no organizations.</strong>
+            <strong>{{ location.name }} has no Organizations.</strong><br><br>
         {% endif %}
-        <br>
-        <a href="/personas/add_organization/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
+        <br><br>
+        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
+        <br><br>
         <hr>
     </div>
     {% if user == location.creator or user == story.author %}

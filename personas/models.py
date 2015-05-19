@@ -244,12 +244,15 @@ class StoryObject(models.Model):
     CREATURE = "Creature"
     THING = "Thing"
     ABSTRACT = "Abstract"
+    ORGANIZATION = "Organization"
 
     CHAR_CHOICES = (
+        (ABSTRACT, "Abstract"),
         (CHARACTER, "Character"),
         (CREATURE, "Creature"),
+        (ORGANIZATION, "Organization"),
         (THING, "Thing"),
-        (ABSTRACT, "Abstract"))
+    )
 
     creator = models.ForeignKey(User, unique=False, blank=True)
     name = models.CharField(max_length=128, unique=False)
@@ -296,16 +299,21 @@ class Relationship(models.Model):
     from_storyobject = models.ForeignKey(StoryObject, related_name="from_storyobject",
         verbose_name="Subject of Relationship")
     to_storyobject = models.ForeignKey(StoryObject, related_name="to_storyobject",
-        verbose_name="Object of Relationship")
+        verbose_name="Object of Relationship",
+        help_text="Enter the character or story object subject of the relationship here.")
 
     relationship_class = models.CharField(max_length=32,
         default='Ally',
-        verbose_name="Defining Emotion")
+        verbose_name="Relationship Description",
+        help_text="Enter the type of relationship here. E.g.: Ally, Friend, Lover, etc.")
 
     weight = models.CharField(default="50", max_length=64,
-        verbose_name="Strength of the relationship")
+        verbose_name="Numerical Rating",
+        help_text="If your story uses it, enter a numerical rating here.")
 
-    relationship_description = models.CharField(max_length=128, unique=False)
+    relationship_description = models.CharField(max_length=128, unique=False,
+        verbose_name="Details",
+        help_text="Enter any additional details here.")
 
     def __str__(self):
         return '{} >> {} >> {} ({}: {})'.format(

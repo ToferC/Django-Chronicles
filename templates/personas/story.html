@@ -25,8 +25,8 @@
             </a>
         </li>
         <li>
-            <a href="#political" role="tab" data-toggle="tab">
-                <i class="fa fa-cog"></i> Political
+            <a href="#organizations" role="tab" data-toggle="tab">
+                <i class="fa fa-cog"></i> Organizations
             </a>
         </li>
         <li>
@@ -101,10 +101,30 @@
 
             {% endblock %}
             {% block column2 %}
-            <div class="tab-pane fade in" id="political"> <!-- Start Tab Two -->
+            <div class="tab-pane fade in" id="organizations"> <!-- Start Tab Two -->
                 <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
                     <div class="row">
-                        <h3>Nations:</h3>
+                        <h3>Organization:</h3>
+                        {% if organizations %}
+                                {% for storyobject in organizations %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>{{ story.title }} has no Organizations.</strong><br><br>
+                        {% endif %}
+                        <br><br>
+                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
+                        <br><br>
+                        <hr>
+                    </div>
+                    </div>
+                </div> <!-- End Tab Two -->
+                <div class="tab-pane fade in" id="geography"> <!-- Start Tab Three -->
+                <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+                    <div class="row">
+                        <h3>Areas:</h3>
                         {% if nations %}
                             <ul>
                                 {% for nation in nations %}
@@ -112,31 +132,12 @@
                                 {% endfor %}
                             </ul>
                         {% else %}
-                            <strong>{{ story.title }} has no organizations.</strong>
+                            <strong>{{ story.title }} has no areas.</strong>
                             <br><br>
                         {% endif %}
-                        <a href="/personas/add_nation/{{ story.slug }}" style="color:gray">Add Nation <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_nation/{{ story.slug }}" style="color:gray">Add Area <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
-                    <div class="row">
-                        <h3>Organizations:</h3>
-                        {% if organizations %}
-                            <ul>
-                                {% for organization in organizations %}
-                                    <li><a href="/personas/organization/{{ organization.slug }}">{{ organization }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <strong>{{ story.title }} has no organizations.</strong>
-                            <br><br>
-                        {% endif %}
-                        <a href="/personas/add_organization/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
-                        <hr>
-                    </div>
-                    </div>
-                    </div> <!-- End Tab Two -->
-                    <div class="tab-pane fade in" id="geography"> <!-- Start Tab Three -->
-                <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
                     <div class="row">
                         <h3>Locations:</h3>
                         {% if locations %}
@@ -160,12 +161,13 @@
                         {% if characters %}
                                 {% for storyobject in characters %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
-                                    {% thumbnail storyobject.image "40x40" crop="center" as im %}
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                                 {% endfor %}
                         {% else %}
                             <strong>{{ story.title }} has no Characters.</strong><br><br>
                         {% endif %}
+                        <br><br>
                         <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
                         <br><br>
                         <hr>
@@ -173,14 +175,15 @@
                     <div class="row">
                         <h3>Artifacts:</h3>
                         {% if artifacts %}
-                            <ul>
-                                {% for artifact in artifacts %}
-                                    <li><a href="/personas/storyobject/{{ artifact.slug }}">{{ artifact.name }}</a></li>
+                                {% for storyobject in artifacts %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                                 {% endfor %}
-                            </ul>
                         {% else %}
                             <strong>{{ story.title }} has no Artifacts.</strong><br><br>
                         {% endif %}
+                        <br><br>
                         <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
@@ -189,14 +192,15 @@
                     <div class="row">
                         <h3>Creatures:</h3>
                         {% if creatures %}
-                            <ul>
-                                {% for creature in creatures %}
-                                    <li><a href="/personas/storyobject/{{ creature.slug }}">{{ creature }}</a></li>
+                                {% for storyobject in creatures %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                                 {% endfor %}
-                            </ul>
                         {% else %}
                             <strong>{{ story.title }} has no Creatures.</strong><br><br>
                         {% endif %}
+                        <br><br>
                         <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Creature <span class="glyphicon glyphicon-pencil"></span></a>
                         <br><br>
                         <hr>
@@ -204,14 +208,15 @@
                     <div class="row">
                         <h3>Forces:</h3>
                         {% if forces %}
-                            <ul>
-                                {% for force in forces %}
-                                    <li><a href="/personas/storyobject/{{ force.slug }}">{{ force.name }}</a></li>
+                                {% for storyobject in forces %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                                 {% endfor %}
-                            </ul>
                         {% else %}
                             <strong>{{ story.title }} has no Forces.</strong><br><br>
                         {% endif %}
+                        <br><br>
                         <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Force <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>

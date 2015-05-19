@@ -40,7 +40,8 @@ def index(request):
 def collections(request):
     storyobject_list = StoryObject.objects.all()
     location_list = Location.objects.all()
-    organization_list = Organization.objects.all()
+    organization_list = StoryObject.objects.filter(
+        c_type="Organization").distinct().order_by('name')
 
     context_dict = {'boldmessage': "Personas", 'storyobjects': storyobject_list,
         'locations': location_list, 'organizations': organization_list}
@@ -51,6 +52,7 @@ def collections(request):
 def about(request):
     context_dict = {}
     return render(request, 'personas/about.html', context_dict)
+
 
 def location(request, location_name_slug):
 
@@ -75,8 +77,8 @@ def location(request, location_name_slug):
         context_dict['slug'] = location.slug
         context_dict['scenes'] = Scene.objects.filter(
             location__name=location.name)
-        context_dict['organizations'] = Organization.objects.filter(
-            location__name=location.name).distinct()
+        context_dict['organizations'] = StoryObject.objects.filter(
+                base_of_operations=location).filter(c_type="Organization").distinct().order_by('name')
         context_dict['storyobjects'] = StoryObject.objects.filter(
             base_of_operations__name=location.name)
 
@@ -331,12 +333,16 @@ def storyobject(request, storyobject_name_slug):
 
         context_dict['artifacts'] = Item.objects.filter(
             storyobject__name=storyobject.name)
+
         context_dict['relationships'] = Relationship.objects.filter(
-            Q(from_storyobject__name=storyobject.name) |
-            Q(to_storyobject__name=storyobject.name))
+            Q(from_storyobject__name=storyobject.name),
+            ~Q(from_storyobject__c_type="Organization")  |
+            Q(to_storyobject__name=storyobject.name),
+            ~Q(to_storyobject__c_type="Organization")).order_by(-'weight')
 
         context_dict['abilities'] = Ability.objects.filter(
             storyobject__name=storyobject.name)
+
         context_dict['notes'] = Note.objects.filter(
             storyobject__name=storyobject.name)
 
@@ -349,7 +355,14 @@ def storyobject(request, storyobject_name_slug):
 
         context_dict['nationality'] = storyobject.nationality
         context_dict['base_of_operations'] = storyobject.base_of_operations
-        context_dict['memberships'] = Membership.objects.filter(storyobject=storyobject)
+
+        context_dict['memberships'] = Relationship.objects.filter((
+            Q(from_storyobject__name=storyobject.name) |
+            Q(to_storyobject__name=storyobject.name)) &
+            (Q(from_storyobject__c_type="Organization") |
+            Q(to_storyobject__c_type="Organization"))).order_by(-'weight')
+
+        # Membership.objects.filter(storyobject=storyobject)
 
         context_dict['stats_toggle'] = storyobject.stats_toggle
         context_dict['skill_toggle'] = storyobject.skill_toggle
@@ -521,8 +534,10 @@ def story(request, story_name_slug):
  
         context_dict['locations'] = Location.objects.filter(
                 story__title=story.title).distinct().order_by('name')
-        context_dict['organizations'] = Organization.objects.filter(
-                location__story__title=story.title).distinct().order_by('name')
+
+        context_dict['organizations'] = StoryObject.objects.filter(
+                story=story).filter(c_type="Organization").distinct().order_by('name')
+
         context_dict['nations'] = Nation.objects.filter(
             story=story).distinct().order_by('name')
 

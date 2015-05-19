@@ -85,7 +85,7 @@
                     <h3>Details:</h3>
                     <ul>
                         <li>Role: {{ role }}</li>
-                        <li>Nationality/Tribe: {% if nationality %}<a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a>{% else %}None{% endif %}</li>
+                        <li>Nationality/Area: {% if nationality %}<a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a>{% else %}None{% endif %}</li>
                         <li>Location: {% if base_of_operations %}<a href="/personas/location/{{ base_of_operations.slug }}">{{ base_of_operations }}</a>{% else %} None{% endif %}</li>
                     </ul>
                     <hr>
@@ -110,37 +110,62 @@
             </div>
             <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                 <div class="row">
-                    <h3>Memberships:</h3>
+                    <h3>Organizational Relationships:</h3>
                     {% if memberships %}
                         <ul>
-                            {% for membership in memberships %}
-                                <li><a href="/personas/organization/{{ membership.organization.slug }}">{{ membership.organization }}</a> - Rank {{ membership.rank }} - ({{ membership.role }}) | 
+                            {% for relationship in memberships %}
+                            <li>
+                            {% if relationship.from_storyobject == storyobject %}
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
                                 {% if user == storyobject.creator or user == story.author %}
-                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_membership' pk=membership.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
-                                </li>
+                            {% else %}
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
+                            {% endif %}
+
+                            </li>
                             {% endfor %}
                         </ul>
+                    {% else %}
+                    {{ storyobject.name }} has no organizational relationships.
                     {% endif %}
+                    <!--
                     {% if user == storyobject.creator or user == story.author %}
-                    <a href="/personas/add_membership/{{ storyobject.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+                    <a href="/personas/add_membership/{{ storyobject.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %} -->
                     <hr>
                 </div>
                 <div class="row">
-                <h3>Relationships:</h3>
+                <h3>Personal Relationships:</h3>
                 {% if relationships %}
                     <ul>
                         {% for relationship in relationships %}
                             <li>
-                                 <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> >> {{ relationship.relationship_class }} >> <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
-                                 ({{ relationship.relationship_description }}: {{ relationship.weight }}) |
+                                 {% if relationship.from_storyobject == storyobject %}
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
                                 {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
+                            {% else %}
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
+                            {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
                 {% endif %}
+                <hr>
                 {% if user == storyobject.creator or user == story.author %}
                 <a href="/personas/add_relationships/{{ storyobject.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
                 {% else %}{% endif %}
