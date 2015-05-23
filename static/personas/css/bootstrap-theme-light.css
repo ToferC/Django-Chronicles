@@ -75,23 +75,24 @@ a:active {
     color: #0000FF;
 }
 
- table, label {
+ table, label, tr {
   color: black;
+  background: white;
  }
 
 tr:hover {
   background: black;
-  color: black;
+  color: white;
 }
 
  #col1 {
   color: black;
-  padding-left: 55px;
+  padding-left: 25px;
  }
 
  #col2, #col3, #col4 {
   color: black;
-  padding-left: 25px;
+  padding-left: 0px;
  }
 
  #BBoard {

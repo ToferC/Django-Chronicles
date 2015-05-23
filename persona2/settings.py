@@ -89,6 +89,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'django_markdown',
     'captcha',
+    #'pinax.notifications',
 )
 
 SITE_ID = 1
@@ -143,6 +144,15 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# Email Setup
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'personas.story@gmail.com'
+EMAIL_HOST_PASSWORD = 'Cann1balMonkeyTrue' #os.environ.get('EMAIL_PASSWORD')
+EMAIL_PORT = 587
 
 
 # Static files (CSS, JavaScript, Images)

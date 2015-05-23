@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.template.response import TemplateResponse
 from django.template.defaultfilters import slugify
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.forms.formsets import formset_factory
 from django.contrib.auth import logout, login, authenticate
@@ -337,7 +338,7 @@ def storyobject(request, storyobject_name_slug):
         context_dict['relationships'] = Relationship.objects.filter(
             Q(from_storyobject__name=storyobject.name) &
             (~Q(to_storyobject__c_type="Organization") &
-            ~Q(from_storyobject__c_type="Organization"))).order_by('weight')
+            ~Q(from_storyobject__c_type="Organization"))).order_by('-weight')
 
         context_dict['abilities'] = Ability.objects.filter(
             storyobject__name=storyobject.name)
@@ -359,7 +360,7 @@ def storyobject(request, storyobject_name_slug):
             Q(from_storyobject__name=storyobject.name) |
             Q(to_storyobject__name=storyobject.name)) &
             (Q(from_storyobject__c_type="Organization") |
-            Q(to_storyobject__c_type="Organization"))).order_by('weight')
+            Q(to_storyobject__c_type="Organization"))).order_by('-weight')
 
         # Membership.objects.filter(storyobject=storyobject)
 
@@ -535,7 +536,7 @@ def story(request, story_name_slug):
                 story__title=story.title).distinct().order_by('name')
 
         context_dict['organizations'] = StoryObject.objects.filter(
-                story=story).filter(c_type="Organization").distinct().order_by('name')
+            story=story).filter(c_type="Organization").distinct().order_by('name')
 
         context_dict['nations'] = Nation.objects.filter(
             story=story).distinct().order_by('name')
@@ -619,6 +620,14 @@ def register(request):
             #profile.save()
 
             registered = True
+
+            send_mail("Personas: Account Activated",
+                '''Welcome to Personas.\n\n
+                Your account has been activated as: {}\n\n
+                http:story-chronicles.herokuapp.com/personas/'''.format(
+                    user.username),
+                "personas.story@gmail.com",
+                [user.email])
 
             return index(request)
 

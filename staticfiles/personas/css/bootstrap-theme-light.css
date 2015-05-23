@@ -61,11 +61,12 @@ a:active {
 
  table, label {
   color: black;
+  background: white;
  }
 
 tr:hover {
   background: black;
-  color: black;
+  color: white;
 }
 
  #col1 {

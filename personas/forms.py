@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage
 from personas.models import Statistic, CombatInfo, ScratchPad
+from django.core.mail import send_mail
 from django_markdown.widgets import MarkdownWidget
 from django_markdown.fields import MarkdownFormField
 from captcha.fields import CaptchaField
@@ -14,6 +15,28 @@ from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, Inl
 
 import datetime
 
+def mail_format(s_object, s_object_name, note_creator, title, content):
+
+    try:
+        to_email = s_object.creator.email
+    except AttributeError:
+        to_email = s_object.author.email
+
+    send_mail("Personas Notification: A new note has been added to {}".format(
+        s_object_name),
+        '''{note_creator} has added a note to {s_object}\n\n
+        Title: {title}\n\n
+        {content}\n\n
+        {date}\n\n
+        Link: http://story-chronicles.herokuapp.com/personas/{slug}'''.format(
+            note_creator=note_creator,
+            s_object=s_object_name,
+            title=title,
+            content=content,
+            date=datetime.date.today(),
+            slug=s_object.slug),
+        "personas.story@gmail.com",
+        [to_email])
 
 class StoryObjectForm(forms.ModelForm):
     class Meta:
@@ -498,36 +521,58 @@ class NoteForm(forms.ModelForm):
 
     def save(self, commit=False, *args, **kwargs):
         instance = super(NoteForm, self).save(commit=False)
-        try:
-            instance.storyobject = kwargs.pop('storyobject')
-        except KeyError:
-            pass
+
         try:
             instance.creator = kwargs.pop('creator')
         except KeyError:
             instance.creator = None
+
+        try:
+            instance.storyobject = kwargs.pop('storyobject')
+            mail_format(instance.storyobject, instance.storyobject.name,
+                instance.creator, instance.title, instance.content)
+
+        except KeyError:
+            pass
         try:
             instance.scene = kwargs.pop('scene')
+            mail_format(instance.scene, instance.scene.title,
+                instance.creator, instance.title, instance.content)
+
         except KeyError:
             pass
         try:
             instance.location = kwargs.pop('location')
+            mail_format(instance.location, instance.location.name,
+                instance.creator, instance.title, instance.content)
+
         except KeyError:
             pass
         try:
             instance.chapter = kwargs.pop('chapter')
+            mail_format(instance.chapter, instance.chapter.title,
+                instance.creator, instance.title, instance.content)
+
         except KeyError:
             pass
         try:
             instance.story = kwargs.pop('story')
+            mail_format(instance.story, instance.story.title,
+                instance.creator, instance.title, instance.content)
         except KeyError:
             pass
         try:
             instance.organization = kwargs.pop('organization')
+            mail_format(instance.organization, instance.organization.name,
+                instance.creator, instance.title, instance.content)
+
         except KeyError:
             pass
         try:
             instance.nation = kwargs.pop('nation')
+            mail_format(instance.nation, instance.nation.name,
+                instance.creator, instance.title, instance.content)
+
         except KeyError:
             pass
         instance.save()
