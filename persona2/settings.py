@@ -89,7 +89,6 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'django_markdown',
     'captcha',
-    #'pinax.notifications',
 )
 
 SITE_ID = 1

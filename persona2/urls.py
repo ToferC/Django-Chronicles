@@ -11,7 +11,6 @@ urlpatterns = patterns('',
     url(r'^personas/', include('personas.urls')),
     url('^markdown/', include( 'django_markdown.urls')),
     url(r'^captcha/', include('captcha.urls')),
-    url(r"^notifications/", include("pinax.notifications.urls")),
     url('^', include('django.contrib.auth.urls')),
     #url(r'^about/', include('personas.urls')),
 )
