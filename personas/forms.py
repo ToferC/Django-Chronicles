@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage
 from personas.models import Statistic, CombatInfo, ScratchPad
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
+from django.template import Context
+from django.template.loader import render_to_string, get_template
 from django_markdown.widgets import MarkdownWidget
 from django_markdown.fields import MarkdownFormField
 from captcha.fields import CaptchaField
@@ -15,12 +17,15 @@ from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, Inl
 
 import datetime
 
-def mail_format(s_object, s_object_name, note_creator, title, content):
+def mail_format(s_object, s_object_name, note_creator, title, content,
+    noun="note", verb="added"):
 
     try:
         to_email = s_object.creator.email
+        creator = s_object.creator
     except AttributeError:
         to_email = s_object.author.email
+        creator = s_object.author
 
     if s_object.__class__.__name__ == 'StoryObject':
         so_type = "storyobject"
@@ -35,22 +40,28 @@ def mail_format(s_object, s_object_name, note_creator, title, content):
     else:
         so_type = "story"
 
-    send_mail("Personas Notification: A new note has been added to {}".format(
-        s_object_name),
-        '''{note_creator} has added a note to {s_object}\n\n
-        Title: {title}\n\n
-        {content}\n\n
-        {date}\n\n
-        Link: http://story-chronicles.herokuapp.com/personas/{so_type}/{slug}'''.format(
-            note_creator=note_creator,
-            s_object=s_object_name,
-            title=title,
-            content=content,
-            date=datetime.date.today(),
-            so_type=so_type,
-            slug=s_object.slug),
-        "personas.story@gmail.com",
-        [to_email])
+    subject = "Personas Notification: A new {noun} has been {verb} to {subject}".format(
+        noun=noun,
+        verb=verb,
+        subject=s_object_name)
+
+    from_email = 'personas.story@gmail.com'
+    ctx = {
+        'creator': creator,
+        'note_creator': note_creator,
+        's_object': s_object,
+        'title': title,
+        'content': content,
+        'date': datetime.date.today(),
+        'so_type': so_type,
+        'slug': s_object.slug
+        }
+
+    message = get_template('personas/email.html').render(Context(ctx))
+    msg = EmailMessage(subject, message, to=[to_email], from_email=from_email)
+    msg.content_subtype = 'html'
+    msg.send()
+
 
 class StoryObjectForm(forms.ModelForm):
     class Meta:
@@ -628,6 +639,9 @@ class CommuniqueForm(forms.ModelForm):
         instance = super(CommuniqueForm, self).save(commit=False)
         instance.author = author
         instance.save(author)
+        mail_format(instance.receiver, instance.receiver.name,
+            instance.author, 'New Communique', instance.content,
+            "communique", "sent")
         return instance
 
 

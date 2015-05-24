@@ -105,6 +105,8 @@ tr:hover {
  #BBoard {
   background-color: black;
   color: white;
+  height: 750px;
+  overflow-y: auto;
  }
 
  .note {
