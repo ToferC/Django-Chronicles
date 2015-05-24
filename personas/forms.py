@@ -22,18 +22,32 @@ def mail_format(s_object, s_object_name, note_creator, title, content):
     except AttributeError:
         to_email = s_object.author.email
 
+    if s_object is StoryObject:
+        so_type = "storyobject"
+    elif s_object is Location:
+        so_type = "location"
+    elif s_object is Chapter:
+        so_type = "chapter"
+    elif s_object is Scene:
+        so_type = "scene"
+    elif s_object is Nation:
+        so_type = "nation"
+    else:
+        so_type = "story"
+
     send_mail("Personas Notification: A new note has been added to {}".format(
         s_object_name),
         '''{note_creator} has added a note to {s_object}\n\n
         Title: {title}\n\n
         {content}\n\n
         {date}\n\n
-        Link: http://story-chronicles.herokuapp.com/personas/{slug}'''.format(
+        Link: http://story-chronicles.herokuapp.com/personas/{so_type}/{slug}'''.format(
             note_creator=note_creator,
             s_object=s_object_name,
             title=title,
             content=content,
             date=datetime.date.today(),
+            so_type=so_type,
             slug=s_object.slug),
         "personas.story@gmail.com",
         [to_email])
@@ -52,8 +66,10 @@ class StoryObjectForm(forms.ModelForm):
 
         super(StoryObjectForm, self).__init__(*args, **kwargs)
         if self.story:
-            self.fields['base_of_operations'].queryset = Location.objects.filter(story=self.story)
-            self.fields['nationality'].queryset = Nation.objects.filter(story=self.story)
+            self.fields['base_of_operations'].queryset = Location.objects.filter(
+                story=self.story).order_by('name')
+            self.fields['nationality'].queryset = Nation.objects.filter(
+                story=self.story).order_by('name')
 
 
         self.helper = FormHelper(self)
@@ -398,12 +414,12 @@ class SceneForm(forms.ModelForm):
 
         if self.story:
             self.fields['location'].queryset = Location.objects.filter(
-                story=self.story)
+                story=self.story).order_by('name')
             self.fields['storyobjects'].queryset = StoryObject.objects.filter(
-                story=self.story)
+                story=self.story).order_by('name')
             self.fields['storyobjects'].widget = forms.widgets.CheckboxSelectMultiple()
             self.fields['chapter'].queryset = Chapter.objects.filter(
-                story=self.story)
+                story=self.story).order_by('title')
 
         self.helper = FormHelper(self)
         self.helper.layout.append(
@@ -429,7 +445,7 @@ class LocationForm(forms.ModelForm):
 
         if self.story:
             self.fields['nation'].queryset = Nation.objects.filter(
-                story=self.story)
+                story=self.story).order_by('name')
 
         self.helper = FormHelper(self)
         self.helper.layout.append(
@@ -455,7 +471,7 @@ class OrganizationForm(forms.ModelForm):
 
         if self.story:
             self.fields['location'].queryset = Location.objects.filter(
-                story=self.story)
+                story=self.story).order_by('name')
 
         self.helper = FormHelper(self)
         self.helper.layout.append(

@@ -1272,7 +1272,7 @@ def add_artifact(request, slug, *args, **kwargs):
 def add_gallery_image(request, storyobject_slug):
 
 
-    storyobject = get_object_or_404(storyobject, slug=storyobject_slug)
+    storyobject = get_object_or_404(StoryObject, slug=storyobject_slug)
     story = storyobject.story
 
     if request.method == 'POST':
