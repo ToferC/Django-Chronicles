@@ -22,15 +22,15 @@ def mail_format(s_object, s_object_name, note_creator, title, content):
     except AttributeError:
         to_email = s_object.author.email
 
-    if s_object is StoryObject:
+    if s_object.__class__.__name__ == 'StoryObject':
         so_type = "storyobject"
-    elif s_object is Location:
+    elif s_object.__class__.__name__ == 'Location':
         so_type = "location"
-    elif s_object is Chapter:
+    elif s_object.__class__.__name__ == 'Chapter':
         so_type = "chapter"
-    elif s_object is Scene:
+    elif s_object.__class__.__name__ == 'Scene':
         so_type = "scene"
-    elif s_object is Nation:
+    elif s_object.__class__.__name__ == 'Nation':
         so_type = "nation"
     else:
         so_type = "story"
