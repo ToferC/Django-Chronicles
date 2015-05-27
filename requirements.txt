@@ -1,8 +1,10 @@
 boto==2.38.0
 defusedxml==0.4.1
+detox==0.10.0
 dj-database-url==0.3.0
 dj-static==0.0.6
 Django==1.8.1
+django-appconf==1.0.1
 django-crispy-forms==1.4.0
 django-geojson==2.6.0
 django-herokuapp==0.9.19
@@ -15,12 +17,19 @@ django-s3-folder-storage==0.2
 django-simple-captcha==0.4.5
 django-storages==1.1.8
 django-toolbelt==0.0.1
+django-watson==1.1.8
+docutils==0.12
+eventlet==0.17.4
+greenlet==0.4.7
 gunicorn==19.3.0
 jsonfield==1.0.3
 Markdown==2.6.1
 oauthlib==0.7.2
 Pillow==2.7.0
+pluggy==0.3.0
 psycopg2==2.6
+py==1.4.27
+py2neo==2.0.7
 python3-openid==3.0.5
 pytz==2015.2
 requests==2.6.0
@@ -31,4 +40,6 @@ sorl-thumbnail==12.2
 South==1.0.2
 SQLAlchemy==0.9.9
 static3==0.5.1
+tox==2.0.1
+virtualenv==12.1.1
 waitress==0.8.9
