@@ -1,0 +1,16 @@
+{% load personas_extras %}
+
+<article>
+    <h3>
+        <a href="/personas/{{result.object | to_class_name }}/{{result.object.slug}}">{{result.title}}</a> 
+
+        {% if result.object.c_type %}
+            ({{ result.object.c_type}}) - {{ result.object.story }}
+        {% else %}
+            ({{ result.object | to_class_name | title }}) - {{ result.object.story }}
+        {% endif %}
+    </h3>
+    {% if result.object.description %}
+        {{result.object.description|linebreaks}}
+    {% endif %}
+</article>
