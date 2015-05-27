@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url('^markdown/', include( 'django_markdown.urls')),
     url(r'^captcha/', include('captcha.urls')),
     url('^', include('django.contrib.auth.urls')),
+    url(r"^search/", include("watson.urls", namespace="watson")),
     #url(r'^about/', include('personas.urls')),
 )
 

@@ -89,6 +89,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'django_markdown',
     'captcha',
+    'watson',
 )
 
 SITE_ID = 1

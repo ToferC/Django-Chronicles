@@ -49,6 +49,8 @@ def mail_format(s_object, s_object_name, note_creator, title, content,
     ctx = {
         'creator': creator,
         'note_creator': note_creator,
+        'noun': noun,
+        'verb': verb,
         's_object': s_object,
         'title': title,
         'content': content,
@@ -641,7 +643,7 @@ class CommuniqueForm(forms.ModelForm):
         instance.save(author)
         mail_format(instance.receiver, instance.receiver.name,
             instance.author, 'New Communique', instance.content,
-            "communique", "sent")
+            noun="communique", verb="sent")
         return instance
 
 
