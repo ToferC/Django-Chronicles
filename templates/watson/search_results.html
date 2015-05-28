@@ -1,21 +1,49 @@
-<!DOCTYPE html>{% load watson %}
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>Search results{% if query %} for &ldquo;{{query}}&rdquo;{% endif %}</title>
-    </head>
-    <body>
-        <h1>Search results{% if query %} for &ldquo;{{query}}&rdquo;{% endif %}</h1>
-        {% if search_results %}
-            {% search_results search_results %}
-        {% else %}
-            {% if query %}
-                <p><em>There are no results to display.</em></p>
-                <p><em>Try entering a less specific search term.</em></p>
-            {% else %}
-                <p><em>Please enter a query in the search form.</em></p>
-            {% endif %}
-        {% endif %}
-    </body>
-</html>
+{% extends "personas/base.html" %}
+{% load watson %}
+{% load personas_extras %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load thumbnail %}
+
+{% block title %}
+    <header>
+        <h1>Personas Search - results{% if query %} for &ldquo;{{query}}&rdquo;{% endif %}</h1>
+    </header>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+{% block l_content %}
+    <div class="col-md-1 col-sm-1 col-lg-1">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+<div class="col-md-10 col-sm-10 col-lg-10" id="col1">
+{% if search_results %}
+    <ul class="search-results">
+        {% for search_result in search_results %}
+            <li>
+                {% search_result_item search_result %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    {% if query %}
+        <p><em>There are no results to display.</em></p>
+        <p><em>Try entering a less specific search term.</em></p>
+    {% else %}
+        <p><em>Please enter a query in the search form.</em></p>
+    {% endif %}
+{% endif %}
+
+</div>
+{% endblock %}
+
+{% block r_content %}
+        <div class="col-md-1 col-sm-1 col-lg-1">
+        </div>
+{% endblock %}
+</div>
+{% endblock %}
