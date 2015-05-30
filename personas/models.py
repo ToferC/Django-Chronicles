@@ -504,7 +504,8 @@ class MainMap(models.Model):
     story = models.ForeignKey(Story)
     base_latitude = models.FloatField(blank=True)
     base_longitude = models.FloatField(blank=True)
-    tiles = models.CharField(max_length=256, blank=True)
+    tiles = models.CharField(max_length=256, blank=True,
+        default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):

@@ -42,7 +42,7 @@
     </ul>
     
     {% block column1 %}
-    <div class="col-md-4 col-sm-4 col-lg-4" id="col2">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                     <div class="row">
                     <br>
                         {% thumbnail image "400" crop="center" as im %}
@@ -97,7 +97,7 @@
             {% endblock %}
             {% block column2 %}
             <div class="tab-pane fade in" id="organizations"> <!-- Start Tab Two -->
-                <div class="col-md-8 col-sm-8 col-lg-8" id="col2">
+                <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
                     <div class="row">
                         <h3>Organizations:</h3>
                         {% if organizations %}
@@ -147,6 +147,7 @@
                         <a href="/personas/add_location/{{ story.slug }}" style="color:gray">Add Location <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
+                    <div class="row">
                     <h3>Maps:</h3>
                         {% if mainmaps %}
                             <ul>
@@ -160,6 +161,7 @@
                         {% endif %}
                         <a href="/personas/add_mainmap/{{ story.slug }}" style="color:gray">Add Map <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
+                    </div>
                     </div>
                     </div> <!-- End Tab Three -->
                     <div class="tab-pane fade in" id="story_objects"> <!-- Start Tab Four -->
@@ -235,7 +237,7 @@
             {% endblock %}
             {% block column3 %}
             <div class="tab-pane fade in" id="notes"> <!-- Start Tab Five -->
-                <div class="col-md-8 col-sm-8 col-lg-8" id="col3">
+                <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
                     <div id="BBoard">
                         <h3>Notes:</h3>
                         {% if notes %}
