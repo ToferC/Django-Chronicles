@@ -15,7 +15,7 @@ from crispy_forms.helper import FormHelper
 from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, MainMap, Chapter, Scene, Skill, Note, Communique
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, ItemForm, AbilityForm, RelationshipForm
-from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm
+from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm
 
 from datetime import datetime
 
@@ -1117,7 +1117,7 @@ def add_location(request, story_title_slug):
 
     try:
         mainmap = MainMap.objects.get(story=story)
-    except ObjectDoesNotExist:
+    except MainMap.DoesNotExist:
         mainmap = MainMap(base_latitude=50.000, base_longitude=-1.3)
 
 
@@ -1314,6 +1314,34 @@ def add_gallery_image(request, storyobject_slug):
     return render(request, 'personas/add_gallery_image.html',
         {'image_form': image_form, 'storyobject':storyobject, 'story':story})
 
+
+@login_required
+def add_mainmap(request, story_title_slug):
+
+    story = Story.objects.get(slug=story_title_slug)
+
+    if request.method == 'POST':
+
+        mainmap_form = MainMapForm(request.POST)
+
+        if mainmap_form.is_valid():
+            mainmap = mainmap_form.save(commit=False)
+            mainmap.creator = request.user
+            mainmap.story = story
+            mainmap.slug = slugify("{}-{}".format(story.title, mainmap.name))
+            mainmap.save()
+
+            return HttpResponseRedirect("/personas/mainmap/{}".format(mainmap.slug))
+
+        else:
+            print (mainmap_form.errors)
+
+    else:
+        mainmap_form = MainMapForm(story=story)
+
+    return render(request, 'personas/add_mainmap.html', {
+        'slug': story_title_slug, 'story':story,
+        'mainmap_form':mainmap_form})
 
 
 # Edit and Delete Views

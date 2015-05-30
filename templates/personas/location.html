@@ -51,24 +51,6 @@
     <div class="img-responsive" style="width:95%">
         <div id="map" style="width: 500px; height: 400px"></div>
     </div>
-        
-        <script type="text/javascript">
-        var map = L.map('map').setView([{{ latitude|floatformat:6 }}, {{ longitude|floatformat:6 }}], 6);
-
-        L.tileLayer("{{ story.map_tile }}", {
-            maxZoom: 30,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            id: 'examples.map-i875mjb7'
-        }).addTo(map);
-
-
-        L.marker([{{ latitude|floatformat:6 }}, {{ longitude|floatformat:6 }}], 6).addTo(map)
-
-        var popup = L.popup();
-
-        </script>
 
         <!-- Old Django-Leaflet JS 
         <script type="text/javascript">
@@ -180,5 +162,24 @@
     </div>
     </div>
 {% endblock %}
+
+<script type="text/javascript">
+        var map = L.map('map').setView([{{ latitude|floatformat:6 }}, {{ longitude|floatformat:6 }}], 6);
+
+        L.tileLayer("{{ story.map_tile }}", {
+            maxZoom: 30,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'examples.map-i875mjb7'
+        }).addTo(map);
+
+
+        L.marker([{{ location.latitude|floatformat:6 }}, {{ location.longitude|floatformat:6 }}], 6).addTo(map)
+        .bindPopup( "{{location.name}}" ).openPopup();
+
+        var popup = L.popup();
+
+</script>
 
 {% endblock content %}

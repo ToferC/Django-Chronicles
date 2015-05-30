@@ -152,11 +152,13 @@
                             <ul>
                                 {% for mainmap in mainmaps %}
                                     <li><a href="/personas/mainmap/{{ mainmap.slug }}">{{ mainmap }}</a></li>
-                                </ul>
                             {% endfor %}
+                            </ul>
                         {% else %}
                             <strong>{{ story.title }} has no maps.</strong>
+                            <br><br>
                         {% endif %}
+                        <a href="/personas/add_mainmap/{{ story.slug }}" style="color:gray">Add Map <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
                     </div> <!-- End Tab Three -->

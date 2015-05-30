@@ -3,7 +3,7 @@ from django.forms import widgets
 from django.forms.models import modelform_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage
+from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage, MainMap
 from personas.models import Statistic, CombatInfo, ScratchPad
 from django.core.mail import send_mail, EmailMessage
 from django.template import Context
@@ -460,6 +460,27 @@ class LocationForm(forms.ModelForm):
         if self.story:
             self.fields['nation'].queryset = Nation.objects.filter(
                 story=self.story).order_by('name')
+
+        self.helper = FormHelper(self)
+        self.helper.layout.append(
+            FormActions(
+                HTML("""<a role="button" class="btn btn-default"
+                        href="/personas/story/{{ story.slug }}/#geography">Cancel</a>"""),
+                Submit('save', 'Submit'),))
+
+
+class MainMapForm(forms.ModelForm):
+    class Meta:
+        model = MainMap
+        fields = ["name", "base_latitude", "base_longitude", "tiles"]
+
+    def __init__(self, *args, **kwargs):
+        try:
+            self.story = kwargs.pop('story')
+        except KeyError:
+            self.story = None
+
+        super(MainMapForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
         self.helper.layout.append(

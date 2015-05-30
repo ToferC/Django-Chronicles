@@ -1,0 +1,66 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<header>
+    <h1>Add Map to "{{ story.title }}"</h1>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+{% block l_content %}
+    <div class="col-md-1 col-sm-1 col-lg-1">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-5 col-sm-5 col-lg-5" id="col1">
+    <h3>Adding a Map</h3>
+    <p>Adds an OpenStreetMap to your story.  You can specify your base coordinates and any templates that you want to use for the map.</p>
+
+    <div id="map" style="width: 500px; height: 400px"></div>
+
+    </div>
+{% endblock %}
+
+{% block column2 %}
+    <div class="col-md-5 col-sm-5 col-lg-5" id="col1">
+    <h3>Add a Map</h3>
+    {% crispy mainmap_form %}
+    <br><br><br>
+    </div>
+{% endblock %}
+
+{% block r_content %}
+<div class="col-md-1 col-sm-1 col-lg-1">
+</div>
+{% endblock %}
+
+</div>
+
+<script type="text/javascript">
+        var map = L.map('map').setView([53, -1], 6);
+
+        L.tileLayer("{{ story.map_tile }}", {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'examples.map-i875mjb7'
+        }).addTo(map);
+
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(map);
+        }
+
+        map.on('click', onMapClick);
+</script>
+{% endblock %}
