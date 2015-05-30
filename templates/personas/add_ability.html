@@ -9,7 +9,7 @@
 {% endblock %}
 <div class="row">
     {% block l_content %}
-        <div class="col-md-2 col-sm-0 col-lg-2">
+        <div class="col-md-1 col-sm-1 col-lg-1">
         </div>
     {% endblock %}
     {% block column1 %}
@@ -20,7 +20,7 @@
         </div>
     {% endblock %}
     {% block column2 %}
-        <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
+        <div class="col-md-5 col-sm-5 col-lg-5" id="col1">
             <h3>Abilities:</h3>
                                 {% if abilities %}
                                 
@@ -36,7 +36,7 @@
                         </div>
     {% endblock %}
     {% block column3 %}
-        <div class="col-md-3 col-sm-4 col-lg-3" id="col3">
+        <div class="col-md-5 col-sm-5 col-lg-5" id="col1">
             <h3>Add Ability</h3>
             {% crispy ability_form %}
             <h4>Finished adding abilities?</h4>
@@ -51,7 +51,7 @@
         </div>
     {% endblock %}
     {% block r_content %}
-        <div class="col-md-2 col-sm-0 col-lg-2">
+        <div class="col-md-1 col-sm-1 col-lg-1">
         </div>
     {% endblock %}
 </div>

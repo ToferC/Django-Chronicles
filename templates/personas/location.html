@@ -47,29 +47,66 @@
         <hr>
     </div>
     <div class="row" style="color:black">
+
+        <div id="map" style="width: 500px; height: 400px"></div>
+        
+        <script type="text/javascript">
+        var map = L.map('map').setView([{{ latitude|floatformat:6 }}, {{ longitude|floatformat:6 }}], 6);
+
+        L.tileLayer("{{ story.map_tile }}", {
+            maxZoom: 30,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'examples.map-i875mjb7'
+        }).addTo(map);
+
+
+        L.marker([{{ latitude|floatformat:6 }}, {{ longitude|floatformat:6 }}], 6).addTo(map)
+
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(map);
+        }
+
+        map.on('click', onMapClick);
+        </script>
+
+        <!-- Old Django-Leaflet JS 
         <script type="text/javascript">
         function map_init_basic (map, options) {
         L.tileLayer("{{ story.map_tile }}", {
         attribution: "Pliedes Roman Empire Map",
         maxZoom: 18
         }).addTo(map);
-        L.marker([{{ latitude|add:"0" }}, {{ longitude|add:"0" }}], 10).addTo(map)
+        L.marker([{{ latitude }}, {{ longitude }}], 10).addTo(map)
         .bindPopup( "{{location_name}}" ).openPopup();
         }
         var popup = L.popup();
-        
+
+        </script>
+
+        <h3 style="color:white">Map Location:</h3><br>
+        <div class="container leaflet-container" id="map">
+            {% leaflet_map "Britannia" callback="window.map_init_basic"%}
+        </div>
+        <script type="text/javascript">
+
         function onMapClick(e) {
         popup
         .setLatLng(e.latlng)
         .setContent("You clicked the map at " + e.latlng.toString())
         .openOn(map);
         }
+
         map.on('click', onMapClick);
         </script>
-        <h3 style="color:white">Map Location:</h3><br>
-        <div class="container leaflet-container" id="smallmap">
-            {% leaflet_map "Britannia" callback="window.map_init_basic"%}
-        </div>
+        -->
+
     </div>
 </div>
 {% endblock %}

@@ -11,6 +11,6 @@
         {% endif %}
     </h3>
     {% if result.object.description %}
-        {{result.object.description|linebreaks}}
+        {{result.object.description|linebreaks|truncatewords:30}}
     {% endif %}
 </article>

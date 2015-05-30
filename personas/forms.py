@@ -57,7 +57,7 @@ def mail_format(s_object, s_object_name, note_creator, title, content,
         'date': datetime.date.today(),
         'so_type': so_type,
         'slug': s_object.slug
-        }
+    }
 
     message = get_template('personas/email.html').render(Context(ctx))
     msg = EmailMessage(subject, message, to=[to_email], from_email=from_email)
@@ -359,6 +359,7 @@ class RelationshipForm(forms.ModelForm):
                 Submit('save', 'Submit'),))
 
 
+
 class StoryForm(forms.ModelForm):
     class Meta:
         model = Story
@@ -432,7 +433,7 @@ class SceneForm(forms.ModelForm):
                 story=self.story).order_by('name')
             self.fields['storyobjects'].widget = forms.widgets.CheckboxSelectMultiple()
             self.fields['chapter'].queryset = Chapter.objects.filter(
-                story=self.story).order_by('title')
+                story=self.story).order_by("number")
 
         self.helper = FormHelper(self)
         self.helper.layout.append(

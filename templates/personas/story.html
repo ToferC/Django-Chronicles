@@ -35,11 +35,6 @@
             </a>
         </li>
         <li>
-            <a href="#maps" role="tab" data-toggle="tab">
-                <i class="fa fa-cog"></i> Maps
-            </a>
-        </li>
-        <li>
             <a href="#notes" role="tab" data-toggle="tab">
                 <i class="fa fa-cog"></i> Notes
             </a>
@@ -86,7 +81,7 @@
                         {% if chapters %}
                             <ul>
                                 {% for chapter in chapters %}
-                                    <li><a href="/personas/chapter/{{ chapter.slug }}">{{ chapter.number }} - {{ chapter }}</a></li>
+                                    <li><a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a></li>
                                 {% endfor %}
                             </ul>
                         {% else %}
@@ -152,6 +147,17 @@
                         <a href="/personas/add_location/{{ story.slug }}" style="color:gray">Add Location <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
+                    <h3>Maps:</h3>
+                        {% if mainmaps %}
+                            <ul>
+                                {% for mainmap in mainmaps %}
+                                    <li><a href="/personas/mainmap/{{ mainmap.slug }}">{{ mainmap }}</a></li>
+                                </ul>
+                            {% endfor %}
+                        {% else %}
+                            <strong>{{ story.title }} has no maps.</strong>
+                        {% endif %}
+                        <hr>
                     </div>
                     </div> <!-- End Tab Three -->
                     <div class="tab-pane fade in" id="story_objects"> <!-- Start Tab Four -->
@@ -222,24 +228,6 @@
                     </div>
                 </div>
                 </div> <!-- End Tab Four -->
-
-<div class="tab-pane fade in" id="maps"> <!-- Start Tab Five -->
-                <div class="col-md-8 col-sm-8 col-lg-8" id="col3">
-                <div class="row">
-                        <h3>Maps:</h3>
-                        {% if mainmaps %}
-                            <ul>
-                                {% for mainmap in mainmaps %}
-                                    <li><a href="/personas/mainmap/{{ mainmap.slug }}">{{ mainmap }}</a></li>
-                                </ul>
-                            {% endfor %}
-                        {% else %}
-                            <strong>{{ story.title }} has no maps.</strong>
-                        {% endif %}
-                        <hr>
-                    </div>
-                    </div>
-                    </div>
 
 
             {% endblock %}

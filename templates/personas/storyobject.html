@@ -1,10 +1,11 @@
 {% extends 'personas/base.html' %}
 {% load staticfiles %}
 {% load crispy_forms_tags %}
+{% load django_markdown django_markdown_static %}
 {% load thumbnail %}
 {% block title %}
     <header>
-        <h1 style="text-justify:centre">{{ storyobject_name }} <span style="color: gray">({{ c_type }})</span></h1>
+        <h1 style="text-justify:centre">{{ storyobject_name }} <span style="color: gray">({{ role }})</span></h1>
     </header>
 {% endblock %}
 {% block content %}
@@ -73,7 +74,7 @@
             <hr>
         <div class="row">
             <h3>Description</h3>
-            <p>{{ description }}</p>
+            <p>{{ description|markdown }}</p>
             <hr>
         </div>
     </div>
@@ -84,7 +85,6 @@
                 <div class="row">
                     <h3>Details:</h3>
                     <ul>
-                        <li>Role: {{ role }}</li>
                         <li>Nationality/Area: {% if nationality %}<a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a>{% else %}None{% endif %}</li>
                         <li>Location: {% if base_of_operations %}<a href="/personas/location/{{ base_of_operations.slug }}">{{ base_of_operations }}</a>{% else %} None{% endif %}</li>
                     </ul>
@@ -111,60 +111,108 @@
             <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                 <div class="row">
                     <h3>Relationships:</h3>
+        <div class="container">
+        
+        <!-- Nav tabs -->
+            <ul class="nav nav-pills nav-inverse" role="tablist" id="rel_tabs">
+                <li class="active">
+                    <a href="#mine" role="tab" data-toggle="tab">
+                        <icon class="fa fa-home"></icon> From {{ storyobject.name | truncatewords:3 }}
+                    </a>
+                </li>
+                <li>
+                    <a href="#others" role="tab" data-toggle="tab">
+                        <i class="fa fa-user"></i> To {{ storyobject.name | truncatewords:3 }}
+                    </a>
+                </li>
+            </ul>
+
+        <div class="tab-content">
+        <div class="tab-pane fade active in" id="mine">
+            <div class="row">
                     <h3>Organizational:</h3>
-                    {% if memberships %}
+                    {% if my_memberships %}
                         <ul>
-                            {% for relationship in memberships %}
+                            {% for relationship in my_memberships %}
                             <li>
-                            {% if relationship.from_storyobject == storyobject %}
                                 {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
                                  ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
                                 {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
-                            {% else %}
-                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} 
+
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        {{ storyobject.name }} has no organizational relationships.
+                        {% endif %}
+            </div>
+
+                <div class="row">
+                <h3>Personal:</h3>
+                {% if my_relationships %}
+                    <ul>
+                        {% for relationship in my_relationships %}
+                            <li>
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                        {{ storyobject.name }} has no personal relationships.
+                    {% endif %}
+                </div>
+        </div>
+        <div class="tab-pane fade in" id="others">
+            <div class="row">
+            <h3>Organizational:</h3>
+                {% if other_memberships %}
+                        <ul>
+                            {% for relationship in other_memberships %}
+                            <li>
+                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }} 
                                  ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
                                 
                                 {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
-                            {% endif %}
-
                             </li>
                             {% endfor %}
                         </ul>
                     {% else %}
                     {{ storyobject.name }} has no organizational relationships.
                     {% endif %}
-                    <!--
-                    {% if user == storyobject.creator or user == story.author %}
-                    <a href="/personas/add_membership/{{ storyobject.slug }}" style="color:lightgray">Add Membership <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %} -->
-                </div>
-                <div class="row">
-                <h3>Personal:</h3>
-                {% if relationships %}
+            </div>
+                
+            <div class="row">
+            <h3>Personal:</h3>
+                {% if other_relationships %}
                     <ul>
-                        {% for relationship in relationships %}
+                        {% for relationship in other_relationships %}
                             <li>
-                                 {% if relationship.from_storyobject == storyobject %}
-                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+
+                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }}
                                  ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
-                                {% if user == storyobject.creator or user == story.author %}
-                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
-                                {% else %}{% endif %}
-                            {% else %}
-                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a>
-                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                }
+                                }
                                 
                                 {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
-                            {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
+                {% else %}
+                {{ storyobject.name }} has no personal relationships.
                 {% endif %}
+            </div>
+        </div>
+    </div>
                 <hr>
                 {% if user == storyobject.creator or user == story.author %}
                 <a href="/personas/add_relationships/{{ storyobject.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
@@ -180,6 +228,7 @@
             <strong>No Story Objects exist in the database right now.</strong>
         {% endif %}
         </div> <!-- First Tab Ends -->
+    </div> <!-- rel_tab container ends -->
         {% if stats_toggle %}
         <div class="tab-pane fade in" id="abilities"> <!-- Second Tab Starts -->
         <div class="col-md-4 col-sm-4 col-lg-4" id="col1">

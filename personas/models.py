@@ -20,7 +20,7 @@ class Nation(models.Model):
     wealth = models.PositiveSmallIntegerField(default=0)
     influence = models.PositiveSmallIntegerField(default=0)
     defense = models.PositiveSmallIntegerField(default=0)
-    image = models.ImageField(upload_to='nation_images/%Y/%m/%d', default='nation_images/nothing.jpg')
+    image = models.ImageField(upload_to='nation_images/%Y/%m/%d/%H_%M_%S', default='nation_images/nothing.jpg')
 
     story = models.ForeignKey('Story')
 
@@ -37,7 +37,7 @@ class Nation(models.Model):
 class Location(models.Model):
     name = models.CharField(max_length=128)
     creator = models.ForeignKey(User, blank=True, null=True)
-    image = models.ImageField(upload_to='location_images/%Y/%m/%d', default='location_images/nowhere.jpg')
+    image = models.ImageField(upload_to='location_images/%Y/%m/%d/%H_%M_%S', default='location_images/nowhere.jpg')
     terrain = models.CharField(max_length=128)
     features = models.CharField(max_length=500)
     description = models.TextField(blank=True)
@@ -121,7 +121,7 @@ class Note(models.Model):
 
 class GalleryImage(models.Model):
     creator = models.ForeignKey(User)
-    image = models.ImageField(upload_to='content_images/%Y/%m/%d', default='content_images/nothing.jpg')
+    image = models.ImageField(upload_to='content_images/%Y/%m/%d/%H_%M_%S', default='content_images/nothing.jpg')
     title = models.CharField(max_length=64)
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
@@ -267,7 +267,7 @@ class StoryObject(models.Model):
         blank=True, null=True )
 
     image = models.ImageField(
-        upload_to='profile_images/%Y/%m/%d/%H/%M/%S', default='profile_images/shadow_figure.jpeg')
+        upload_to='profile_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')
     slug = models.SlugField(unique=True)
 
     stats_toggle = models.BooleanField(default=True,
@@ -330,7 +330,7 @@ class Organization(models.Model):
     region = models.CharField(max_length=128)
     location = models.ForeignKey(Location)
     story = models.ForeignKey('Story')
-    image = models.ImageField(upload_to='organization_images/%Y/%m/%d', default='organization_images/nothing.jpg')
+    image = models.ImageField(upload_to='organization_images/%Y/%m/%d/%H_%M_%S', default='organization_images/nothing.jpg')
 
     slug = models.SlugField(unique=True)
 
@@ -417,7 +417,7 @@ class Chapter(models.Model):
         super(Chapter, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title
+        return "{} - {}".format(self.number, self.title)
 
 
 class Story(models.Model):
@@ -463,9 +463,9 @@ class Story(models.Model):
     genre = models.CharField(
         max_length=128, choices=GENRE_CHOICES, default='Fantasy')
     image = models.ImageField(
-        upload_to='story_images/%Y/%m/%d', default='story_images/nobody.jpg')
+        upload_to='story_images/%Y/%m/%d/%H_%M_%S', default='story_images/nobody.jpg')
     background = models.ImageField(
-        upload_to='story_backgrounds/%Y/%m/%d', default='story_backgrounds/nothing.jpg')
+        upload_to='story_backgrounds/%Y/%m/%d/%H_%M_%S', default='story_backgrounds/nothing.jpg')
     colour_theme = models.CharField(
         max_length=12, choices=THEME_CHOICES, default='Dark')
     map_tile = models.CharField(

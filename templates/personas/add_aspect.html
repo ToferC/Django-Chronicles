@@ -11,7 +11,7 @@
 <div class="row">
 
 {% block l_content %}
-<div class="col-md-2 col-sm-0 col-lg-2">
+<div class="col-md-1 col-sm-1 col-lg-1">
 </div>
 {% endblock %}
 
@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block column2 %}
-    <div class="col-md-3 col-sm-4 col-lg-2" id="col2">
+    <div class="col-md-5 col-sm-5 col-lg-5" id="col1">
 <h3>Current Aspects</h3>
     {% if aspects %}
     {% for aspect in aspects %}
@@ -43,7 +43,7 @@
 {% endblock %}
 
 {% block column3 %}
-    <div class="col-md-3 col-sm-4 col-lg-3" id="col3">
+    <div class="col-md-5 col-sm-5 col-lg-5" id="col1">
     <h3>Add or Modify Aspects</h3>
         {% crispy form %}
     <br><br><br>
@@ -59,7 +59,7 @@
 {% endblock %}
 
 {% block r_content %}
-<div class="col-md-2 col-sm-0 col-lg-2">
+<div class="col-md-1 col-sm-1 col-lg-1">
 </div>
 {% endblock %}
 

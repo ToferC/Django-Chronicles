@@ -335,8 +335,13 @@ def storyobject(request, storyobject_name_slug):
         context_dict['artifacts'] = Item.objects.filter(
             storyobject__name=storyobject.name)
 
-        context_dict['relationships'] = Relationship.objects.filter(
+        context_dict['my_relationships'] = Relationship.objects.filter(
             Q(from_storyobject__name=storyobject.name) &
+            (~Q(to_storyobject__c_type="Organization") &
+            ~Q(from_storyobject__c_type="Organization"))).order_by('-weight')
+
+        context_dict['other_relationships'] = Relationship.objects.filter(
+            Q(to_storyobject__name=storyobject.name) &
             (~Q(to_storyobject__c_type="Organization") &
             ~Q(from_storyobject__c_type="Organization"))).order_by('-weight')
 
@@ -356,9 +361,13 @@ def storyobject(request, storyobject_name_slug):
         context_dict['nationality'] = storyobject.nationality
         context_dict['base_of_operations'] = storyobject.base_of_operations
 
-        context_dict['memberships'] = Relationship.objects.filter((
-            Q(from_storyobject__name=storyobject.name) |
-            Q(to_storyobject__name=storyobject.name)) &
+        context_dict['my_memberships'] = Relationship.objects.filter(
+            Q(from_storyobject__name=storyobject.name) &
+            (Q(from_storyobject__c_type="Organization") |
+            Q(to_storyobject__c_type="Organization"))).order_by('-weight')
+
+        context_dict['other_memberships'] = Relationship.objects.filter(
+            Q(to_storyobject__name=storyobject.name) &
             (Q(from_storyobject__c_type="Organization") |
             Q(to_storyobject__c_type="Organization"))).order_by('-weight')
 
@@ -977,10 +986,10 @@ def add_ability(request, storyobject_name_slug):
 @login_required
 def add_relationships(request, storyobject_name_slug):
 
-    relationships = Relationship.objects.filter(Q(to_storyobject__slug=storyobject_name_slug) |
-        Q(from_storyobject__slug=storyobject_name_slug))
-
     storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
+
+    relationships = Relationship.objects.filter(Q(to_storyobject=storyobject) |
+        Q(from_storyobject=storyobject))
 
     story = storyobject.story
     data = {"from_storyobject": storyobject}
@@ -1105,6 +1114,7 @@ def add_location(request, story_title_slug):
 
 
     story = Story.objects.get(slug=story_title_slug)
+    mainmap = MainMap.objects.get(story=story)
 
     locations = Location.objects.filter(story__slug=story_title_slug)
 
@@ -1130,7 +1140,7 @@ def add_location(request, story_title_slug):
 
     return render(request, 'personas/add_location.html', {
         'slug': story_title_slug, 'story':story, 'locations': locations,
-        'location_form':location_form})
+        'location_form':location_form, 'mainmap':mainmap})
 
 
 @login_required

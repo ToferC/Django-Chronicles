@@ -7,47 +7,20 @@
 </header>
 {% endblock %}
 
+{% block content %}
+
 {% block l_content %}
-    <div class="col-md-0 col-sm-0 col-lg-0">
+    <div class="col-md-1 col-sm-1 col-lg-1">
     </div>
 {% endblock %}
 
 {% block column1 %}
-    <div class="col-md-9 col-sm-9 col-lg-9" id="col1">
+    <div class="col-md-7 col-sm-7 col-lg-7" id="col1">
     <div class="img-responsive">
-            <script type="text/javascript">
-
-                function map_init_basic (map, options) {
-                    L.tileLayer("{{ story.map_tile }}", {
-                        attribution: "Pliedes Roman Empire Map",
-                        maxZoom: 18
-                    }).addTo(map);
-
-                    {% for location in locations %}
-                    L.marker([{{ location.latitude|add:"0" }}, {{ location.longitude|add:"0" }}], 13).addTo(map)
-                    .bindPopup( "{{location}}" );
-                    {% endfor %}
-
-                }
-
-                var popup = L.popup();
-                
-                function onMapClick(e) {
-                    popup
-                    .setLatLng(e.latlng)
-                    .setContent("You clicked the map at " + e.latlng.toString())
-                    .openOn(map);
-                }
-
-                map.on('click', onMapClick);
-            </script>
-
-            <h3 style="color:white">Map Location:</h3><br>
-            <div class="container large-leaflet-container">
-            {% leaflet_map "Britannia" callback="window.map_init_basic"%}
-            </div>
+        <div id="map" style="width: 900px; height: 600px"></div>
     </div>
     </div>
+
 {% endblock %}
 
 {% block column2 %}
@@ -64,6 +37,36 @@
 {% endblock %}
 
 {% block r_content %}
-    <div class="col-md-2 col-sm-0 col-lg-2">
+    <div class="col-md-1 col-sm-1 col-lg-1">
     </div>
+{% endblock %}
+
+<script type="text/javascript">
+        var map = L.map('map').setView([{{ base_latitude|floatformat:6 }}, {{ base_longitude|floatformat:6 }}], 6);
+
+        L.tileLayer("{{ story.map_tile }}", {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'examples.map-i875mjb7'
+        }).addTo(map);
+
+        {% for location in locations %}
+        L.marker([{{ location.latitude|floatformat:6 }}, {{ location.longitude|floatformat:6 }}], 6).addTo(map)
+        .bindPopup( "{{location.name}}" ).openPopup();
+        {% endfor %}
+
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(map);
+        }
+
+        map.on('click', onMapClick);
+        </script>
+
 {% endblock %}
