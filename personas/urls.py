@@ -3,11 +3,12 @@ from django.views.generic import TemplateView
 from personas import views
 #from djgeojson.views import GeoJSONLayerView
 
+
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^about', views.about, name='about'),
     url(r'^redirect_template', TemplateView.as_view(template_name="redirect_template.html")),
-    
+
     url(r'^add_storyobject/(?P<story_title_slug>[\w\-]+)/$', views.add_storyobject, name='add_storyobject'),
     url(r'^delete_storyobject/(?P<pk>\d+)/$', views.delete_storyobject, name='delete_storyobject'),
     url(r'^edit_storyobject/(?P<pk>\d+)/$', views.edit_storyobject, name='edit_storyobject'),

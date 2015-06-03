@@ -312,23 +312,6 @@
                     <a href="/personas/add_ability/{{ storyobject.slug }}" style="color:lightgray">Add Ability <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
             </div>
             <hr>
-            
-            <div class="row">
-                <h3>Artifacts:</h3>
-                {% if artifacts %}
-                    <ul>
-                        {% for artifact in artifacts %}
-                            <li><a href="/personas/artifact/{{ artifact.slug }}">  {{ artifact.name }}</a>: {{ artifact.description }}
-                            {% if user == storyobject.creator or user == story.author %}
-                            <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_artifact' pk=artifact.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-                {% if user == storyobject.creator or user == story.author %}
-                <a href="/personas/add_artifact/{{ storyobject.slug }}" style="color:lightgray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
-            </div>
-            <hr>
         </div>
     </div>
     {% endif %} <!-- endif for stats_toggle -->
@@ -421,8 +404,7 @@
                     {{ scratchpad }}
                 {% endif %}         
         </div>
-    </div>
-    <!-- breaks fancybox if removed "endif" for combat_toggle -->
+    </div>  <!-- end of Tab Three -->
 <div class="tab-pane fade in" id="notes"> <!-- Tab Four Starts -->
 <div class="col-md-8 col-sm-8" id="BBoard">
     <h3>Notes:</h3>

@@ -90,6 +90,8 @@ INSTALLED_APPS = (
     'django_markdown',
     'captcha',
     'watson',
+    'rest_framework',
+    'rest_framework_swagger',
 )
 
 SITE_ID = 1
@@ -186,11 +188,19 @@ TEMPLATE_DIRS = [TEMPLATE_PATH,]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-LEAFLET_CONFIG = {
+'''LEAFLET_CONFIG = {
     #'SPACIAL_EXTENT': (5.0, 44.0, 7.5, 46),
     'DEFAULT_CENTER': (50.91, -1.37),
     'DEFAULT_ZOOM': 6,
     'MIN_ZOOM': 3,
     'MAX_ZOOM': 20,
     'TILES': ""
+}'''
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }

@@ -9,20 +9,15 @@ django.setup()
 from personas.models import Organization, StoryObject, Membership, Relationship
 
 
-m = Membership.objects.all()
+s = StoryObject.objects.all()
 
-for i in m:
-    r = Relationship(
-        from_storyobject = i.storyobject,
-        to_storyobject = StoryObject.objects.get(name=i.organization.name),
-        relationship_class = "Member of",
-        weight = i.rank,
-        relationship_description = i.role
-    )
-    r.save()
-    print(r)
+for i in s:
+    if i.c_type not in "Character Thing Force Organization Creature":
+        i.c_type = "Character"
+        i.save()
+        print(i)
 
-print("Memberships converted")
+print("StoryObjects converted")
 
 '''o = Organization.objects.all()
 
