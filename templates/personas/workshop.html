@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+{% extends "personas/base.html" %}
+{% load crispy_forms_tags %}
+{% load thumbnail %}
+{% load django_markdown %}
+
+{% block title %}
+    <header>
+        <h1>{{ user|title }}'s Worshop</h1>
+    </header>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        
+        <!-- Nav tabs -->
+        <ul class="nav nav-pills nav-inverse" role="tablist" id="char_tabs">
+            <li class="active">
+                <a href="#stories" role="tab" data-toggle="tab">
+                <i class="fa fa-user"></i> Stories
+            </a>
+        </li>
+        <li>
+            <a href="#chapters" role="tab" data-toggle="tab">
+                <i class="fa fa-envelope"></i> Chapters & Scenes
+            </a>
+        </li>
+        <li>
+            <a href="#geography" role="tab" data-toggle="tab">
+                <i class="fa fa-envelope"></i> Geography
+            </a>
+        </li>
+        <li>
+            <a href="#organizations" role="tab" data-toggle="tab">
+                <i class="fa fa-cog"></i> Organizations & Forces
+            </a>
+        </li>
+        <li>
+            <a href="#characters" role="tab" data-toggle="tab">
+                <i class="fa fa-cog"></i> Characters
+            </a>
+        </li>
+        <li>
+            <a href="#creatures" role="tab" data-toggle="tab">
+                <i class="fa fa-cog"></i> Creatures & Items
+            </a>
+        </li>
+    </ul>
+    
+    {% block column1 %}
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                    <div class="row">
+                    <h3>{{ user }}</h3>
+                    <p>The Workshop is used to access and edit your published and non-published material.  Everything defaults to published, but if you de-select the Published toggle in the item creation page, it won't appear anywhere on the site except for your workshop.</p>
+                    <br>
+                    </div>
+    </div>
+<!-- Tab panes -->
+        <div class="tab-content">
+        <div class="tab-pane fade active in" id="stories"> <!-- Start Tab One -->
+                <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
+                <div class="row">
+                        <h3>Published Stories:</h3>
+                        {% if published_stories %}
+                                {% for story in published_stories %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/story/{{ story.slug }}">
+                                    {% thumbnail story.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ story }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No stories.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+
+                        <h3>Unublished Stories:</h3>
+                        {% if unpublished_stories %}
+                                {% for story in unpublished_stories %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/story/{{ story.slug }}">
+                                    {% thumbnail story.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ story }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No stories.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+
+                        <a href="/personas/add_story" style="color:gray">Add Story <span class="glyphicon glyphicon-pencil"></span></a>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade in" id="chapters"> <!-- Start Tab One -->
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                <div class="row">
+                        <h3>Published Chapters:</h3>
+                        {% if published_chapters %}
+                            <ul>
+                                {% for chapter in published_chapters %}
+                                    <li><a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <strong>No published chapters.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+                        <h3>Unpublished Chapters</h3>
+                        {% if unpublished_chapters %}
+                            <ul>
+                                {% for chapter in unpublished_chapters %}
+                                    <li><a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <strong>No unpublished chapters.</strong>
+                            <br><br>
+                        {% endif %}
+
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                <div class="row">
+                        <h3>Published Scenes:</h3>
+                        {% if published_scenes %}
+                            <ul>
+                                {% for scene in published_scenes %}
+                                    <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <strong>No published scenes.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+                        <h3>Unpublished Scenes</h3>
+                        {% if unpublished_scenes %}
+                            <ul>
+                                {% for scene in unpublished_scenes %}
+                                    <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <strong>No unpublished scenes.</strong>
+                            <br><br>
+                        {% endif %}
+
+                        <hr>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade in" id="geography"> <!-- Start Tab One -->
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                <div class="row">
+                        <h3>Published Areas:</h3>
+                        {% if published_nations %}
+                                {% for nation in published_nations %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/nation/{{ nation.slug }}">
+                                    {% thumbnail nation.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ nation }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No published areas.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+                        <h3>Unublished Areas:</h3>
+                        {% if unpublished_nations %}
+                                {% for story in unpublished_nations %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/nation/{{ nation.slug }}">
+                                    {% thumbnail nation.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ nation }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished areas.</strong>
+                            <br><br>
+                        {% endif %}
+
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                <div class="row">
+                        <h3>Published Locations:</h3>
+                        {% if published_locations %}
+                                {% for location in published_locations %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/location/{{ location.slug }}">
+                                    {% thumbnail location.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ location }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No published locations.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+
+                        <h3>Unublished Locations:</h3>
+                        {% if unpublished_locations %}
+                                {% for location in unpublished_locations %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/location/{{ location.slug }}">
+                                    {% thumbnail location.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ location }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished locations.</strong>
+                            <br><br>
+                        {% endif %}
+
+                        <hr>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade in" id="organizations"> <!-- Start Tab One -->
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                <div class="row">
+                        <h3>Published Organizations:</h3>
+                        {% if published_organizations %}
+                                {% for storyobject in published_organizations %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No published organizations.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+
+                        <h3>Unublished Organizations:</h3>
+                        {% if unpublished_nations %}
+                                {% for storyobject in unpublished_organizations %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished organizations.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                <div class="row">
+                        <h3>Published Forces:</h3>
+                        {% if published_forces %}
+                                {% for storyobject in published_forces %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No published forces.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+
+                        <h3>Unublished Forces:</h3>
+                        {% if unpublished_forces %}
+                                {% for storyobject in unpublished_forces %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished forces.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+                    </div>
+                </div>
+            </div>
+
+            {% endblock %}
+            {% block column2 %}
+            <div class="tab-pane fade in" id="characters"> <!-- Start Tab Two -->
+                <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
+                    <div class="row">
+                        <h3>Published Characters:</h3>
+                        {% if published_characters %}
+                                {% for storyobject in published_characters %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No published characters.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+
+                        <h3>Unublished Characters:</h3>
+                        {% if unpublished_characters %}
+                                {% for storyobject in unpublished_characters %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished characters.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+                    </div>
+                    </div>
+                </div> <!-- End Tab Two -->
+
+                <div class="tab-pane fade in" id="creatures"> <!-- Start Tab One -->
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                <div class="row">
+                        <h3>Published Creatures:</h3>
+                        {% if published_creatures %}
+                                {% for storyobject in published_creatures %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No published creatures.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+
+                        <h3>Unublished Creatures:</h3>
+                        {% if unpublcreatures %}
+                                {% for storyobject in unpublished_creatures %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished creatures.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+                <div class="row">
+                        <h3>Published Things:</h3>
+                        {% if published_things %}
+                                {% for storyobject in published_things %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No published things.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+
+                        <h3>Unublished Things:</h3>
+                        {% if unpublished_things %}
+                                {% for storyobject in unpublished_things %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished things.</strong>
+                            <br><br>
+                        {% endif %}
+                        <hr>
+                    </div>
+                </div>
+            </div>
+
+
+            {% endblock %}
+        </div> <!-- End of container -->
+<script>
+var url = document.location.toString();
+if (url.match('#')) {
+$('#char_tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+}
+// Change hash for page-reload
+$('#char_tabs a').on('shown.bs.tab', function (e) {
+window.location.hash = e.target.hash;
+})
+</script>
+
+    {% endblock content %}

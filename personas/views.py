@@ -12,10 +12,10 @@ from django.db.models.base import ObjectDoesNotExist
 from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateView
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
-from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, MainMap, Chapter, Scene, Skill, Note, Communique
+from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
-from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, ItemForm, AbilityForm, RelationshipForm
-from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, ItemForm, OrganizationForm, MembershipForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm
+from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
+from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm
 
 from datetime import datetime
 
@@ -28,7 +28,16 @@ def index(request):
     context_dict = {}
 
     try:
-        stories = Story.objects.all()
+        stories = Story.objects.filter(published=True)
+
+        story_dict = {}
+
+        for story in stories:
+            so = StoryObject.objects.filter(story=story)
+            l = Location.objects.filter(story=story)
+            n = Nation.objects.filter(story=story)
+            c = Chapter.objects.filter(story=story)
+            story.count = so.count() + l.count() + n.count() + c.count()
 
         context_dict['stories'] = stories
 
@@ -36,6 +45,100 @@ def index(request):
         pass
 
     return render(request, 'personas/index.html', context_dict)
+
+@login_required
+def workshop(request, user):
+    context_dict = {}
+
+    user = request.user
+
+    try:
+        context_dict['user'] = user
+
+        # Set up Stories
+        context_dict['published_stories'] = Story.objects.filter(
+            author=user).filter(published=True)
+
+        context_dict['unpublished_stories'] = Story.objects.filter(
+            author=user).filter(published=False)
+
+        # Set up Chapters
+        context_dict['published_chapters'] = Chapter.objects.filter(
+            creator=user).filter(published=True)
+
+        context_dict['unpublished_chapters'] = Chapter.objects.filter(
+            creator=user).filter(published=False)
+
+        # Set up Scenes
+        context_dict['published_scenes'] = Scene.objects.filter(
+            creator=user).filter(published=True)
+
+        context_dict['unpublished_scenes'] = Scene.objects.filter(
+            creator=user).filter(published=False)
+
+        # Set up Nations
+        context_dict['published_nations'] = Nation.objects.filter(
+            creator=user).filter(published=True)
+
+        context_dict['unpublished_nations'] = Nation.objects.filter(
+            creator=user).filter(published=False)
+
+        # Set up Locations
+        context_dict['published_locations'] = Location.objects.filter(
+            creator=user).filter(published=True)
+
+        context_dict['unpublished_locations'] = Location.objects.filter(
+            creator=user).filter(published=False)
+
+        # Set up Organizations
+        context_dict['published_organizations'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Organization").filter(
+            published=True)
+
+        context_dict['unpublished_organizations'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Organization").filter(
+            published=False)
+
+        # Set up Forces
+        context_dict['published_forces'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Abstract").filter(
+            published=True)
+
+        context_dict['unpublished_forces'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Abstract").filter(
+            published=False)
+
+        # Set up Characters
+        context_dict['published_characters'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Character").filter(
+            published=True)
+
+        context_dict['unpublished_characters'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Character").filter(
+            published=False)
+
+        # Set up Creatures
+        context_dict['published_creatures'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Creature").filter(
+            published=True)
+
+        context_dict['unpublished_creatures'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Creature").filter(
+            published=False)
+
+        # Set up Things
+        context_dict['published_things'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Thing").filter(
+            published=True)
+
+        context_dict['unpublished_things'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Thing").filter(
+            published=False)
+
+    except Story.DoesNotExist:
+        pass
+
+    return render(request, 'personas/workshop.html', context_dict)
 
 
 def collections(request):
@@ -77,11 +180,11 @@ def location(request, location_name_slug):
         context_dict['longitude'] = location.longitude
         context_dict['slug'] = location.slug
         context_dict['scenes'] = Scene.objects.filter(
-            location__name=location.name)
+            location__name=location.name).filter(published=True).order_by("order")
         context_dict['organizations'] = StoryObject.objects.filter(
-                base_of_operations=location).filter(c_type="Organization").distinct().order_by('name')
+                base_of_operations=location).filter(c_type="Organization").filter(published=True).distinct().order_by('name')
         context_dict['storyobjects'] = StoryObject.objects.filter(
-            base_of_operations__name=location.name).filter(~Q(c_type="Organization"))
+            base_of_operations__name=location.name).filter(published=True).filter(~Q(c_type="Organization"))
 
         context_dict['notes'] = Note.objects.filter(location__name=location.name)
 
@@ -121,7 +224,7 @@ def scene(request, scene_name_slug):
         context_dict['resolution'] = scene.resolution
         context_dict['description'] = scene.description
         context_dict['publication_date'] = scene.publication_date
-        context_dict['storyobjects'] = StoryObject.objects.filter(scene__title=scene.title)
+        context_dict['storyobjects'] = StoryObject.objects.filter(scene__title=scene.title).filter(published=True)
 
         context_dict['story'] = Story.objects.get(chapter__scene__title=scene.title)
         context_dict['chapter'] = Chapter.objects.get(scene__title=scene.title)
@@ -152,90 +255,6 @@ def scene(request, scene_name_slug):
     return render(request, 'personas/scene.html', context_dict)
 
 
-def artifact(request, artifact_name_slug):
-
-    context_dict = {}
-
-    try:
-        artifact = Item.objects.get(slug=artifact_name_slug)
-        story = artifact.story
-        storyobject = artifact.storyobject
-
-        context_dict['artifact'] = artifact
-        context_dict['description'] = artifact.description
-        context_dict['storyobject'] = storyobject
-        context_dict['story'] = story
-        try:
-            context_dict['image'] = GalleryImage.objects.get(item=artifact)
-        except GalleryImage.DoesNotExist:
-            pass
-        context_dict['abilities'] = Ability.objects.filter(item__name=artifact.name)
-
-        context_dict['notes'] = Note.objects.filter(
-            item__name=artifact.name)[0:10]
-
-        form = NoteForm(request.POST or None)
-        context_dict['form'] = form
-
-        if request.method == 'POST':
-            if form.is_valid():
-
-                form = context_dict['form']
-                post_artifact = artifact
-                post_creator = request.user
-                form.save(artifact=post_artifact, creator=post_creator, commit=True)
-
-                return HttpResponseRedirect("")
-
-        else:
-
-            context_dict['form'] = NoteForm()
-
-    except Item.DoesNotExist:
-        pass
-
-    return render(request, 'personas/artifact.html', context_dict)
-
-
-def organization(request, organization_name_slug):
-
-    context_dict = {}
-
-    try:
-        organization = Organization.objects.get(slug=organization_name_slug)
-        members = Membership.objects.filter(organization=organization)
-        story = Story.objects.get(location__organization=organization)
-
-        context_dict['organization'] = organization
-        context_dict['members'] = members
-        context_dict['story'] = story
-
-        context_dict['notes'] = Note.objects.filter(
-            organization__name=organization.name)
-
-        form = NoteForm(request.POST or None)
-        context_dict['form'] = form
-
-        if request.method == 'POST':
-            if form.is_valid():
-
-                form = context_dict['form']
-                post_organization = organization
-                post_creator = request.user
-                form.save(organization=post_organization, creator=post_creator, commit=True)
-
-                return HttpResponseRedirect("")
-
-        else:
-
-            context_dict['form'] = NoteForm()
-
-    except Organization.DoesNotExist:
-        pass
-
-    return render(request, 'personas/organization.html', context_dict)
-
-
 def nation(request, nation_name_slug):
 
     context_dict = {}
@@ -247,7 +266,7 @@ def nation(request, nation_name_slug):
         context_dict['nation'] = nation
         context_dict['story'] = story
         context_dict['locations'] = Location.objects.filter(
-            nation=nation).distinct()
+            nation=nation).filter(published=True).distinct()
 
         context_dict['notes'] = Note.objects.filter(
             nation__name=nation.name)[0:10]
@@ -330,9 +349,6 @@ def storyobject(request, storyobject_name_slug):
             'name')
 
         context_dict['combat_info'] = CombatInfo.objects.filter(
-            storyobject__name=storyobject.name)
-
-        context_dict['artifacts'] = Item.objects.filter(
             storyobject__name=storyobject.name)
 
         context_dict['my_relationships'] = Relationship.objects.filter(
@@ -454,8 +470,8 @@ def chapter(request, chapter_name_slug):
 
     try:
         chapter = Chapter.objects.get(slug=chapter_name_slug)
-        scenes = Scene.objects.filter(chapter__title=chapter.title).order_by(
-            'order')
+        scenes = Scene.objects.filter(chapter__title=chapter.title).filter(
+            published=True).order_by('order')
 
         context_dict['chapter_title'] = chapter.title
         context_dict['chapter'] = chapter
@@ -466,9 +482,9 @@ def chapter(request, chapter_name_slug):
         context_dict['scenes'] = scenes
 
         context_dict['storyobjects'] = StoryObject.objects.filter(
-            scene__chapter__title=chapter.title).distinct()
+            scene__chapter__title=chapter.title).filter(published=True).distinct()
         context_dict['locations'] = Location.objects.filter(
-            scene__chapter__title=chapter.title).distinct()
+            scene__chapter__title=chapter.title).filter(published=True).distinct()
 
 
         context_dict['notes'] = Note.objects.filter(
@@ -503,7 +519,8 @@ def story(request, story_name_slug):
 
     try:
         story = Story.objects.get(slug=story_name_slug)
-        chapters = Chapter.objects.filter(story__title=story.title).order_by("number")
+        chapters = Chapter.objects.filter(story__title=story.title).filter(
+            published=True).order_by("number")
 
         context_dict['chapters'] = chapters
 
@@ -525,30 +542,44 @@ def story(request, story_name_slug):
         context_dict['notes'] = Note.objects.filter(
             story__title=story.title)
 
-        scenes = Scene.objects.filter(chapter__story__title=story.title).distinct().order_by("order")
+        scenes = Scene.objects.filter(
+            chapter__story__title=story.title).filter(
+            published=True).distinct().order_by("order")
 
         context_dict['scenes'] = scenes
 
         context_dict['characters'] = StoryObject.objects.filter(
-                story=story).filter(c_type="Character").distinct().order_by('name')
+                story=story).filter(
+                published=True).filter(
+                c_type="Character").distinct().order_by('name')
 
         context_dict['artifacts'] = StoryObject.objects.filter(
-                story=story).filter(c_type="Thing").distinct().order_by('name')
+                story=story).filter(
+                published=True).filter(
+                c_type="Thing").distinct().order_by('name')
 
         context_dict['creatures'] = StoryObject.objects.filter(
-                story=story).filter(c_type="Creature").distinct().order_by('name')
+                story=story).filter(
+                published=True).filter(
+                c_type="Creature").distinct().order_by('name')
 
         context_dict['forces'] = StoryObject.objects.filter(
-                story=story).filter(c_type="Abstract").distinct().order_by('name')
+                story=story).filter(
+                published=True).filter(
+                c_type="Abstract").distinct().order_by('name')
 
         context_dict['locations'] = Location.objects.filter(
-                story__title=story.title).distinct().order_by('name')
+                story__title=story.title).filter(
+                published=True).distinct().order_by('name')
 
         context_dict['organizations'] = StoryObject.objects.filter(
-            story=story).filter(c_type="Organization").distinct().order_by('name')
+            story=story).filter(
+            published=True).filter(
+            c_type="Organization").distinct().order_by('name')
 
         context_dict['nations'] = Nation.objects.filter(
-            story=story).distinct().order_by('name')
+            story=story).filter(
+            published=True).distinct().order_by('name')
 
         form = NoteForm(request.POST or None)
         context_dict['form'] = form
@@ -1149,38 +1180,6 @@ def add_location(request, story_title_slug):
 
 
 @login_required
-def add_organization(request, story_title_slug):
-
-    story = Story.objects.get(slug=story_title_slug)
-
-    organizations = Organization.objects.filter(location__story=story)
-
-    if request.method == 'POST':
-
-        organization_form = OrganizationForm(request.POST or None, request.FILES or None)
-
-        if organization_form.is_valid():
-            organization = organization_form.save(commit=False)
-            organization.creator = request.user
-            organization.slug = slugify(
-                "{}-{}".format(story.title, organization.name))
-            organization.story = story
-            organization.save()
-
-            return HttpResponseRedirect("/personas/organization/{}".format(organization.slug))
-
-        else:
-            print (organization_form.errors)
-
-    else:
-        organization_form = OrganizationForm(story=story)
-
-    return render(request, 'personas/add_organization.html', {
-        'slug': story_title_slug, 'story':story, 'organizations': organizations,
-        'organization_form':organization_form})
-
-
-@login_required
 def add_nation(request, story_title_slug):
 
     story = Story.objects.get(slug=story_title_slug)
@@ -1209,78 +1208,6 @@ def add_nation(request, story_title_slug):
     return render(request, 'personas/add_nation.html', {
         'slug': story_title_slug, 'story':story, 'nations': nations,
         'nation_form':nation_form})
-
-
-
-@login_required
-def add_membership(request, storyobject_name_slug):
-
-    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
-
-    story = Story.objects.get(storyobject=storyobject)
-
-    memberships = Membership.objects.filter(storyobject=storyobject)
-
-    if request.method == 'POST':
-
-        membership_form = MembershipForm(request.POST or None)
-
-        if membership_form.is_valid():
-            membership = membership_form.save(commit=False)
-            membership.storyobject = storyobject
-            membership.save()
-
-            return HttpResponseRedirect("")
-
-        else:
-            print (membership_form.errors)
-
-    else:
-        membership_form = MembershipForm(story=story)
-
-    return render(request, 'personas/add_membership.html', {
-        'slug': storyobject_name_slug, 'story':story, 'memberships': memberships,
-        'membership_form':membership_form, 'storyobject': storyobject})
-
-
-@login_required
-def add_artifact(request, slug, *args, **kwargs):
-
-    try:
-        story = Story.objects.get(slug=slug)
-        storyobject = None
-    except ObjectDoesNotExist:
-        storyobject = StoryObject.objects.get(slug=slug)
-        story = Story.objects.get(storyobject=storyobject)
-
-    artifacts = Item.objects.filter(story=story)
-
-    if request.method == 'POST':
-
-        artifact_form = ItemForm(request.POST, request.FILES or None)
-
-        if artifact_form.is_valid():
-            artifact = artifact_form.save(commit=False)
-            artifact.slug = slugify(
-                "{}-{}".format(story.title, artifact.name))
-            if storyobject:
-                artifact.storyobject = storyobject
-            else:
-                pass
-            artifact.story = story
-            artifact.save()
-
-            return HttpResponseRedirect("")
-
-        else:
-            print (artifact_form.errors)
-
-    else:
-        artifact_form = ItemForm()
-
-    return render(request, 'personas/add_artifact.html', {
-        'story':story, 'artifacts': artifacts,
-        'artifact_form':artifact_form, 'storyobject':storyobject})
 
 
 @login_required
@@ -1593,31 +1520,6 @@ def edit_location(request, pk, template_name='personas/edit_location.html'):
 
 
 @login_required
-def delete_organization(request, pk, template_name='personas/delete_organization.html'):
-    organization = Organization.objects.get(pk=pk)
-    story = Story.objects.get(organization=organization)
-    if request.user == story.author:
-        if request.method=='POST':
-            organization.delete()
-            return HttpResponseRedirect('/personas/{}'.format(story.slug))
-    else:
-        return HttpResponse("You do not have permission to delete this.")
-    return render(request, template_name, {'object': organization})
-
-
-@login_required
-def edit_organization(request, pk, template_name='personas/edit_organization.html'):
-    organization = Organization.objects.get(pk=pk)
-    story = organization.story
-    user = request.user
-    form = OrganizationForm(request.POST or None, request.FILES or None, instance=organization, story=story)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect('/personas/organization/{}'.format(organization.slug))
-    return render(request, template_name, {'form': form, 'organization':organization, 'story':story})
-
-
-@login_required
 def delete_chapter(request, pk, template_name='personas/delete_chapter.html'):
     chapter = Chapter.objects.get(pk=pk)
     story = Story.objects.get(chapter=chapter)
@@ -1665,65 +1567,6 @@ def edit_scene(request, pk, template_name='personas/edit_scene.html'):
         form.save()
         return HttpResponseRedirect('/personas/scene/{}'.format(scene.slug))
     return render(request, template_name, {'form': form, 'object':scene, 'story':story})
-
-
-@login_required
-def delete_membership(request, pk, template_name='personas/delete_membership.html'):
-    membership = Membership.objects.get(pk=pk)
-    storyobject = membership.storyobject
-    if request.user == storyobject.creator:
-        if request.method=='POST':
-            membership.delete()
-            return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#details'.format(
-            storyobject.slug)})
-    else:
-        return HttpResponse("You do not have permission to delete this.")
-    return render(request, template_name, {'object': membership})
-
-
-@login_required
-def edit_membership(request, pk, template_name='personas/edit_membership.html'):
-    membership = Membership.objects.get(pk=pk)
-    storyobject = membership.storyobject
-    story = storyobject.story
-    form = MembershipForm(request.POST or None, instance=membership, story=story)
-    if form.is_valid():
-        form.save()
-        return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#details'.format(
-            storyobject.slug)})
-    return render(request, template_name, {'form': form, 'storyobject':storyobject, 'membership': membership,
-        'story':story})
-
-
-@login_required
-def delete_artifact(request, pk, template_name='personas/delete_artifact.html'):
-    artifact = Item.objects.get(pk=pk)
-    storyobject = StoryObject.objects.get(item=artifact)
-    if request.user == storyobject.creator:
-        if request.method=='POST':
-            artifact.delete()
-            return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/storyobject/{}/#abilities'.format(
-                storyobject.slug)})
-    else:
-        return HttpResponse("You do not have permission to delete this.")
-    return render(request, template_name, {'object': artifact})
-
-
-@login_required
-def edit_artifact(request, pk, template_name='personas/edit_artifact.html'):
-    artifact = Item.objects.get(pk=pk)
-    storyobject = StoryObject.objects.get(item=artifact)
-    story= storyobject.story
-    form = ItemForm(request.POST or None, instance=artifact)
-    if form.is_valid():
-        form.save()
-        return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#abilities'.format(
-            storyobject.slug)})
-    return render(request, template_name, {'form': form, 'storyobject':storyobject, 'artifact': artifact, 'story':story})
 
 
 @login_required

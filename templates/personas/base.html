@@ -77,19 +77,20 @@
                                     <li><a href="/personas/story/{{ story.slug }}/#maps">Maps</a></li>
                                     <li><a href="/personas/story/{{ story.slug }}/#notes">Notes</a></li>
                                 </ul>
-                                <li class="dropdown">
-                                    <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Add Content</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="/personas/add_chapter/{{ story.slug }}">Add Chapter</a></li>
-                                        <li><a href="/personas/add_scene/{{ story.slug }}">Add Scene</a></li>
-                                        <li><a href="/personas/add_location/{{ story.slug }}">Add Location</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="/personas/add_nation/{{ story.slug }}">Add Area</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="/personas/add_storyobject/{{ story.slug }}">
-                                        Add Story Object</a></li>
-                                        <li class="divider"></li>
-                                    </ul></li>
+                        </li>
+                        <li class="dropdown">
+                            <a href="/personas/story/{{ story.slug }}" class="dropdown-toggle" data-toggle="dropdown">Add Content</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/personas/add_chapter/{{ story.slug }}">Add Chapter</a></li>
+                                <li><a href="/personas/add_scene/{{ story.slug }}">Add Scene</a></li>
+                                <li><a href="/personas/add_location/{{ story.slug }}">Add Location</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/personas/add_nation/{{ story.slug }}">Add Area</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/personas/add_storyobject/{{ story.slug }}">
+                                Add Story Object</a></li>
+                                <li class="divider"></li>
+                            </ul></li>
                                 {% else %}
                                     <a href="/personas/" class="dropdown-toggle" data-toggle="dropdown">Choose a Story</a>
                                     <ul class="dropdown-menu">
@@ -101,6 +102,9 @@
                                     {% endif %}
                                     </ul>
                                 {% endif %}
+                                {% if user.is_authenticated %}
+                                <li><a href="/personas/workshop/{{ user }}">My Workshop</a></li>
+                                {% else %}{% endif %}
 
                             </ul>
 

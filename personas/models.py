@@ -14,16 +14,18 @@ class Nation(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
     creator = models.ForeignKey(User, default=1)
+    
     might = models.PositiveSmallIntegerField(default=0)
     intrigue = models.PositiveSmallIntegerField(default=0)
     magic = models.PositiveSmallIntegerField(default=0)
     wealth = models.PositiveSmallIntegerField(default=0)
     influence = models.PositiveSmallIntegerField(default=0)
     defense = models.PositiveSmallIntegerField(default=0)
-    image = models.ImageField(upload_to='nation_images/%Y/%m/%d/%H_%M_%S', default='nation_images/nothing.jpg')
+    image = models.ImageField(upload_to='nation_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')
 
     story = models.ForeignKey('Story')
-
+    published = models.BooleanField(default=True,
+        help_text="Elements that are NOT published will only be viewable in your Workshop.")
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -37,7 +39,9 @@ class Nation(models.Model):
 class Location(models.Model):
     name = models.CharField(max_length=128)
     creator = models.ForeignKey(User, blank=True, null=True)
-    image = models.ImageField(upload_to='location_images/%Y/%m/%d/%H_%M_%S', default='location_images/nowhere.jpg')
+    
+    image = models.ImageField(upload_to='location_images/%Y/%m/%d/%H_%M_%S',
+        default='profile_images/shadow_figure.jpeg')
     terrain = models.CharField(max_length=128)
     features = models.CharField(max_length=500)
     description = models.TextField(blank=True)
@@ -46,7 +50,8 @@ class Location(models.Model):
     longitude = models.FloatField(default=-1.0)
     story = models.ForeignKey('Story', default=1)
     #geom = PointField()
-
+    published = models.BooleanField(default=True,
+        help_text="Elements that are NOT published will only be viewable in your Workshop.")
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -87,7 +92,6 @@ class Ability(models.Model):
     name = models.CharField(max_length=32)
     description = models.TextField(blank=True)
     storyobject = models.ForeignKey('StoryObject', null=True, blank=True)
-    item = models.ForeignKey('Item', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         super(Ability, self).save(*args, **kwargs)
@@ -104,8 +108,6 @@ class Note(models.Model):
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
     location = models.ForeignKey("Location", blank=True, null=True)
-    item = models.ForeignKey("Item", blank=True, null=True)
-    organization = models.ForeignKey("Organization", blank=True, null=True)
     nation = models.ForeignKey("Nation", blank=True, null=True)
     scene = models.ForeignKey("Scene", blank=True, null=True)
     chapter = models.ForeignKey("Chapter", blank=True, null=True)
@@ -126,8 +128,6 @@ class GalleryImage(models.Model):
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
     location = models.ForeignKey("Location", blank=True, null=True)
-    item = models.ForeignKey("Item", blank=True, null=True)
-    organization = models.ForeignKey("Organization", blank=True, null=True)
     nation = models.ForeignKey("Nation", blank=True, null=True)
     scene = models.ForeignKey("Scene", blank=True, null=True)
     chapter = models.ForeignKey("Chapter", blank=True, null=True)
@@ -221,23 +221,6 @@ class CombatInfo(models.Model):
         return "{}: {}".format(self.title, self.data)
 
 
-class Item(models.Model):
-    name = models.CharField(max_length=32)
-    description = models.TextField(blank=True)
-    storyobject = models.ForeignKey('StoryObject', blank=True, null=True)
-    story = models.ForeignKey('Story', blank=True, null=True)
-
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        slug = slugify("{}-{}".format(self.story.title, self.name))
-        super(Item, self).save(*args, **kwargs)
-
-
-    def __str__(self):
-        return "{}: {}".format(self.name, self.description)
-
-
 class StoryObject(models.Model):
 
     CHARACTER = "Character"
@@ -285,6 +268,8 @@ class StoryObject(models.Model):
     social_toggle = models.BooleanField(default=True,
      help_text="Check to enable social functionality for this story object.",
         verbose_name="Enable Social Functions?")
+    published = models.BooleanField(default=True,
+        help_text="Elements that are NOT published will only be viewable in your Workshop.")
 
     def save(self, slug=None, creator=None, *args, **kwargs):
         slug = slugify("{}-{}".format(self.story.title, self.name))
@@ -319,38 +304,6 @@ class Relationship(models.Model):
         return '{} >> {} >> {} ({}: {})'.format(
             self.from_storyobject, self.relationship_class,
             self.to_storyobject, self.relationship_description, self.weight)
-
-
-class Organization(models.Model):
-    name = models.CharField(max_length=128)
-    creator = models.ForeignKey(User, blank=True, null=True)
-    description = models.TextField(blank=True)
-    members = models.ManyToManyField(StoryObject, through='Membership', blank=True)
-    purpose = models.CharField(max_length=128)
-    region = models.CharField(max_length=128)
-    location = models.ForeignKey(Location)
-    story = models.ForeignKey('Story')
-    image = models.ImageField(upload_to='organization_images/%Y/%m/%d/%H_%M_%S', default='organization_images/nothing.jpg')
-
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        slug = slugify("{}-{}".format(self.story.title, self.name))
-        super(Organization, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
-class Membership(models.Model):
-    storyobject = models.ForeignKey(StoryObject)
-    organization = models.ForeignKey(Organization)
-    date_joined = models.DateField(auto_now=True)
-    role = models.CharField(max_length=128)
-    rank = models.PositiveSmallIntegerField(default=1)
-
-    def __str__(self):
-        return "{} - Rank {} - {}".format(self.organization, self.rank, self.role)
 
 
 class Scene(models.Model):
@@ -391,6 +344,8 @@ class Scene(models.Model):
     order = models.PositiveSmallIntegerField(default=1)
     storyobjects = models.ManyToManyField(StoryObject, blank=True)
     chapter = models.ForeignKey("Chapter")
+    published = models.BooleanField(default=True,
+        help_text="Elements that are NOT published will only be viewable in your Workshop.")
 
     slug = models.SlugField(unique=True, blank=True)
 
@@ -409,6 +364,8 @@ class Chapter(models.Model):
     story = models.ForeignKey("Story")
     number = models.PositiveSmallIntegerField(default=1,
         verbose_name="Chapter Number")
+    published = models.BooleanField(default=True,
+        help_text="Elements that are NOT published will only be viewable in your Workshop.")
 
     slug = models.SlugField(unique=True)
 
@@ -463,9 +420,11 @@ class Story(models.Model):
     genre = models.CharField(
         max_length=128, choices=GENRE_CHOICES, default='Fantasy')
     image = models.ImageField(
-        upload_to='story_images/%Y/%m/%d/%H_%M_%S', default='story_images/nobody.jpg')
+        upload_to='story_images/%Y/%m/%d/%H_%M_%S',
+        default='profile_images/shadow_figure.jpeg')
     background = models.ImageField(
-        upload_to='story_backgrounds/%Y/%m/%d/%H_%M_%S', default='story_backgrounds/nothing.jpg')
+        upload_to='story_backgrounds/%Y/%m/%d/%H_%M_%S',
+        default='profile_images/shadow_figure.jpeg')
     colour_theme = models.CharField(
         max_length=12, choices=THEME_CHOICES, default='Dark')
     map_tile = models.CharField(
@@ -487,6 +446,8 @@ class Story(models.Model):
         max_length=24, default="Social", blank=True)
     statistic_type_name_4 = models.CharField(
         max_length=24, default="Magic", blank=True)
+    published = models.BooleanField(default=True,
+        help_text="Elements that are NOT published will only be viewable in your Workshop.")
 
 
     slug = models.SlugField(unique=True)
@@ -520,10 +481,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     website = models.URLField(blank=True)
     image = models.ImageField(
-        upload_to='user_images/%Y/%m/%d', default='user_images/nobody.jpg')
+        upload_to='user_images/%Y/%m/%d',
+        default='profile_images/shadow_figure.jpeg')
 
     def __str__(self):
         return self.user.username
-
-
-

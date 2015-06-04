@@ -3,7 +3,7 @@ from django.forms import widgets
 from django.forms.models import modelform_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from personas.models import Nation, Location, StoryObject, Organization, Relationship, Membership, Aspect, Ability, Item, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage, MainMap
+from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage, MainMap
 from personas.models import Statistic, CombatInfo, ScratchPad
 from django.core.mail import send_mail, EmailMessage
 from django.template import Context
@@ -269,50 +269,6 @@ class AbilityForm(forms.ModelForm):
             )
 
 
-class MembershipForm(forms.ModelForm):
-    class Meta:
-        model = Membership
-        fields = ["organization",
-        "role", "rank"]
-
-    def __init__(self, *args, **kwargs):
-        try:
-            self.story = kwargs.pop('story')
-        except KeyError:
-            self.story = None
-
-        super(MembershipForm, self).__init__(*args, **kwargs)
-        if self.story:
-            self.fields['organization'].queryset = Organization.objects.filter(
-                location__story=self.story).distinct()
-
-        self.helper = FormHelper(self)
-        self.helper.layout.append(
-            FormActions(
-                HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/storyobject/{{ storyobject.slug }}/#details">Cancel</a>"""),
-                Submit('save', 'Submit'),))
-
-
-class ItemForm(forms.ModelForm):
-    class Meta:
-        model = Item
-        fields = ["name", "description",]
-
-    def __init__(self, *args, **kwargs):
-        super(ItemForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.layout = Layout(
-            'name',
-            'description',
-        )
-        self.helper.layout.append(
-            FormActions(
-                HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/storyobject/{{ storyobject.slug }}/#abilities">Cancel</a>"""),
-                Submit('save', 'Submit'),))
-
-
 class GalleryImageForm(forms.ModelForm):
     class Meta:
         model = GalleryImage
@@ -387,7 +343,7 @@ class StoryForm(forms.ModelForm):
 class ChapterForm(forms.ModelForm):
     class Meta:
         model = Chapter
-        fields = ["title", "number", "description",]
+        fields = ["title", "number", "description", "published"]
 
     def __init__(self, *args, **kwargs):
 
@@ -447,7 +403,7 @@ class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
         fields = ["name", "terrain", "features", "description",
-        "nation", "latitude", "longitude", "image"]
+        "nation", "latitude", "longitude", "image", "published"]
 
     def __init__(self, *args, **kwargs):
         try:
@@ -490,37 +446,12 @@ class MainMapForm(forms.ModelForm):
                 Submit('save', 'Submit'),))
 
 
-class OrganizationForm(forms.ModelForm):
-    class Meta:
-        model = Organization
-        fields = ["name", "description", "purpose",
-        "region", "location", "image"]
-
-    def __init__(self, *args, **kwargs):
-        try:
-            self.story = kwargs.pop('story')
-        except KeyError:
-            self.story = None
-
-        super(OrganizationForm, self).__init__(*args, **kwargs)
-
-        if self.story:
-            self.fields['location'].queryset = Location.objects.filter(
-                story=self.story).order_by('name')
-
-        self.helper = FormHelper(self)
-        self.helper.layout.append(
-            FormActions(
-                HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/story/{{ story.slug }}/#political">Cancel</a>"""),
-                Submit('save', 'Submit'),))
-
-
 class NationForm(forms.ModelForm):
     class Meta:
         model = Nation
         fields = ["name", "description", "might",
-        "intrigue", "magic", "wealth", "influence", "defense", "image"]
+        "intrigue", "magic", "wealth", "influence", "defense", "image",
+        "published"]
 
     def __init__(self, *args, **kwargs):
         try:
@@ -536,22 +467,6 @@ class NationForm(forms.ModelForm):
                 HTML("""<a role="button" class="btn btn-default"
                         href="/personas/story/{{ story.slug }}/#political">Cancel</a>"""),
                 Submit('save', 'Submit'),))
-
-
-class ItemForm(forms.ModelForm):
-    class Meta:
-        model = Item
-        fields = ["name", "description",]
-
-    def __init__(self, *args, **kwargs):
-        super(ItemForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.layout.append(
-            FormActions(
-                HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/story/{{ story.slug }}">Cancel</a>"""),
-                Submit('save', 'Submit'),))
-
 
 
 class NoteForm(forms.ModelForm):
@@ -585,6 +500,7 @@ class NoteForm(forms.ModelForm):
 
         except KeyError:
             pass
+
         try:
             instance.scene = kwargs.pop('scene')
             mail_format(instance.scene, instance.scene.title,
@@ -592,6 +508,7 @@ class NoteForm(forms.ModelForm):
 
         except KeyError:
             pass
+
         try:
             instance.location = kwargs.pop('location')
             mail_format(instance.location, instance.location.name,
@@ -606,19 +523,14 @@ class NoteForm(forms.ModelForm):
 
         except KeyError:
             pass
+
         try:
             instance.story = kwargs.pop('story')
             mail_format(instance.story, instance.story.title,
                 instance.creator, instance.title, instance.content)
         except KeyError:
             pass
-        try:
-            instance.organization = kwargs.pop('organization')
-            mail_format(instance.organization, instance.organization.name,
-                instance.creator, instance.title, instance.content)
 
-        except KeyError:
-            pass
         try:
             instance.nation = kwargs.pop('nation')
             mail_format(instance.nation, instance.nation.name,

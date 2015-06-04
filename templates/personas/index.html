@@ -11,13 +11,13 @@
     {% endblock %}
     {% block column1 %}
         <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
-        <h3>Popular Stories</h3>
+        <h3>Active Stories</h3>
         <br>
         {% if stories %}
-            {% for story in stories %}
-                    <a class="btn btn-success btn-lg" style="background:black" href="/personas/story/{{ story.slug }}">
+            {% for story in stories|dictsortreversed:"count" %}
+                    <a class="btn btn-success btn-md" style="background:black" href="/personas/story/{{ story.slug }}">
                     {% thumbnail story.image "40x40" crop="center" as im %}
-                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}  {{ story.title }}</a>
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}  {{ story.title }} - [{{ story.count }}]</a>
             {% endfor %}
         {% else %}
             <strong>There are no stories present.</strong>
@@ -48,6 +48,8 @@
         </div>
         <hr>
         <a class="btn btn-primary" href="/personas/create_story/">Create a New Story!</a>   
+        <hr>
+        <a class="btn btn-primary" href="/personas/workshop/{{ user }}">My Workshop</a>   
         <!--
         <a class="btn btn-info" style="background:black" href="/personas/about">What is Persona?</a> -->
 
