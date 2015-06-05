@@ -566,7 +566,7 @@ def story(request, story_name_slug):
         context_dict['forces'] = StoryObject.objects.filter(
                 story=story).filter(
                 published=True).filter(
-                c_type="Abstract").distinct().order_by('name')
+                c_type="Force").distinct().order_by('name')
 
         context_dict['locations'] = Location.objects.filter(
                 story__title=story.title).filter(
