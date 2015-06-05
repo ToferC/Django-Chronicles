@@ -12,12 +12,12 @@
 {% block content %}
 
 {% block l_content %}
-    <div class="col-md-1 col-sm-0 col-lg-1">
+    <div class="col-md-1 col-sm-1 col-lg-1">
     </div>
 {% endblock %}
 
 {% block column1 %}
-    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
     <div class="row">
         <h3>Story:</h3>
         <a href="/personas/story/{{ story.slug }}">{{ story }}</a>
@@ -29,7 +29,7 @@
     </div>
 {% endblock %}
 {% block column2 %}
-    <div class="col-md-3 col-sm-4 col-lg-3" id="col1">
+    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
     <div class="row">
         <h3>Scenes:</h3>
         {% if scenes %}
@@ -104,6 +104,11 @@
     </div>
     </div>
     </div>
+    </div>
+{% endblock %}
+
+{% block r_content %}
+    <div class="col-md-1 col-sm-1 col-lg-1">
     </div>
 {% endblock %}
 

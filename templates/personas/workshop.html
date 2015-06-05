@@ -6,7 +6,7 @@
 
 {% block title %}
     <header>
-        <h1>{{ user|title }}'s Worshop</h1>
+        <h1>{{ user|title }}'s Workshop</h1>
     </header>
 {% endblock %}
 {% block content %}
@@ -50,7 +50,7 @@
     <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                     <div class="row">
                     <h3>{{ user }}</h3>
-                    <p>The Workshop is used to access and edit your published and non-published material.  Everything defaults to published, but if you de-select the Published toggle in the item creation page, it won't appear anywhere on the site except for your workshop.</p>
+                    <p>The Workshop is used to access and edit your published and non-published material. <br><br> Everything defaults to published, but if you de-select the Published toggle in the item creation page, it won't appear anywhere on the site except for your workshop. <br><br><strong>This includes search.</strong></p>
                     <br>
                     </div>
     </div>
@@ -72,7 +72,7 @@
                         {% endif %}
                         <hr>
 
-                        <h3>Unublished Stories:</h3>
+                        <h3>Unpublished Stories:</h3>
                         {% if unpublished_stories %}
                                 {% for story in unpublished_stories %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/story/{{ story.slug }}">
@@ -168,7 +168,7 @@
                             <br><br>
                         {% endif %}
                         <hr>
-                        <h3>Unublished Areas:</h3>
+                        <h3>Unpublished Areas:</h3>
                         {% if unpublished_nations %}
                                 {% for story in unpublished_nations %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/nation/{{ nation.slug }}">
@@ -199,7 +199,7 @@
                         {% endif %}
                         <hr>
 
-                        <h3>Unublished Locations:</h3>
+                        <h3>Unpublished Locations:</h3>
                         {% if unpublished_locations %}
                                 {% for location in unpublished_locations %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/location/{{ location.slug }}">
@@ -232,7 +232,7 @@
                         {% endif %}
                         <hr>
 
-                        <h3>Unublished Organizations:</h3>
+                        <h3>Unpublished Organizations:</h3>
                         {% if unpublished_nations %}
                                 {% for storyobject in unpublished_organizations %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
@@ -262,7 +262,7 @@
                         {% endif %}
                         <hr>
 
-                        <h3>Unublished Forces:</h3>
+                        <h3>Unpublished Forces:</h3>
                         {% if unpublished_forces %}
                                 {% for storyobject in unpublished_forces %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
@@ -296,7 +296,7 @@
                         {% endif %}
                         <hr>
 
-                        <h3>Unublished Characters:</h3>
+                        <h3>Unpublished Characters:</h3>
                         {% if unpublished_characters %}
                                 {% for storyobject in unpublished_characters %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
@@ -328,8 +328,8 @@
                         {% endif %}
                         <hr>
 
-                        <h3>Unublished Creatures:</h3>
-                        {% if unpublcreatures %}
+                        <h3>Unpublished Creatures:</h3>
+                        {% if unpublished_creatures %}
                                 {% for storyobject in unpublished_creatures %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
                                     {% thumbnail storyobject.image "30x30" crop="center" as im %}
@@ -358,7 +358,7 @@
                         {% endif %}
                         <hr>
 
-                        <h3>Unublished Things:</h3>
+                        <h3>Unpublished Things:</h3>
                         {% if unpublished_things %}
                                 {% for storyobject in unpublished_things %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">

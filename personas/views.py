@@ -1147,7 +1147,8 @@ def add_location(request, story_title_slug):
     story = Story.objects.get(slug=story_title_slug)
 
     try:
-        mainmap = MainMap.objects.get(story=story)
+        mainmaps = MainMap.objects.filter(story=story)
+        mainmap = mainmaps[1]
     except MainMap.DoesNotExist:
         mainmap = MainMap(base_latitude=50.000, base_longitude=-1.3)
 

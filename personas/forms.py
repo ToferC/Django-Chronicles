@@ -80,9 +80,9 @@ class StoryObjectForm(forms.ModelForm):
         super(StoryObjectForm, self).__init__(*args, **kwargs)
         if self.story:
             self.fields['base_of_operations'].queryset = Location.objects.filter(
-                story=self.story).order_by('name')
+                story=self.story).filter(published=True).order_by('name')
             self.fields['nationality'].queryset = Nation.objects.filter(
-                story=self.story).order_by('name')
+                story=self.story).filter(published=True).order_by('name')
 
 
         self.helper = FormHelper(self)
@@ -301,7 +301,7 @@ class RelationshipForm(forms.ModelForm):
 
         if self.story:
             self.fields['to_storyobject'].queryset = StoryObject.objects.filter(
-                story=self.story).order_by('name')
+                story=self.story).filter(published=True).order_by('name')
 
         self.helper = FormHelper(self)
         self.layout = Layout(
@@ -384,12 +384,12 @@ class SceneForm(forms.ModelForm):
 
         if self.story:
             self.fields['location'].queryset = Location.objects.filter(
-                story=self.story).order_by('name')
+                story=self.story).filter(published=True).order_by('name')
             self.fields['storyobjects'].queryset = StoryObject.objects.filter(
-                story=self.story).order_by('name')
+                story=self.story).filter(published=True).order_by('name')
             self.fields['storyobjects'].widget = forms.widgets.CheckboxSelectMultiple()
             self.fields['chapter'].queryset = Chapter.objects.filter(
-                story=self.story).order_by("number")
+                story=self.story).filter(published=True).order_by("number")
 
         self.helper = FormHelper(self)
         self.helper.layout.append(
@@ -415,7 +415,7 @@ class LocationForm(forms.ModelForm):
 
         if self.story:
             self.fields['nation'].queryset = Nation.objects.filter(
-                story=self.story).order_by('name')
+                story=self.story).filter(published=True).order_by('name')
 
         self.helper = FormHelper(self)
         self.helper.layout.append(

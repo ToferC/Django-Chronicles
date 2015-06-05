@@ -8,7 +8,7 @@
 </header>
 {% endblock %}
 
-<div class="row">
+{% block content %}
 
 {% block l_content %}
     <div class="col-md-1 col-sm-1 col-lg-1">
@@ -16,14 +16,12 @@
 {% endblock %}
 
 {% block column1 %}
-    <div class="col-md-5 col-sm-5 col-lg-5" id="col1">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
     <h3>Adding a Scene</h3>
     <p>Scenes are where the action and drama of your chronicle take place.  An action scene, an investigative scene or a love scene, all take place here.</p>
     </div>
-{% endblock %}
 
-{% block column2 %}
-    <div class="col-md-5 col-sm-5 col-lg-5" id="col1">
+    <div class="col-md-6 col-sm-6 col-lg-6" id="col1">
     <h3>Add a Scene</h3>
     {% crispy scene_form %}
     <br><br><br>
@@ -35,4 +33,4 @@
 </div>
 {% endblock %}
 
-</div>
+{% endblock %}
