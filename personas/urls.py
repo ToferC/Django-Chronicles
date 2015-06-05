@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^workshop/(?P<user>[\w\-]+)/$', views.workshop, name="workshop"),
     url(r'^redirect_template', TemplateView.as_view(template_name="redirect_template.html")),
 
-    url(r'^add_storyobject/(?P<story_title_slug>[\w\-]+)/$', views.add_storyobject, name='add_storyobject'),
+    url(r'^add_storyobject/(?P<story_title_slug>[\w\-]+)/(?P<c_type>[\w\-]+)/$', views.add_storyobject, name='add_storyobject'),
     url(r'^delete_storyobject/(?P<pk>\d+)/$', views.delete_storyobject, name='delete_storyobject'),
     url(r'^edit_storyobject/(?P<pk>\d+)/$', views.edit_storyobject, name='edit_storyobject'),
 

@@ -17,7 +17,7 @@
     {% block column1 %}
         <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
             <h3>Skills</h3>
-            <p>Skills are ways to explain what your story object can do.  Each game system treats skills differently, but most of them tend to both designate a skill and designate a skill value that tells you <i>how good you are</i> at using the skill.</p>
+            <p>Skills are ways to explain what your {{ storyobject.c_type }} can do.  Each game system treats skills differently, but most of them tend to both designate a skill and designate a skill value that tells you <i>how good you are</i> at using the skill.</p>
             <p>For each Skill, choose a name that describes the skill or talent or choose from a pre-prepared skill list for your game.</p>
         </div>
     {% endblock %}
@@ -88,7 +88,7 @@
                 <a role="button" class="btn btn-primary" href="/personas/add_ability/{{ storyobject.slug }}">I'm done. Next Step!</a>
             </div><br>
             <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#skills">Take me straight<br>to my character.</a>
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#skills">Take me straight<br>to my {{ storyobject.c_type }}.</a>
             </div>
         </div>
     {% endblock %}

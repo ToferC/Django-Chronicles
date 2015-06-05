@@ -6,14 +6,14 @@ from django.template.defaultfilters import slugify
 import django
 django.setup()
 
-from personas.models import Organization, StoryObject, Membership, Relationship
+from personas.models import StoryObject, Relationship
 
 
 s = StoryObject.objects.all()
 
 for i in s:
-    if i.c_type not in "Character Thing Force Organization Creature":
-        i.c_type = "Character"
+    if i.c_type == "Abstract":
+        i.c_type = "Force"
         i.save()
         print(i)
 

@@ -17,7 +17,7 @@
     {% block column1 %}
         <div class="col-md-2 col-sm-4 col-lg-2" id="col1">
             <h3>Abilities</h3>
-            <p>Abilities are special ways that your storyobject can break the rules of a game system or do things beyond what can be captured by simple skills.</p>
+            <p>Abilities are special ways that your {{ storyobject.c_type }} can break the rules of a game system or do things beyond what can be captured by simple skills.</p>
             <p>Different systems capture this differently, and you could call abilities by an array of different names: powers, advantages, talents, stunts, etc.  Just use what works for you and your story.</p>
         </div>
     {% endblock %}
@@ -48,7 +48,7 @@
             </div>
             <hr>
             <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#abilities">Take me straight<br>to my character.</a>
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#abilities">Take me straight<br>to my {{ storyobject.c_type }}.</a>
             </div>
         </div>
     {% endblock %}

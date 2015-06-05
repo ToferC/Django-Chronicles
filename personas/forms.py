@@ -69,13 +69,18 @@ class StoryObjectForm(forms.ModelForm):
     class Meta:
         model = StoryObject
         fields = "__all__"
-        exclude = ['slug', 'creator', 'story']
+        exclude = ['c_type', 'slug', 'creator', 'story']
 
     def __init__(self, *args, **kwargs):
         try:
             self.story = kwargs.pop('story')
         except KeyError:
             self.story = None
+
+        try:
+            self.c_type = kwargs.pop('c_type')
+        except KeyError:
+            self.c_type = "Character"
 
         super(StoryObjectForm, self).__init__(*args, **kwargs)
         if self.story:
@@ -92,11 +97,12 @@ class StoryObjectForm(forms.ModelForm):
                         href="/personas/story/{{ story.slug }}/#storyobjects">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
-    def save(self, creator, story=None, commit=True):
+    def save(self, creator, story=None, c_type="Character", commit=True):
         instance = super(StoryObjectForm, self).save(commit=False)
         instance.slug = slugify("{}-{}".format(story.title, instance.name))
         instance.creator = creator
         instance.story = story
+        instance.c_type = c_type
         instance.save()
         return instance
 

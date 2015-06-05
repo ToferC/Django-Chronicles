@@ -717,12 +717,13 @@ def user_logout(request):
 # Add content Views
 
 @login_required
-def add_storyobject(request, story_title_slug):
+def add_storyobject(request, story_title_slug, c_type):
 
     story = Story.objects.get(slug=story_title_slug)
 
     if request.method == 'POST':
-        storyobject_form = StoryObjectForm(request.POST, request.FILES)
+        storyobject_form = StoryObjectForm(request.POST, request.FILES,
+            c_type=c_type)
 
         creator = request.user
 
@@ -730,7 +731,8 @@ def add_storyobject(request, story_title_slug):
             slug = slugify("{}-{}".format(
                 story.title, storyobject_form.cleaned_data['name']))
 
-            storyobject_form.save(creator=creator, story=story, commit=True)
+            storyobject_form.save(creator=creator, story=story, c_type=c_type,
+                commit=True)
 
             return HttpResponseRedirect("/personas/add_aspect/{}".format(slug))
 
@@ -739,10 +741,10 @@ def add_storyobject(request, story_title_slug):
 
     else:
 
-        storyobject_form = StoryObjectForm(story=story)
+        storyobject_form = StoryObjectForm(story=story, c_type=c_type)
 
     return render(request, 'personas/add_storyobject.html',
-        {'storyobject_form': storyobject_form, 'story':story})
+        {'storyobject_form': storyobject_form, 'story':story, "c_type":c_type})
 
 
 @login_required

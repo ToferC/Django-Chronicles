@@ -73,7 +73,10 @@
                                     <li><a href="/personas/story/{{ story.slug }}/#chapters">Chapters</a></li>
                                     <li><a href="/personas/story/{{ story.slug }}/#geography">Geography</a></li>
                                     <li><a href="/personas/story/{{ story.slug }}/#organizations">Organizations</a></li>
-                                    <li><a href="/personas/story/{{ story.slug }}/#story_objects">Story Objects</a></li>
+                                    <li><a href="/personas/story/{{ story.slug }}/#story_objects">Characters</a></li>
+                                    <li><a href="/personas/story/{{ story.slug }}/#story_objects">Creatures</a></li>
+                                    <li><a href="/personas/story/{{ story.slug }}/#story_objects">Things</a></li>
+                                    <li><a href="/personas/story/{{ story.slug }}/#story_objects">Forces</a></li>
                                     <li><a href="/personas/story/{{ story.slug }}/#maps">Maps</a></li>
                                     <li><a href="/personas/story/{{ story.slug }}/#notes">Notes</a></li>
                                 </ul>
@@ -86,9 +89,17 @@
                                 <li><a href="/personas/add_location/{{ story.slug }}">Add Location</a></li>
                                 <li class="divider"></li>
                                 <li><a href="/personas/add_nation/{{ story.slug }}">Add Area</a></li>
+                                <li><a href="/personas/add_storyobject/{{ story.slug }}/Organization">
+                                Add Organization</a></li>
                                 <li class="divider"></li>
-                                <li><a href="/personas/add_storyobject/{{ story.slug }}">
-                                Add Story Object</a></li>
+                                <li><a href="/personas/add_storyobject/{{ story.slug }}/Character">
+                                Add Character</a></li>
+                                <li><a href="/personas/add_storyobject/{{ story.slug }}/Creature">
+                                Add Creature</a></li>
+                                <li><a href="/personas/add_storyobject/{{ story.slug }}/Thing">
+                                Add Thing</a></li>
+                                <li><a href="/personas/add_storyobject/{{ story.slug }}/Force">
+                                Add Force</a></li>
                                 <li class="divider"></li>
                             </ul></li>
                                 {% else %}

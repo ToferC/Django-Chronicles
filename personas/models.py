@@ -226,11 +226,11 @@ class StoryObject(models.Model):
     CHARACTER = "Character"
     CREATURE = "Creature"
     THING = "Thing"
-    ABSTRACT = "Abstract"
+    FORCE = "Force"
     ORGANIZATION = "Organization"
 
     CHAR_CHOICES = (
-        (ABSTRACT, "Abstract"),
+        (FORCE, "Force"),
         (CHARACTER, "Character"),
         (CREATURE, "Creature"),
         (ORGANIZATION, "Organization"),

@@ -31,7 +31,7 @@
         </li>
         <li>
             <a href="#story_objects" role="tab" data-toggle="tab">
-                <i class="fa fa-cog"></i> Story Objects
+                <i class="fa fa-cog"></i> Actors
             </a>
         </li>
         <li>
@@ -110,7 +110,7 @@
                             <strong>{{ story.title }} has no Organizations.</strong><br><br>
                         {% endif %}
                         <br><br>
-                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_storyobject/{{ story.slug }}/Organization" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
                         <br><br>
                         <hr>
                     </div>
@@ -164,7 +164,7 @@
                     </div>
                     </div>
                     </div> <!-- End Tab Three -->
-                    <div class="tab-pane fade in" id="story_objects"> <!-- Start Tab Four -->
+                <div class="tab-pane fade in" id="story_objects"> <!-- Start Tab Four -->
                 <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                     <div class="row">
                         <h3>Characters:</h3>
@@ -178,7 +178,7 @@
                             <strong>{{ story.title }} has no Characters.</strong><br><br>
                         {% endif %}
                         <br><br>
-                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_storyobject/{{ story.slug }}/Character" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
                         <br><br>
                         <hr>
                     </div>
@@ -196,7 +196,7 @@
                             <strong>{{ story.title }} has no Creatures.</strong><br><br>
                         {% endif %}
                         <br><br>
-                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Creature <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_storyobject/{{ story.slug }}/Creature" style="color:gray">Add Creature <span class="glyphicon glyphicon-pencil"></span></a>
                         <br><br>
                         <hr>
                     </div>
@@ -212,11 +212,11 @@
                             <strong>{{ story.title }} has no Forces.</strong><br><br>
                         {% endif %}
                         <br><br>
-                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Force <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_storyobject/{{ story.slug }}/Force" style="color:gray">Add Force <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
                     <div class="row">
-                        <h3>Artifacts:</h3>
+                        <h3>Things:</h3>
                         {% if artifacts %}
                                 {% for storyobject in artifacts %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
@@ -227,7 +227,7 @@
                             <strong>{{ story.title }} has no Artifacts.</strong><br><br>
                         {% endif %}
                         <br><br>
-                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_storyobject/{{ story.slug }}/Thing" style="color:gray">Add Artifact <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
                 </div>

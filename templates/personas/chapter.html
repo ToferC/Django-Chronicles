@@ -74,10 +74,11 @@
             <strong>{{ chapter.title }} has no Characters.</strong>
         {% endif %}
         <br>
-        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+        <a href="/personas/add_storyobject/{{ story.slug }}/Character" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
         {% if user == chapter.creator or user == story.author %}
         <a role="button" class="btn btn-primary" href="{% url 'edit_chapter' pk=chapter.pk %}">Edit Chapter  <span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
+        <hr>
     </div>
     </div>
 {% endblock %}

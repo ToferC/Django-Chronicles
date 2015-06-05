@@ -18,7 +18,7 @@
 {% block column1 %}
     <div class="col-md-2 col-sm-4 col-lg-3" id="col1">
     <h3>Aspects and Traits</h3>
-    <p>Aspects and traits are ways that you can distill your character down to a few succinct lines of prose.</p>
+    <p>Aspects and traits are ways that you can distill your {{ storyobject.c_type }} down to a few succinct lines of prose.</p>
     <p>For each Aspect, choose a label that is most appropriate and come up with a fun, entertaining line that encapsulates your character.  You can find great resources for coming up with awesome aspects on the <a href="http://fate-srd.com">FATE System Reference Document</a> or in <a href="http://fate-srd.com/fate-core/making-good-aspect">FATE Core</a>.</p>
     </div>
 {% endblock %}
@@ -53,7 +53,7 @@
             </div>
         <hr>
         <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#details">Take me straight<br>to my character.</a>
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#details">Take me straight<br>to my {{ storyobject.c_type }}.</a>
             </div>
     </div>
 {% endblock %}
