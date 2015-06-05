@@ -3,6 +3,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from PIL import Image
 from django_markdown.models import MarkdownField
+from personas.personas_email import mail_format as mail_format
 #from django.contrib.gis.db import models as gismodels
 #from jsonfield import JSONField
 #from djgeojson.fields import PointField
@@ -14,7 +15,6 @@ class Nation(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
     creator = models.ForeignKey(User, default=1)
-    
     might = models.PositiveSmallIntegerField(default=0)
     intrigue = models.PositiveSmallIntegerField(default=0)
     magic = models.PositiveSmallIntegerField(default=0)
@@ -301,9 +301,17 @@ class Relationship(models.Model):
         help_text="Enter any additional details here.")
 
     def __str__(self):
-        return '{} >> {} >> {} ({}: {})'.format(
+        return '{} >> {} {} ({}) - weight: {})'.format(
             self.from_storyobject, self.relationship_class,
             self.to_storyobject, self.relationship_description, self.weight)
+
+    def save(self, *args, **kwargs):
+        mail_format(self.to_storyobject,
+            self.to_storyobject.name,
+            self.from_storyobject.creator, 'New Relationship', self,
+            noun="relationship", verb="added")
+        super(Relationship, self).save(*args, **kwargs)
+
 
 
 class Scene(models.Model):

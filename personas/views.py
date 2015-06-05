@@ -30,14 +30,9 @@ def index(request):
     try:
         stories = Story.objects.filter(published=True)
 
-        story_dict = {}
-
         for story in stories:
             so = StoryObject.objects.filter(story=story)
-            l = Location.objects.filter(story=story)
-            n = Nation.objects.filter(story=story)
-            c = Chapter.objects.filter(story=story)
-            story.count = so.count() + l.count() + n.count() + c.count()
+            story.count = so.count()
 
         context_dict['stories'] = stories
 

@@ -10,7 +10,7 @@
 
  html, body {
   height: 100%;
-  background-color: gray;
+  background-color: #BDBDBD;
  }
 
  .wrapper {
@@ -34,7 +34,7 @@
   background-repeat: repeat-x;
  }
 
-@media screen and (max-width: 480px) {
+@media screen {
   .footer {
     display: none;
     visibility: hidden;
