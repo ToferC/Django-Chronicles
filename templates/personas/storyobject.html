@@ -421,7 +421,7 @@
                     {{ equipment }}
                 {% endif %}         
         </div>
-    </div>  <!-- end of Tab Five -->
+</div>  <!-- end of Tab Five -->
 <div class="tab-pane fade in" id="notes"> <!-- Tab Six Starts -->
 <div class="col-md-8 col-sm-8" id="BBoard">
     <h3>Notes:</h3>
@@ -445,8 +445,11 @@
 <h3>Images:</h3>
 {% if gallery_images %}
     {% for g_image in gallery_images %}
-            {% thumbnail g_image.image "300x300" crop="center" as im %}
-            <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% thumbnail g_image.image "150x150" crop="center" as im %}
+
+            <a class="fancybox" rel="gallery1" href="{{ g_image.image.url }}" title="{{ g_image.title }}">
+                <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            </a>
         {% endthumbnail %}
         <p>{{ g_image.title }}</p>
 {% endfor %}
