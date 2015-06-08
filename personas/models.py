@@ -151,6 +151,16 @@ class ScratchPad(models.Model):
         return self.content
 
 
+class Equipment(models.Model):
+    creator = models.ForeignKey(User, default=0)
+    content = models.TextField(default="Enter your equipment here.")
+    date = models.DateTimeField(auto_now=True)
+    storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
+
+    def __str__(self):
+        return self.content
+
+
 class Communique(models.Model):
     author = models.ForeignKey("StoryObject", related_name="Author")
     receiver = models.ForeignKey("StoryObject", related_name="Receiver")
@@ -262,6 +272,9 @@ class StoryObject(models.Model):
     combat_toggle = models.BooleanField(default=True,
      help_text="Check to enable combat info for this story object.",
         verbose_name="Enable Combat Info?")
+    equipment_toggle = models.BooleanField(default=True,
+     help_text="Check to enable equipment for this story object.",
+        verbose_name="Enable Equipment?")
     gallery_toggle = models.BooleanField(default=True,
      help_text="Check to enable gallery images for this story object.",
         verbose_name="Enable Gallery Images?")

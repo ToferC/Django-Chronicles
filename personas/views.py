@@ -12,10 +12,10 @@ from django.db.models.base import ObjectDoesNotExist
 from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateView
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
-from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique
+from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
-from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm
+from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
 
 from datetime import datetime
 
@@ -59,76 +59,76 @@ def workshop(request, user):
 
         # Set up Chapters
         context_dict['published_chapters'] = Chapter.objects.filter(
-            creator=user).filter(published=True)
+            creator=user).filter(published=True).order_by("story", "number")
 
         context_dict['unpublished_chapters'] = Chapter.objects.filter(
-            creator=user).filter(published=False)
+            creator=user).filter(published=False).order_by("story", "number")
 
         # Set up Scenes
         context_dict['published_scenes'] = Scene.objects.filter(
-            creator=user).filter(published=True)
+            creator=user).filter(published=True).order_by("chapter__story", "chapter", "order")
 
         context_dict['unpublished_scenes'] = Scene.objects.filter(
-            creator=user).filter(published=False)
+            creator=user).filter(published=False).order_by("chapter__story", "chapter", "order")
 
         # Set up Nations
         context_dict['published_nations'] = Nation.objects.filter(
-            creator=user).filter(published=True)
+            creator=user).filter(published=True).order_by("story", "name")
 
         context_dict['unpublished_nations'] = Nation.objects.filter(
-            creator=user).filter(published=False)
+            creator=user).filter(published=False).order_by("story", "name")
 
         # Set up Locations
         context_dict['published_locations'] = Location.objects.filter(
-            creator=user).filter(published=True)
+            creator=user).filter(published=True).order_by("story", "name")
 
         context_dict['unpublished_locations'] = Location.objects.filter(
-            creator=user).filter(published=False)
+            creator=user).filter(published=False).order_by("story", "name")
 
         # Set up Organizations
         context_dict['published_organizations'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Organization").filter(
-            published=True)
+            published=True).order_by("story", "name")
 
         context_dict['unpublished_organizations'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Organization").filter(
-            published=False)
+            published=False).order_by("story", "name")
 
         # Set up Forces
         context_dict['published_forces'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Abstract").filter(
-            published=True)
+            published=True).order_by("story", "name")
 
         context_dict['unpublished_forces'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Abstract").filter(
-            published=False)
+            published=False).order_by("story", "name")
 
         # Set up Characters
         context_dict['published_characters'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Character").filter(
-            published=True)
+            published=True).order_by("story", "name")
 
         context_dict['unpublished_characters'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Character").filter(
-            published=False)
+            published=False).order_by("story", "name")
 
         # Set up Creatures
         context_dict['published_creatures'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Creature").filter(
-            published=True)
+            published=True).order_by("story", "name")
 
         context_dict['unpublished_creatures'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Creature").filter(
-            published=False)
+            published=False).order_by("story", "name")
 
         # Set up Things
         context_dict['published_things'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Thing").filter(
-            published=True)
+            published=True).order_by("story", "name")
 
         context_dict['unpublished_things'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Thing").filter(
-            published=False)
+            published=False).order_by("story", "name")
 
     except Story.DoesNotExist:
         pass
@@ -305,14 +305,24 @@ def storyobject(request, storyobject_name_slug):
         context_dict['description'] = storyobject.description
 
         # Set up ScratchPad for storyobject
+
         try:
             scratchpad = ScratchPad.objects.get(
                 storyobject__name=storyobject.name)
         except ScratchPad.DoesNotExist:
-            scratchpad = ScratchPad(storyobject=storyobject, creator=request.user,
+            scratchpad = ScratchPad(storyobject=storyobject, creator=storyobject.creator,
                 content="Enter info here and save to update", date=datetime.now())
 
         context_dict['scratchpad'] = scratchpad
+
+        try:
+            equipment = Equipment.objects.get(
+                storyobject__name=storyobject.name)
+        except Equipment.DoesNotExist:
+            equipment = Equipment(storyobject=storyobject, creator=storyobject.creator,
+                date=datetime.now())
+
+        context_dict['equipment'] = equipment
 
         context_dict['aspects'] = Aspect.objects.filter(
             storyobject__name=storyobject.name)
@@ -387,6 +397,7 @@ def storyobject(request, storyobject_name_slug):
         context_dict['stats_toggle'] = storyobject.stats_toggle
         context_dict['skill_toggle'] = storyobject.skill_toggle
         context_dict['combat_toggle'] = storyobject.combat_toggle
+        context_dict['equipment_toggle'] = storyobject.equipment_toggle
         context_dict['gallery_toggle'] = storyobject.gallery_toggle
         context_dict['social_toggle'] = storyobject.social_toggle
 
@@ -446,11 +457,28 @@ def storyobject(request, storyobject_name_slug):
                 else:
                     print (context_dict['scratchpadform'].errors)
 
+            if 'record' in request.POST:
+
+                equipmentform = EquipmentForm(request.POST or None, instance=equipment)
+
+                if equipmentform.is_valid():
+                    equipmentform.storyobject = storyobject
+
+                    equipmentform.save()
+
+                    context_dict['equipmentform'] = EquipmentForm(instance=equipment)
+
+                    return HttpResponseRedirect("/personas/storyobject/{}/#equipment".format(storyobject_name_slug))
+
+                else:
+                    print (context_dict['equipmentform'].errors)
+
         else:
 
             context_dict['noteform'] = NoteForm()
             context_dict['communique_form'] = CommuniqueForm(story=storyobject.story)
             context_dict['scratchpadform'] = ScratchPadForm(instance=scratchpad)
+            context_dict['equipmentform'] = EquipmentForm(instance=equipment)
 
 
     except storyobject.DoesNotExist:
@@ -662,7 +690,7 @@ def register(request):
                 http:story-chronicles.herokuapp.com/personas/'''.format(
                     user.username),
                 "personas.story@gmail.com",
-                [user.email])
+                [user.email, "personas.story@gmail.com"])
 
             return index(request)
 

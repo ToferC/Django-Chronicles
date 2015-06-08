@@ -41,7 +41,7 @@
         </li>
         <li>
             <a href="#creatures" role="tab" data-toggle="tab">
-                <i class="fa fa-cog"></i> Creatures & Items
+                <i class="fa fa-cog"></i> Creatures & Things
             </a>
         </li>
     </ul>
@@ -99,6 +99,7 @@
                             <ul>
                                 {% for chapter in published_chapters %}
                                     <li><a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a></li>
+                                    {{ chapter.story }}
                                 {% endfor %}
                             </ul>
                         {% else %}
@@ -111,6 +112,7 @@
                             <ul>
                                 {% for chapter in unpublished_chapters %}
                                     <li><a href="/personas/chapter/{{ chapter.slug }}">{{ chapter }}</a></li>
+                                    {{ chapter.story }}
                                 {% endfor %}
                             </ul>
                         {% else %}
@@ -129,6 +131,7 @@
                             <ul>
                                 {% for scene in published_scenes %}
                                     <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
+                                    <span color="grey">{{scene.chapter.story }} - Chapter {{ scene.chapter }}</span>
                                 {% endfor %}
                             </ul>
                         {% else %}
@@ -141,6 +144,7 @@
                             <ul>
                                 {% for scene in unpublished_scenes %}
                                     <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
+                                    <span color="grey">{{scene.chapter.story }} - Chapter {{ scene.chapter }}</span>
                                 {% endfor %}
                             </ul>
                         {% else %}
@@ -233,7 +237,7 @@
                         <hr>
 
                         <h3>Unpublished Organizations:</h3>
-                        {% if unpublished_nations %}
+                        {% if unpublished_organizations %}
                                 {% for storyobject in unpublished_organizations %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
                                     {% thumbnail storyobject.image "30x30" crop="center" as im %}

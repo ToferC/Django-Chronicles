@@ -39,6 +39,13 @@
                     </a>
                 </li>
             {% endif %}
+            {% if equipment_toggle %}
+                <li>
+                    <a href="#equipment" role="tab" data-toggle="tab">
+                        <i class="fa fa-envelope"></i> Equipment
+                    </a>
+                </li>
+            {% endif %}
             <li>
                 <a href="#notes" role="tab" data-toggle="tab">
                     <i class="fa fa-cog"></i> Notes
@@ -198,8 +205,6 @@
 
                                 <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }}
                                  ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
-                                }
-                                }
                                 
                                 {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
@@ -216,12 +221,12 @@
                 <hr>
                 {% if user == storyobject.creator or user == story.author %}
                 <a href="/personas/add_relationships/{{ storyobject.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
-                {% else %}{% endif %}
                 <hr>
+                {% else %}{% endif %}
                 {% if user == storyobject.creator or user == story.author %}
                 <a role="button" class="btn btn-primary" href="{% url 'edit_storyobject' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
-                {% else %}{% endif %}
                 <hr>
+                {% else %}{% endif %}
                 </div>
             </div>
         {% else %}
@@ -405,7 +410,19 @@
                 {% endif %}         
         </div>
     </div>  <!-- end of Tab Three -->
-<div class="tab-pane fade in" id="notes"> <!-- Tab Four Starts -->
+
+
+<div class="tab-pane fade in" id="equipment"> <!-- Tab Five Starts -->
+        <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
+            <h3>Equipment:</h3>
+            {% if user == storyobject.creator or user == story.author %}
+                {% crispy equipmentform %}
+                {% else %}
+                    {{ equipment }}
+                {% endif %}         
+        </div>
+    </div>  <!-- end of Tab Five -->
+<div class="tab-pane fade in" id="notes"> <!-- Tab Six Starts -->
 <div class="col-md-8 col-sm-8" id="BBoard">
     <h3>Notes:</h3>
     {% if notes %}
@@ -421,9 +438,9 @@
             {% crispy noteform %}
     </div>
 </div>
-</div> <!-- End of Tab Four -->
+</div> <!-- End of Tab Six -->
 {% if gallery_toggle %}
-<div class="tab-pane fade in" id="images"> <!-- Tab Five Starts -->
+<div class="tab-pane fade in" id="images"> <!-- Tab Seven Starts -->
 <div class="col-md-8 col-sm-8" id="col1">
 <h3>Images:</h3>
 {% if gallery_images %}
