@@ -19,6 +19,25 @@ from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, Stat
 
 from datetime import datetime
 
+
+def return_object(s_object):
+    # retrieve object type function
+
+    if s_object.__class__.__name__ == 'StoryObject':
+        so_type = "storyobject"
+    elif s_object.__class__.__name__ == 'Location':
+        so_type = "location"
+    elif s_object.__class__.__name__ == 'Chapter':
+        so_type = "chapter"
+    elif s_object.__class__.__name__ == 'Scene':
+        so_type = "scene"
+    elif s_object.__class__.__name__ == 'Nation':
+        so_type = "nation"
+    else:
+        so_type = "story"
+
+    return so_type
+
 # Permission functions
 
 
@@ -304,7 +323,7 @@ def storyobject(request, storyobject_name_slug):
         context_dict['c_type'] = storyobject.c_type
         context_dict['description'] = storyobject.description
 
-        # Set up ScratchPad for storyobject
+        # Set up ScratchPad and Equipment for storyobject
 
         try:
             scratchpad = ScratchPad.objects.get(
@@ -1598,10 +1617,25 @@ def edit_scene(request, pk, template_name='personas/edit_scene.html'):
 @login_required
 def delete_note(request, pk, template_name='personas/delete_note.html'):
     note = Note.objects.get(pk=pk)
+
+    if note.storyobject:
+        target = note.storyobject
+    elif note.location:
+        target = note.location
+    elif note.story:
+        target = note.story
+    elif note.chapter:
+        target = note.chapter
+    else:
+        target = note.scene
+
+    pointer = return_object(target)
+
     if request.user == note.creator:
         if request.method=='POST':
             note.delete()
-            return HttpResponseRedirect('/personas/')
+            return HttpResponseRedirect('/personas/{}/{}'.format(pointer,
+                target.slug))
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': note})
@@ -1610,10 +1644,25 @@ def delete_note(request, pk, template_name='personas/delete_note.html'):
 @login_required
 def edit_note(request, pk, template_name='personas/edit_note.html'):
     note = Note.objects.get(pk=pk)
+
+    if note.storyobject:
+        target = note.storyobject
+    elif note.location:
+        target = note.location
+    elif note.story:
+        target = note.story
+    elif note.chapter:
+        target = note.chapter
+    else:
+        target = note.scene
+
+    pointer = return_object(target)
+
     form = NoteForm(request.POST or None, instance=note)
     if form.is_valid():
         form.save(creator=note.creator)
-        return HttpResponseRedirect('/personas/')
+        return HttpResponseRedirect('/personas/{}/{}'.format(pointer,
+            target.slug))
     return render(request, template_name, {'form': form, 'object': note})
 
 
