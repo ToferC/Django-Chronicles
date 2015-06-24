@@ -115,11 +115,11 @@ def workshop(request, user):
 
         # Set up Forces
         context_dict['published_forces'] = StoryObject.objects.filter(
-            creator=user).filter(c_type="Abstract").filter(
+            creator=user).filter(c_type="Force").filter(
             published=True).order_by("story", "name")
 
         context_dict['unpublished_forces'] = StoryObject.objects.filter(
-            creator=user).filter(c_type="Abstract").filter(
+            creator=user).filter(c_type="Force").filter(
             published=False).order_by("story", "name")
 
         # Set up Characters
