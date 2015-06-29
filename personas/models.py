@@ -314,7 +314,7 @@ class Relationship(models.Model):
         help_text="Enter any additional details here.")
 
     def __str__(self):
-        return '{} >> {} >> {} ({}) - weight: {})'.format(
+        return '{} > {} >> {} ({}) - weight: {})'.format(
             self.from_storyobject, self.relationship_class,
             self.to_storyobject, self.relationship_description, self.weight)
 
