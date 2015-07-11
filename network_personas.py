@@ -1,6 +1,7 @@
 import json
 import networkx as nx
 import os
+import re
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'persona2.settings')
 import django
@@ -73,10 +74,12 @@ def return_json_graph(graph_subject):
                 target = i.to_storyobject.name
                 context = i.relationship_class
 
-                if int(i.weight) > 10:
-                    weight = int(i.weight)/10
+                weight = re.sub(r"\D", "", i.weight)
+
+                if int(weight) > 10:
+                    weight = int(weight)/10
                 else:
-                    weight = int(i.weight)
+                    weight = int(weight)
 
                 G.add_edge(source, target, label=context, weight=weight)
                 edge_labels[(source, target)] = context

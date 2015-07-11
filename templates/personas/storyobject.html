@@ -231,6 +231,8 @@
                 </div>
             </div>
         </div>
+        <hr>
+        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' storyobject_name_slug=storyobject.slug %}"> Full Screen Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
     </div>
                 <hr>
                 {% if user == storyobject.creator or user == story.author %}

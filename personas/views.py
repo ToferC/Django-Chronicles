@@ -684,6 +684,25 @@ def mainmap(request, mainmap_slug):
     return render(request, 'personas/mainmap.html', context_dict)
 
 
+def relationship_map(request, storyobject_name_slug):
+
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
+
+    relationships = Relationship.objects.filter(Q(to_storyobject=storyobject) |
+        Q(from_storyobject=storyobject))
+
+    story = storyobject.story
+
+    data = {"from_storyobject": storyobject}
+
+    result = network_personas.return_json_graph(
+            storyobject.name)
+
+    return render(request, 'personas/relationship_map.html', {
+        'slug': storyobject_name_slug, 'storyobject': storyobject, 'story':story,
+        'relationships': relationships, 'result':result})
+
+
 # Admin Views
 
 def register(request):
