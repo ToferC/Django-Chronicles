@@ -48,6 +48,7 @@ def return_json_graph(graph_subject):
     story_objects[target] = target
     for so in neighbours:
         story_objects[so.to_storyobject] = so.to_storyobject
+        story_objects[so.from_storyobject] = so.from_storyobject
 
     for so in story_objects:
         print(so.name)
