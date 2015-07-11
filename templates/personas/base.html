@@ -9,7 +9,7 @@
     {% else %}
         <link rel="stylesheet" type="text/css" href="{% static 'personas/css/bootstrap-theme-dark.css' %}" />
     {% endif %}
-    <html>
+    <html xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
         <head>
             <!-- Latest compiled and minified CSS -->
             <meta charset="utf-8">
@@ -26,6 +26,7 @@
             <!-- fancyBox -->
             <link rel="stylesheet" href="{% static 'personas/js/fancybox/source/jquery.fancybox.css' %}" type="text/css" media="screen" />
             <script type="text/javascript" src="{% static 'personas/js/fancybox/source/jquery.fancybox.pack.js' %}"></script>
+            <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
             
             <title>Personas {{ story.title }} {{ chapter.title }} {{ scene_title }} {{ character.name }}</title>
             {% leaflet_js %}

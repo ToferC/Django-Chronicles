@@ -10,7 +10,6 @@ from personas.personas_email import mail_format as mail_format
 #from treasuremap.fields import LatLongField
 import collections
 
-
 class Nation(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)

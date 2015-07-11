@@ -18,6 +18,7 @@ from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, 
 from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
 
 from datetime import datetime
+import network_personas
 
 
 def return_object(s_object):
@@ -322,6 +323,11 @@ def storyobject(request, storyobject_name_slug):
         context_dict['role'] = storyobject.role
         context_dict['c_type'] = storyobject.c_type
         context_dict['description'] = storyobject.description
+
+        # Return JSON object for relationship map
+
+        context_dict['result'] = network_personas.return_json_graph(
+            storyobject.name)
 
         # Set up ScratchPad and Equipment for storyobject
 

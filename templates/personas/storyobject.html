@@ -132,6 +132,11 @@
                         <i class="fa fa-user"></i> To {{ storyobject.name | truncatewords:3 }}
                     </a>
                 </li>
+                <li>
+                    <a href="#map" role="tab" data-toggle="tab">
+                        <i class="fa fa-user"></i> Map
+                    </a>
+                </li>
             </ul>
 
         <div class="tab-content">
@@ -215,6 +220,15 @@
                 {% else %}
                 {{ storyobject.name }} has no personal relationships.
                 {% endif %}
+            </div>
+        </div>
+        <div class="tab-pane fade in" id="map">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="container" style="background-color:white; width=400; height=400">
+                        <div id="graph_frame"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -503,4 +517,177 @@ $('#char_tabs a').on('shown.bs.tab', function (e) {
 window.location.hash = e.target.hash;
 })
 </script>
+
+<script type="text/javascript">
+
+    var w = 400;
+    var h = 400;
+    var linkDistance=150;
+
+    var colors = d3.scale.category10()
+      .domain(['r', 'b', 'g', 'c', 'y']);
+
+    var dataset = {{ result|safe }};
+ 
+    var svg = d3.select("#graph_frame")
+        .append("svg")
+        .attr({"width":w,"height":h});
+
+    var force = d3.layout.force()
+        .nodes(dataset.nodes)
+        .links(dataset.links)
+        .size([w,h])
+        .linkDistance([linkDistance])
+        .charge([-500])
+        .theta(0.1)
+        .gravity(0.05)
+        .start();
+
+    var edges = svg.selectAll("line")
+      .data(dataset.links)
+      .enter()
+      .append("line")
+      .attr("id",function(d,i) {return 'edge'+i})
+      .attr('marker-end','url(#arrowhead)')
+      .style("stroke","#ccc")
+      .style("pointer-events", "none");
+    
+    var nodes = svg.selectAll("circle")
+      .data(dataset.nodes)
+      .enter().append("svg:a")
+      .attr("xlink:href", function(d){return d.url;})
+      .append("circle")
+      .attr({"r":10})
+      .style("fill",function(d,i){return colors(d.node_color);})
+      .call(force.drag)
+      .on("mouseover", fade(.1))
+      .on("mouseout", fade(1));
+
+    var linkedByIndex = {};
+    dataset.links.forEach(function(d) {
+        linkedByIndex[d.source.index + "," + d.target.index] = 1;
+    });
+
+    function isConnected(a, b) {
+        return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
+    }
+
+    var nodelabels = svg.selectAll(".nodelabel") 
+       .data(dataset.nodes)
+       .enter()
+       .append("text")
+       .attr({"x":function(d){return d.x;},
+              "y":function(d){return d.y;},
+              "class":"nodelabel",
+              "stroke":"black"})
+       .text(function(d){return d.id;});
+
+    var edgepaths = svg.selectAll(".edgepath")
+        .data(dataset.links)
+        .enter()
+        .append('path')
+        .attr({'d': function(d) {return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y},
+               'class':'edgepath',
+               'fill-opacity':0,
+               'stroke-opacity':0,
+               'fill':'blue',
+               'stroke':'red',
+               'id':function(d,i) {return 'edgepath'+i}})
+        .style("pointer-events", "none");
+
+    var edgelabels = svg.selectAll(".edgelabel")
+        .data(dataset.links)
+        .enter()
+        .append('text')
+        .style("pointer-events", "none")
+        .attr({'class':'edgelabel',
+               'id':function(d,i){return 'edgelabel'+i},
+               'dx':80,
+               'dy':-5,
+               'font-size':10,
+               'stroke-opacity':0,
+               'fill':'#aaa'});
+
+    edgelabels.append('textPath')
+        .attr('xlink:href',function(d,i) {return '#edgepath'+i})
+        .style("pointer-events", "none")
+        .text(function(d){return d.label});
+
+
+    svg.append('defs').append('marker')
+        .attr({'id':'arrowhead',
+               'viewBox':'-0 -5 10 10',
+               'refX':25,
+               'refY':0,
+               //'markerUnits':'strokeWidth',
+               'orient':'auto',
+               'markerWidth':10,
+               'markerHeight':10,
+               'xoverflow':'visible'})
+        .append('svg:path')
+            .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+            .attr('fill', '#ccc')
+            .attr('stroke','#ccc');
+     
+
+    force.on("tick", function(){
+
+        edges.attr({"x1": function(d){return d.source.x;},
+                    "y1": function(d){return d.source.y;},
+                    "x2": function(d){return d.target.x;},
+                    "y2": function(d){return d.target.y;}
+        });
+
+        nodes.attr({"cx":function(d){return d.x;},
+                    "cy":function(d){return d.y;}
+        });
+
+        nodelabels.attr("x", function(d) { return d.x; }) 
+                  .attr("y", function(d) { return d.y; });
+
+        edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
+                                           //console.log(d)
+                                           return path});       
+
+        edgelabels.attr('transform',function(d,i){
+            if (d.target.x<d.source.x){
+                bbox = this.getBBox();
+                rx = bbox.x+bbox.width/2;
+                ry = bbox.y+bbox.height/2;
+                return 'rotate(180 '+rx+' '+ry+')';
+                }
+            else {
+                return 'rotate(0)';
+                }
+        });
+
+    });
+
+function fade(opacity) {
+        return function(d) {
+            nodes.style("stroke-opacity", function(o) {
+                thisOpacity = isConnected(d, o) ? 1 : opacity;
+                this.setAttribute('fill-opacity', thisOpacity);
+                return thisOpacity;
+            });
+
+            nodelabels.style("stroke-opacity", function(o) {
+                thisOpacity = isConnected(d, o) ? 1 : opacity;
+                this.setAttribute('fill-opacity', thisOpacity);
+                return thisOpacity;
+            });
+
+            edges.style("stroke-opacity", function(o) {
+                return o.source === d || o.target === d ? 1 : opacity;
+            });
+
+            edgelabels.style("stroke-opacity", function(o) {
+                return o.source === d || o.target === d ? 1 : opacity;
+            });
+        };
+      };
+
+</script>
+
+
 {% endblock content %}
