@@ -58,7 +58,7 @@ def return_json_graph(graph_subject):
     for so in story_objects:
         find_colour(so)
         G.add_node(so.name, name=so.name, role=so.role,
-            url="http://story-chronicles.herokuapp.com/personas/story_object/{}".format(so.slug),
+            url="http://story-chronicles.herokuapp.com/personas/storyobject/{}".format(so.slug),
             node_color=node_colors[so.name], node_shape=node_shapes[so.name])
         labels[so.name] = so.name
         simple_colours.append(node_colors[so.name])
