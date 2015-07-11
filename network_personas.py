@@ -63,18 +63,23 @@ def return_json_graph(graph_subject):
         labels[so.name] = so.name
         simple_colours.append(node_colors[so.name])
 
-        for i in neighbours:
-            source = i.from_storyobject.name
-            target = i.to_storyobject.name
-            context = i.relationship_class
+        links = Relationship.objects.filter(
+                Q(from_storyobject__name=so.name) |
+                Q(to_storyobject__name=so.name))
 
-            if int(i.weight) > 10:
-                weight = int(i.weight)/10
-            else:
-                weight = int(i.weight)
+        for i in links:
+            if i.from_storyobject in story_objects or i.to_storyobject in story_objects:
+                source = i.from_storyobject.name
+                target = i.to_storyobject.name
+                context = i.relationship_class
 
-            G.add_edge(source, target, label=context, weight=weight)
-            edge_labels[(source, target)] = context
+                if int(i.weight) > 10:
+                    weight = int(i.weight)/10
+                else:
+                    weight = int(i.weight)
+
+                G.add_edge(source, target, label=context, weight=weight)
+                edge_labels[(source, target)] = context
 
     # Export to JSON format
     from networkx.readwrite import json_graph
@@ -87,4 +92,4 @@ def return_json_graph(graph_subject):
     return json.dumps(d)
 
 if __name__ == "__main__":
-    return_json_graph("Logos of Ios")
+    print(return_json_graph("Logos of Ios"))
