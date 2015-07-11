@@ -79,7 +79,14 @@ def return_json_graph(graph_subject):
     from networkx.readwrite import json_graph
 
     d = json_graph.node_link_data(G)
-    #output = json.dump(d, open('/Users/christopherallison/.virtualenvs/persona2/persona2/character_graph.json', 'w'))
+
+    # Reset Data
+    G = None
+    story_objects = {}
+    labels = {}
+    node_shapes = {}
+    node_colors = {}
+
     return json.dumps(d)
 
 if __name__ == "__main__":
