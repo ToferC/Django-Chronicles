@@ -11,8 +11,6 @@ from django.db.models import F, Q
 
 from personas.models import StoryObject, Statistic, Skill, Ability, Aspect, CombatInfo, Relationship
 
-story_objects = {}
-labels = {}
 node_shapes = {}
 node_colors = {}
 
@@ -36,6 +34,9 @@ def find_colour(story_object):
         node_colors[story_object.name] = 'y'
 
 def return_json_graph(graph_subject):
+
+    story_objects = {}
+    labels = {}
 
     target = StoryObject.objects.get(name=graph_subject)
 
@@ -82,10 +83,6 @@ def return_json_graph(graph_subject):
 
     # Reset Data
     G = None
-    story_objects = {}
-    labels = {}
-    node_shapes = {}
-    node_colors = {}
 
     return json.dumps(d)
 
