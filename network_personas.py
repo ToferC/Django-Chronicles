@@ -15,7 +15,6 @@ from personas.models import StoryObject, Statistic, Skill, Ability, Aspect, Comb
 node_shapes = {}
 node_colors = {}
 
-simple_colours = []
 
 def find_colour(story_object):
     if story_object.c_type == "Character":
@@ -46,9 +45,10 @@ def return_json_graph(graph_subject):
                 Q(to_storyobject__name=target.name))
 
     story_objects[target] = target
-    for so in neighbours:
-        story_objects[so.to_storyobject] = so.to_storyobject
-        story_objects[so.from_storyobject] = so.from_storyobject
+
+    for rel in neighbours:
+        story_objects[rel.to_storyobject] = rel.to_storyobject
+        story_objects[rel.from_storyobject] = rel.from_storyobject
 
     for so in story_objects:
         print(so.name)
@@ -63,14 +63,12 @@ def return_json_graph(graph_subject):
             url="http://story-chronicles.herokuapp.com/personas/storyobject/{}".format(so.slug),
             node_color=node_colors[so.name], node_shape=node_shapes[so.name])
         labels[so.name] = so.name
-        simple_colours.append(node_colors[so.name])
 
         links = Relationship.objects.filter(
-                Q(from_storyobject__name=so.name) |
-                Q(to_storyobject__name=so.name))
+                Q(from_storyobject__name=so.name))
 
         for i in links:
-            if i.from_storyobject in story_objects or i.to_storyobject in story_objects:
+            if i.to_storyobject in story_objects:
                 source = i.from_storyobject.name
                 target = i.to_storyobject.name
                 context = i.relationship_class

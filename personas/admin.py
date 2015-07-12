@@ -8,7 +8,7 @@ class FlatPageAdmin(admin.ModelAdmin):
 
 class StoryObjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'story', 'nationality', 'base_of_operations')
+    list_display = ('name', 'story', 'c_type', 'nationality', 'base_of_operations')
 
 class LocationAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
