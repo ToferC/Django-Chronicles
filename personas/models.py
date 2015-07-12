@@ -14,7 +14,9 @@ class Nation(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
     creator = models.ForeignKey(User, default=1)
-    might = models.PositiveSmallIntegerField(default=0)
+    might = models.PositiveSmallIntegerField(default=0,
+        help_text='''This field and the fields below can be used to set values for
+        the relative power of different areas or regions in a game.''')
     intrigue = models.PositiveSmallIntegerField(default=0)
     magic = models.PositiveSmallIntegerField(default=0)
     wealth = models.PositiveSmallIntegerField(default=0)
@@ -88,7 +90,7 @@ class Aspect(models.Model):
 
 
 class Ability(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=64)
     description = models.TextField(blank=True)
     storyobject = models.ForeignKey('StoryObject', null=True, blank=True)
 
@@ -304,9 +306,9 @@ class Relationship(models.Model):
         verbose_name="Relationship Description",
         help_text="Enter the type of relationship here. E.g.: Ally, Friend, Lover, etc.")
 
-    weight = models.CharField(default="50", max_length=64,
+    weight = models.CharField(default="5", max_length=64,
         verbose_name="Numerical Rating",
-        help_text="If your story uses it, enter a numerical rating here.")
+        help_text="If your story uses it, enter a numerical rating for the relationship here.")
 
     relationship_description = models.CharField(max_length=128, unique=False,
         verbose_name="Details",
@@ -450,7 +452,9 @@ class Story(models.Model):
     map_tile = models.CharField(
         max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
     skill_type_name_1 = models.CharField(
-        max_length=24, default="General", blank=True)
+        max_length=24, default="General", blank=True,
+        help_text='''This field and the skill fields below set the name for different skill types in a game.
+        They are optional.''')
     skill_type_name_2 = models.CharField(
         max_length=24, default="Investigative", blank=True)
     skill_type_name_3 = models.CharField(
@@ -459,7 +463,9 @@ class Story(models.Model):
         max_length=24, default="Knowledge", blank=True)
 
     statistic_type_name_1 = models.CharField(
-        max_length=24, default="Physical", blank=True)
+        max_length=24, default="Physical", blank=True,
+        help_text='''This field and the statistic fields below set the name for different stat types in a game.
+        They are optional.''')
     statistic_type_name_2 = models.CharField(
         max_length=24, default="Mental", blank=True)
     statistic_type_name_3 = models.CharField(
