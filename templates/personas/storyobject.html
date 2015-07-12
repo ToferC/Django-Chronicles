@@ -8,6 +8,7 @@
         <h1 style="text-justify:centre">{{ storyobject_name }} <span style="color: gray">({{ role }})</span></h1>
     </header>
 {% endblock %}
+
 {% block content %}
     <div class="container">
         
@@ -225,7 +226,7 @@
         <div class="tab-pane fade in" id="map">
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                    <div class="container" style="background-color:white; width=400; height=400">
+                    <div style="background-color:white; max_width=600; height=400">
                         <div id="graph_frame"></div>
                     </div>
                 </div>
