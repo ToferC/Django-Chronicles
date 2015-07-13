@@ -451,7 +451,10 @@ class Story(models.Model):
     colour_theme = models.CharField(
         max_length=12, choices=THEME_CHOICES, default='Dark')
     map_tile = models.CharField(
-        max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+        max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        help_text='''This field is used for Leaflet maps in the engine.
+        The default tile set is openstreetmap.
+        You probably shouldn't touch this unless you have another tileset in mind.''')
     skill_type_name_1 = models.CharField(
         max_length=24, default="General", blank=True,
         help_text='''This field and the skill fields below set the name for different skill types in a game.

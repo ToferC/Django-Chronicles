@@ -1,5 +1,6 @@
 {% extends "personas/base.html" %}
 {% block title %}
+{% load staticfiles %}
 {% load thumbnail %}
     <header id="header" class="">
         <h1>Welcome to Persona [BETA]</h1>
@@ -55,13 +56,14 @@
         <a class="btn btn-primary" href="/personas/create_story/">Create a New Story!</a>   
         <hr>
         <a class="btn btn-primary" href="/personas/workshop/{{ user }}">My Workshop</a>
+        <br><br>
         <p>Your workshop is where you can access all of the content you've created and see your unpublished creations.</p>
         <!--
         <a class="btn btn-info" style="background:black" href="/personas/about">What is Persona?</a> -->
 
 
         <hr>
-        <p>You can also browse existing content through our <a href="/personas/collections">collections page.</a>
+        <img src="{% static 'images/heroku_django.png' %}" style="width:200px" alt="Powered by Heroku & Django"/>
     </div>
 {% endblock %}
 {% block r_content %}
