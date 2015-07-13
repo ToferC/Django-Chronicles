@@ -230,7 +230,7 @@
             </div>
         </div> <!-- Map Rels Tab Ends -->
         <hr>
-        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' storyobject_name_slug=storyobject.slug %}"> Full Screen Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
+        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=storyobject.slug %}"> Full Screen Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
     </div> <!-- Relationship Tab Content Ends -->
                 <hr>
                 {% if user == storyobject.creator or user == story.author %}
@@ -524,6 +524,9 @@ window.location.hash = e.target.hash;
     var w = 400;
     var h = 400;
     var linkDistance=150;
+    var minRadius = 10;
+    var maxRadius = 20;
+    var scale = d3.scale.linear().range([minRadius,maxRadius]);
 
     var colors = d3.scale.category10()
       .domain(['r', 'b', 'g', 'c', 'y']);
@@ -558,7 +561,14 @@ window.location.hash = e.target.hash;
       .enter().append("svg:a")
       .attr("xlink:href", function(d){return d.url;})
       .append("circle")
-      .attr({"r":10})
+      .attr("r", function(d) { 
+        if(d.children)
+            return scale(d.children.length);
+        else if(d._children)
+            return scale(d._children.length);
+        else
+            return minRadius;
+    })
       .style("fill",function(d,i){return colors(d.node_color);})
       .call(force.drag)
       .on("mouseover", fade(.1))

@@ -33,27 +33,7 @@ def find_colour(story_object):
         node_shapes[story_object.name] = 's'
         node_colors[story_object.name] = 'y'
 
-def return_json_graph(graph_subject):
-
-    story_objects = {}
-    labels = {}
-
-    target = StoryObject.objects.get(name=graph_subject)
-
-    neighbours = Relationship.objects.filter(
-                Q(from_storyobject__name=target.name) |
-                Q(to_storyobject__name=target.name))
-
-    story_objects[target] = target
-
-    for rel in neighbours:
-        story_objects[rel.to_storyobject] = rel.to_storyobject
-        story_objects[rel.from_storyobject] = rel.from_storyobject
-
-    for so in story_objects:
-        print(so.name)
-
-    edge_labels = {}
+def return_json_graph(story_objects):
 
     G = nx.MultiDiGraph()
 
@@ -61,8 +41,8 @@ def return_json_graph(graph_subject):
         find_colour(so)
         G.add_node(so.name, name=so.name, role=so.role,
             url="http://story-chronicles.herokuapp.com/personas/storyobject/{}".format(so.slug),
-            node_color=node_colors[so.name], node_shape=node_shapes[so.name])
-        labels[so.name] = so.name
+            node_color=node_colors[so.name], node_shape=node_shapes[so.name],
+            image=so.image.url)
 
         links = Relationship.objects.filter(
                 Q(from_storyobject__name=so.name))
@@ -81,7 +61,6 @@ def return_json_graph(graph_subject):
                     weight = int(weight)
 
                 G.add_edge(source, target, label=context, weight=weight)
-                edge_labels[(source, target)] = context
 
     # Export to JSON format
     from networkx.readwrite import json_graph
@@ -94,4 +73,4 @@ def return_json_graph(graph_subject):
     return json.dumps(d)
 
 if __name__ == "__main__":
-    print(return_json_graph("Logos of Ios"))
+    print(return_json_graph(StoryObject.objects.get(name="Logos of Ios")))

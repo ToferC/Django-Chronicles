@@ -59,7 +59,7 @@ urlpatterns = patterns('',
     url(r'^edit_nation/(?P<pk>\d+)/$', views.edit_nation, name='edit_nation'),
 
     url(r'^add_mainmap/(?P<story_title_slug>[\w\-]+)/$', views.add_mainmap, name='add_mainmap'),
-    url(r'^relationship_map/(?P<storyobject_name_slug>[\w\-]+)/$', views.relationship_map, name='relationship_map'),
+    url(r'^relationship_map/(?P<slug>[\w\-]+)/$', views.relationship_map, name='relationship_map'),
 
     url(r'^note/(?P<story_slug>[\w\-]+)/(?P<pk>\d+)/$', views.note, name='note'),
     url(r'^delete_note/(?P<pk>\d+)/$', views.delete_note, name='delete_note'),

@@ -326,8 +326,21 @@ def storyobject(request, storyobject_name_slug):
 
         # Return JSON object for relationship map
 
+        story_objects = {}
+
+        neighbours = Relationship.objects.filter(
+                    Q(from_storyobject__name=storyobject.name) |
+                    Q(to_storyobject__name=storyobject.name))
+
+        story_objects[storyobject] = storyobject
+
+        for rel in neighbours:
+            story_objects[rel.to_storyobject] = rel.to_storyobject
+            story_objects[rel.from_storyobject] = rel.from_storyobject
+
+
         context_dict['result'] = network_personas.return_json_graph(
-            storyobject.name)
+            story_objects)
 
         # Set up ScratchPad and Equipment for storyobject
 
@@ -684,23 +697,34 @@ def mainmap(request, mainmap_slug):
     return render(request, 'personas/mainmap.html', context_dict)
 
 
-def relationship_map(request, storyobject_name_slug):
+def relationship_map(request, slug):
 
-    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
+    story_objects = {}
 
-    relationships = Relationship.objects.filter(Q(to_storyobject=storyobject) |
-        Q(from_storyobject=storyobject))
+    try:
+        storyobject = StoryObject.objects.get(slug=slug)
+        title = storyobject.name
+        story = storyobject.story
 
-    story = storyobject.story
+        neighbours = Relationship.objects.filter(
+                    Q(from_storyobject__name=storyobject.name) |
+                    Q(to_storyobject__name=storyobject.name))
 
-    data = {"from_storyobject": storyobject}
+        story_objects[storyobject] = storyobject
 
-    result = network_personas.return_json_graph(
-            storyobject.name)
+        for rel in neighbours:
+            story_objects[rel.to_storyobject] = rel.to_storyobject
+            story_objects[rel.from_storyobject] = rel.from_storyobject
+
+    except ObjectDoesNotExist:
+        story = Story.objects.get(slug=slug)
+        title = story.title
+        story_objects = StoryObject.objects.filter(story=story)
+
+    result = network_personas.return_json_graph(story_objects)
 
     return render(request, 'personas/relationship_map.html', {
-        'slug': storyobject_name_slug, 'storyobject': storyobject, 'story':story,
-        'relationships': relationships, 'result':result})
+        'slug': slug, 'title': title, 'story':story, 'result':result})
 
 
 # Admin Views
