@@ -437,7 +437,8 @@ class Story(models.Model):
     author = models.ForeignKey(User)
     publication_date = models.DateField(auto_now=True)
     setting = models.CharField(max_length=256)
-    themes = models.CharField(max_length=256)
+    themes = models.CharField(max_length=256,
+        help_text="Please note that the LIGHT field is not yet optimized.")
     description = models.TextField(blank=True)
     genre = models.CharField(
         max_length=128, choices=GENRE_CHOICES, default='Fantasy')
@@ -454,7 +455,7 @@ class Story(models.Model):
     skill_type_name_1 = models.CharField(
         max_length=24, default="General", blank=True,
         help_text='''This field and the skill fields below set the name for different skill types in a game.
-        They are optional.''')
+        They are optional, but if you are using skills of some kind, the first value should be set.''')
     skill_type_name_2 = models.CharField(
         max_length=24, default="Investigative", blank=True)
     skill_type_name_3 = models.CharField(
@@ -465,7 +466,7 @@ class Story(models.Model):
     statistic_type_name_1 = models.CharField(
         max_length=24, default="Physical", blank=True,
         help_text='''This field and the statistic fields below set the name for different stat types in a game.
-        They are optional.''')
+        They are optional, but if you are using statistics of some kind, the first value should be set.''')
     statistic_type_name_2 = models.CharField(
         max_length=24, default="Mental", blank=True)
     statistic_type_name_3 = models.CharField(
