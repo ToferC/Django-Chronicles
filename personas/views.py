@@ -16,6 +16,7 @@ from personas.models import Nation, Location, StoryObject, Relationship, Aspect,
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
+from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper
 
 from datetime import datetime
 import network_personas
@@ -838,6 +839,87 @@ def add_storyobject(request, story_title_slug, c_type):
         {'storyobject_form': storyobject_form, 'story':story, "c_type":c_type})
 
 
+
+@login_required
+def add_batch_storyobject(request, story_title_slug):
+
+    story = Story.objects.get(slug=story_title_slug)
+
+    StoryObjectFormSet = formset_factory(BatchStoryObjectForm, extra=8)
+
+    if request.method == 'POST':
+
+        formset = StoryObjectFormSet(request.POST, prefix="batch")
+        helper = BatchFormSetHelper()
+        common_form = BatchCommonStoryObjectForm(request.POST, prefix="common")
+
+        creator = request.user
+
+        if formset.is_valid() and common_form.is_valid():
+            for form in formset:
+                so = StoryObject()
+                if form.cleaned_data['name']:
+                    so.name = form.cleaned_data['name']
+                    so.story = story
+                    so.creator = creator
+                    so.role = form.cleaned_data['role']
+                    so.c_type = form.cleaned_data['c_type']
+
+                    if common_form.cleaned_data['stats_toggle']:
+                        so.stats_toggle = True
+                    else:
+                        so.stats_toggle = False
+
+                    if common_form.cleaned_data['skill_toggle']:
+                        so.skill_toggle = True
+                    else:
+                        so.skill_toggle = False
+
+                    if common_form.cleaned_data['combat_toggle']:
+                        so.combat_toggle = True
+                    else:
+                        so.combat_toggle = False
+
+                    if common_form.cleaned_data['equipment_toggle']:
+                        so.equipment_toggle = True
+                    else:
+                        so.equipment_toggle = False
+
+                    if common_form.cleaned_data['gallery_toggle']:
+                        so.gallery_toggle = True
+                    else:
+                        so.gallery_toggle = False
+
+                    if common_form.cleaned_data['social_toggle']:
+                        so.social_toggle = True
+                    else:
+                        so.social_toggle = False
+
+                    if common_form.cleaned_data['published']:
+                        so.published = True
+                    else:
+                        so.published = False
+
+                    so.slug = slugify("{}-{}".format(
+                        story.title, form.cleaned_data['name']))
+
+                    so.save()
+
+            return HttpResponseRedirect("/personas/story/{}".format(story.slug))
+
+        else:
+            print (formset.errors, common_form.errors)
+
+    else:
+
+        formset = StoryObjectFormSet(prefix="batch")
+        helper = BatchFormSetHelper()
+        common_form = BatchCommonStoryObjectForm(prefix="common")
+
+    return render(request, 'personas/add_batch_storyobject.html',
+        {'formset': formset, 'common_form': common_form, 'helper': helper, 'story':story})
+
+
 @login_required
 def create_story(request):
 
@@ -1554,9 +1636,10 @@ def delete_storyobject(request, pk, template_name='personas/delete_storyobject.h
 def edit_storyobject(request, pk, template_name='personas/edit_storyobject.html'):
     storyobject = StoryObject.objects.get(pk=pk)
     story = storyobject.story
+    c_type = storyobject.c_type
     user = request.user
     form = StoryObjectForm(request.POST or None, request.FILES or None, instance=storyobject,
-        story=story)
+        story=story, c_type=c_type)
     if form.is_valid():
         form.save(creator=storyobject.creator, story=story)
         return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))

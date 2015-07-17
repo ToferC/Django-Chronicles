@@ -1,0 +1,44 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load thumbnail %}
+
+{% block title %}
+<header>
+    <h1>Add Batch StoryObjects</h1>
+</header>
+{% endblock %}
+
+{% block content %}
+{% block l_content %}
+    <div class="col-md-1 col-sm-1 col-lg-1" id="col1">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+    <div class="col-md-2 col-sm-2 col-lg-2" id="col1">
+    <h3>Batch Story Object Entry</h3>
+    <p>This page allows you to create up to 8 story objects at the same time with basic information that can be fleshed out at a later date. Enter the name, role and story object type for each character and then select the common options below before pushing the "Save" button.</p>
+    </div>
+{% endblock %}
+
+{% block column2 %}
+<div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+<h4>Story Object Entry</h4>
+<form action="" class="uniForm"  method="post">
+
+{% crispy formset helper %}
+</div>
+<div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+<h4>Common Options</h4>
+{% crispy common_form %}
+</form>
+</div>
+{% endblock %}
+
+{% block r_content %}
+<div class="col-md-1 col-sm-1 col-lg-1">
+</div>
+{% endblock %}
+
+{% endblock %}
