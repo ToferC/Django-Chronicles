@@ -93,6 +93,7 @@
                 <div class="row">
                     <h3>Details:</h3>
                     <ul>
+                        <li>Type: {{ storyobject.c_type }}</li>
                         <li>Nationality/Area: {% if nationality %}<a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a>{% else %}None{% endif %}</li>
                         <li>Location: {% if base_of_operations %}<a href="/personas/location/{{ base_of_operations.slug }}">{{ base_of_operations }}</a>{% else %} None{% endif %}</li>
                     </ul>
