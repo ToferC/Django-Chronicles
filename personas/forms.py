@@ -28,11 +28,6 @@ class StoryObjectForm(forms.ModelForm):
         except KeyError:
             self.story = None
 
-        try:
-            self.c_type = kwargs.pop('c_type')
-        except KeyError:
-            self.c_type = "Character"
-
         super(StoryObjectForm, self).__init__(*args, **kwargs)
         if self.story:
             self.fields['base_of_operations'].queryset = Location.objects.filter(
@@ -48,12 +43,11 @@ class StoryObjectForm(forms.ModelForm):
                         href="/personas/story/{{ story.slug }}/#storyobjects">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
-    def save(self, creator, story=None, c_type="Character", commit=True):
+    def save(self, creator, story=None, commit=True):
         instance = super(StoryObjectForm, self).save(commit=False)
         instance.slug = slugify("{}-{}".format(story.title, instance.name))
         instance.creator = creator
         instance.story = story
-        instance.c_type = c_type
         instance.save()
         return instance
 

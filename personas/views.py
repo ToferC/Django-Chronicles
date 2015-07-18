@@ -815,8 +815,7 @@ def add_storyobject(request, story_title_slug, c_type):
     story = Story.objects.get(slug=story_title_slug)
 
     if request.method == 'POST':
-        storyobject_form = StoryObjectForm(request.POST, request.FILES,
-            c_type=c_type)
+        storyobject_form = StoryObjectForm(request.POST, request.FILES)
 
         creator = request.user
 
@@ -824,7 +823,7 @@ def add_storyobject(request, story_title_slug, c_type):
             slug = slugify("{}-{}".format(
                 story.title, storyobject_form.cleaned_data['name']))
 
-            storyobject_form.save(creator=creator, story=story, c_type=c_type,
+            storyobject_form.save(creator=creator, story=story,
                 commit=True)
 
             return HttpResponseRedirect("/personas/add_aspect/{}".format(slug))
@@ -834,7 +833,7 @@ def add_storyobject(request, story_title_slug, c_type):
 
     else:
 
-        storyobject_form = StoryObjectForm(story=story, c_type=c_type)
+        storyobject_form = StoryObjectForm(story=story)
 
     return render(request, 'personas/add_storyobject.html',
         {'storyobject_form': storyobject_form, 'story':story, "c_type":c_type})
@@ -1669,12 +1668,11 @@ def delete_storyobject(request, pk, template_name='personas/delete_storyobject.h
 def edit_storyobject(request, pk, template_name='personas/edit_storyobject.html'):
     storyobject = StoryObject.objects.get(pk=pk)
     story = storyobject.story
-    c_type = storyobject.c_type
     user = request.user
     form = StoryObjectForm(request.POST or None, request.FILES or None, instance=storyobject,
-        story=story, c_type=c_type)
+        story=story)
     if form.is_valid():
-        form.save(creator=storyobject.creator, c_type=c_type, story=story)
+        form.save(creator=storyobject.creator, story=story)
         return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
     return render(request, template_name, {'form': form, 'storyobject':storyobject,
         'story':story})
