@@ -20,7 +20,7 @@ class StoryObjectForm(forms.ModelForm):
     class Meta:
         model = StoryObject
         fields = "__all__"
-        exclude = ['c_type', 'slug', 'creator', 'story']
+        exclude = ['slug', 'creator', 'story']
 
     def __init__(self, *args, **kwargs):
         try:
@@ -361,6 +361,36 @@ class RelationshipForm(forms.ModelForm):
                         href="/personas/storyobject/{{ storyobject.slug }}/#details">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
+def create_relationship_form(story):
+    '''Returns a new model form which uses the correct queryset for story'''
+
+    class BatchRelationshipForm(forms.ModelForm):
+
+        class Meta:
+            model = Relationship
+            fields = ["from_storyobject", "to_storyobject", "relationship_class",
+            "relationship_description", "weight"]
+
+        def __init__(self, *args, **kwargs):
+            super(BatchRelationshipForm, self).__init__(*args, **kwargs)
+            self.fields['to_storyobject'].queryset = StoryObject.objects.filter(
+                story=story).filter(published=True).order_by('name')
+            self.fields['from_storyobject'].queryset = StoryObject.objects.filter(
+                story=story).filter(published=True).order_by('name')
+
+    return BatchRelationshipForm
+
+
+class RelationshipFormSetHelper(FormHelper):
+    def __init__(self, *args, **kwargs):
+        super(RelationshipFormSetHelper, self).__init__(*args, **kwargs)
+        self.form_method = 'post'
+        self.layout = Layout(
+            "from_storyobject", "to_storyobject", "relationship_class",
+            "relationship_description", "weight",
+        )
+        self.render_required_fields = True,
+        self.add_input(Submit("submit", "Save"))
 
 
 class StoryForm(forms.ModelForm):

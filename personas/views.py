@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.forms.formsets import formset_factory
+from django.forms.models import modelformset_factory
 from django.contrib.auth import logout, login, authenticate
 from django.db.models import F, Q
 from django.db.models.base import ObjectDoesNotExist
@@ -16,7 +17,7 @@ from personas.models import Nation, Location, StoryObject, Relationship, Aspect,
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
-from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper
+from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper
 
 from datetime import datetime
 import network_personas
@@ -918,6 +919,38 @@ def add_batch_storyobject(request, story_title_slug):
 
     return render(request, 'personas/add_batch_storyobject.html',
         {'formset': formset, 'common_form': common_form, 'helper': helper, 'story':story})
+
+
+@login_required
+def add_batch_relationship(request, story_title_slug):
+
+    story = Story.objects.get(slug=story_title_slug)
+
+    BatchRelationshipForm = create_relationship_form(story)
+    RelationshipFormSet = modelformset_factory(model=Relationship,
+        form=BatchRelationshipForm, extra=10)
+
+    if request.method == 'POST':
+
+        formset = RelationshipFormSet(request.POST)
+        helper = RelationshipFormSetHelper()
+
+        if formset.is_valid():
+            formset.save()
+
+            return HttpResponseRedirect("/personas/story/{}".format(story.slug))
+
+        else:
+            print (formset.errors)
+
+    else:
+
+        formset = RelationshipFormSet(queryset=Relationship.objects.none())
+        helper = RelationshipFormSetHelper()
+
+    return render(request, 'personas/add_batch_relationship.html',
+        {'formset': formset, 'helper':helper,'story':story})
+
 
 
 @login_required
