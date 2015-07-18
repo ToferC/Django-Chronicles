@@ -1674,7 +1674,7 @@ def edit_storyobject(request, pk, template_name='personas/edit_storyobject.html'
     form = StoryObjectForm(request.POST or None, request.FILES or None, instance=storyobject,
         story=story, c_type=c_type)
     if form.is_valid():
-        form.save(creator=storyobject.creator, story=story)
+        form.save(creator=storyobject.creator, c_type=c_type, story=story)
         return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
     return render(request, template_name, {'form': form, 'storyobject':storyobject,
         'story':story})
