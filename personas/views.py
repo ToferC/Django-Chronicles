@@ -924,8 +924,9 @@ def add_batch_storyobject(request, story_title_slug):
 def add_batch_relationship(request, story_title_slug):
 
     story = Story.objects.get(slug=story_title_slug)
+    user = request.user
 
-    BatchRelationshipForm = create_relationship_form(story)
+    BatchRelationshipForm = create_relationship_form(story, user)
     RelationshipFormSet = modelformset_factory(model=Relationship,
         form=BatchRelationshipForm, extra=10)
 

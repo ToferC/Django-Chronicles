@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import widgets
+from django.db.models import Q
 from django.forms.models import modelform_factory, formset_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -355,7 +356,7 @@ class RelationshipForm(forms.ModelForm):
                         href="/personas/storyobject/{{ storyobject.slug }}/#details">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
-def create_relationship_form(story):
+def create_relationship_form(story, user):
     '''Returns a new model form which uses the correct queryset for story'''
 
     class BatchRelationshipForm(forms.ModelForm):
@@ -370,7 +371,8 @@ def create_relationship_form(story):
             self.fields['to_storyobject'].queryset = StoryObject.objects.filter(
                 story=story).filter(published=True).order_by('name')
             self.fields['from_storyobject'].queryset = StoryObject.objects.filter(
-                story=story).filter(published=True).order_by('name')
+                story=story).filter(published=True).filter(
+                Q(creator=user) | Q(story__author=user)).order_by('name')
 
     return BatchRelationshipForm
 

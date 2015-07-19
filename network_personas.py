@@ -55,10 +55,13 @@ def return_json_graph(story_objects):
 
                 weight = re.sub(r"\D", "", i.weight)
 
-                if int(weight) > 10:
-                    weight = int(weight)/10
+                if type(weight) == int:
+                    if int(weight) > 10:
+                        weight = int(weight)/10
+                    else:
+                        weight = int(weight)
                 else:
-                    weight = int(weight)
+                    weight = 1
 
                 G.add_edge(source, target, label=context, weight=weight)
 

@@ -296,7 +296,7 @@ class StoryObject(models.Model):
 class Relationship(models.Model):
 
     from_storyobject = models.ForeignKey(StoryObject, related_name="from_storyobject",
-        verbose_name="Subject of Relationship")
+        verbose_name="Source of Relationship")
     to_storyobject = models.ForeignKey(StoryObject, related_name="to_storyobject",
         verbose_name="Object of Relationship",
         help_text="Enter the character or story object subject of the relationship here.")
