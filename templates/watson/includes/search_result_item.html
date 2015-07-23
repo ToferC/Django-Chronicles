@@ -1,16 +1,73 @@
 {% load personas_extras %}
 
 <article>
-    <h3>
-        <a href="/personas/{{result.object | to_class_name }}/{{result.object.slug}}">{{result.title}}</a> 
 
         {% if result.object.c_type %}
+        <h3>
+            <a href="/personas/{{result.object | to_class_name }}/{{result.object.slug}}">{{result.title}}</a>
             ({{ result.object.c_type}}) - {{ result.object.story }}
-        {% else %}
+        </h3>
+                {% if result.object.description %}
+                    {{result.object.description|linebreaks|truncatewords:30}}
+                {% endif %}
+
+        {% elif result.object.slug %}
+        <h3>
+            <a href="/personas/{{result.object | to_class_name }}/{{result.object.slug}}">{{result.title}}</a> 
             ({{ result.object | to_class_name | title }}) - {{ result.object.story }}
+        </h3>
+                {% if result.object.description %}
+                    {{result.object.description|linebreaks|truncatewords:30}}
+                {% endif %}
+
+        {% else %} <!-- url by pk -->
+
+            {% if result.object.storyobject %}
+                 <h3>
+                        <a href="/personas/{{result.object | to_class_name }}/{{ result.object.storyobject.story|slugify }}/{{result.object.id}}">{{result.object.title}}</a>
+                        ({{ result.object | to_class_name | title }}) - {{ result.object.storyobject }} - {{ result.object.storyobject.story }}
+                </h3>
+                        {% if result.object.content %}
+                            {{result.object.content|linebreaks|truncatewords:30}}
+                        {% endif %}
+
+            {% elif result.object.location %}
+                <h3>
+                        <a href="/personas/{{result.object | to_class_name }}/{{ result.object.location.story|slugify }}/{{result.object.id}}">{{result.object.title}}</a>
+                        ({{ result.object | to_class_name | title }}) - {{ result.object.location }} - {{ result.object.location.story }}
+                </h3>
+                        {% if result.object.content %}
+                            {{result.object.content|linebreaks|truncatewords:30}}
+                        {% endif %}
+
+            {% elif result.object.nation %}
+                <h3>
+                        <a href="/personas/{{result.object | to_class_name }}/{{ result.object.nation.story|slugify }}/{{result.object.id}}">{{result.object.title}}</a>
+                        ({{ result.object | to_class_name | title }}) - {{ result.object.nation }} - {{ result.object.nation.story }}
+                </h3>
+                        {% if result.object.content %}
+                            {{result.object.content|linebreaks|truncatewords:30}}
+                        {% endif %}
+
+            {% elif result.object.chapter %}
+                <h3>
+                        <a href="/personas/{{result.object | to_class_name }}/{{ result.object.chapter.story|slugify }}/{{result.object.id}}">{{result.object.title}}</a>
+                        ({{ result.object | to_class_name | title }}) - {{ result.object.chapter }} - {{ result.object.chapter.story }}
+                </h3>
+                        {% if result.object.content %}
+                            {{result.object.content|linebreaks|truncatewords:30}}
+                        {% endif %}
+
+            {% elif result.object.story %}
+                <h3>
+                        <a href="/personas/{{result.object | to_class_name }}/{{ result.object.story|slugify }}/{{ result.object.id }}">{{result.title}}</a>
+                        ({{ result.object | to_class_name | title }}) - {{ result.object.story }}
+                </h3>
+                        {% if result.object.content %}
+                            {{result.object.content|linebreaks|truncatewords:30}}
+                        {% endif %}
+            {% endif %}
         {% endif %}
-    </h3>
-    {% if result.object.description %}
-        {{result.object.description|linebreaks|truncatewords:30}}
-    {% endif %}
+
+
 </article>

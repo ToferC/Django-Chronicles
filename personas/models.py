@@ -46,7 +46,7 @@ class Location(models.Model):
     terrain = models.CharField(max_length=128)
     features = models.CharField(max_length=500)
     description = models.TextField(blank=True)
-    nation = models.ForeignKey(Nation, blank=True)
+    nation = models.ForeignKey(Nation, blank=True, null=True)
     latitude = models.FloatField(default=50.0)
     longitude = models.FloatField(default=-1.0)
     story = models.ForeignKey('Story', default=1)
@@ -438,7 +438,7 @@ class Story(models.Model):
     publication_date = models.DateField(auto_now=True)
     setting = models.CharField(max_length=256)
     themes = models.CharField(max_length=256,
-        help_text="Please note that the LIGHT field is not yet optimized.")
+        help_text="Enter the themes for your story here.")
     description = models.TextField(blank=True)
     genre = models.CharField(
         max_length=128, choices=GENRE_CHOICES, default='Fantasy')
@@ -449,7 +449,8 @@ class Story(models.Model):
         upload_to='story_backgrounds/%Y/%m/%d/%H_%M_%S',
         default='profile_images/shadow_figure.jpeg')
     colour_theme = models.CharField(
-        max_length=12, choices=THEME_CHOICES, default='Dark')
+        max_length=12, choices=THEME_CHOICES, default='Dark',
+        help_text="Please note that the LIGHT field is not yet optimized.")
     map_tile = models.CharField(
         max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         help_text='''This field is used for Leaflet maps in the engine.

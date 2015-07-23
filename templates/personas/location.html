@@ -39,7 +39,11 @@
     </div>
     <div class="row">
         <h3>Area:</h3>
+        {% if nation %}
         <a href="/personas/nation/{{ nation.slug }}"><strong>{{ nation }}</strong></a>
+        {% else %}
+        <strong>None</strong>
+        {% endif %}
     </div>
     <div class="row">
         <h3>Latitude & Longitude:</h3>

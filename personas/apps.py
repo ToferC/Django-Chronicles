@@ -22,3 +22,5 @@ class PersonasConfig(AppConfig):
         watson.register(Chapter.objects.filter(published=True))
         Scene = self.get_model("Scene")
         watson.register(Scene.objects.filter(published=True))
+        Note = self.get_model("Note")
+        watson.register(Note.objects.all())

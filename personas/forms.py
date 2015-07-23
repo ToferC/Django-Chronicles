@@ -22,6 +22,9 @@ class StoryObjectForm(forms.ModelForm):
         model = StoryObject
         fields = "__all__"
         exclude = ['slug', 'creator', 'story']
+        widgets = {
+        'c_type': forms.RadioSelect()
+        }
 
     def __init__(self, *args, **kwargs):
         try:
@@ -72,7 +75,7 @@ class BatchStoryObjectForm(forms.Form):
     name = forms.CharField(label="Name", max_length=100, required = False)
     role = forms.CharField(label="Role", max_length=100, required = False)
     c_type = forms.ChoiceField(label="Story Object Type", choices=CHAR_CHOICES,
-    help_text="Select a story object category.", required = False)
+    help_text="Select a story object category.", required = False, widget=forms.RadioSelect)
 
 class BatchFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
