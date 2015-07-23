@@ -396,7 +396,7 @@ class StoryForm(forms.ModelForm):
     class Meta:
         model = Story
         fields = "__all__"
-        exclude = ['slug', 'creator', 'publication_date']
+        exclude = ['slug', 'author', 'publication_date']
 
     def __init__(self, *args, **kwargs):
         super(StoryForm, self).__init__(*args, **kwargs)
