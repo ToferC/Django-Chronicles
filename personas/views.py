@@ -1354,9 +1354,11 @@ def add_location(request, story_title_slug):
 
     story = Story.objects.get(slug=story_title_slug)
 
-    try:
-        mainmap = MainMap.objects.filter(story=story).first()
-    except MainMap.DoesNotExist:
+    mainmap = MainMap.objects.filter(story=story).first()
+
+    if mainmap:
+        pass
+    else:
         mainmap = MainMap(base_latitude=50.000, base_longitude=-1.3,
             story=story,
             tiles="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
