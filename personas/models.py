@@ -13,7 +13,7 @@ import collections
 class Nation(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
-    creator = models.ForeignKey(User, default=1)
+    creator = models.ForeignKey(User)
     might = models.PositiveSmallIntegerField(default=0,
         help_text='''This field and the fields below can be used to set values for
         the relative power of different areas or regions in a game.''')

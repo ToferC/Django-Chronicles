@@ -1402,6 +1402,7 @@ def add_nation(request, story_title_slug):
 
         if nation_form.is_valid():
             nation = nation_form.save(commit=False)
+            nation.creator = request.user
             nation.story = story
             nation.slug = slugify(
                 "{}-{}".format(story.title, nation.name))
