@@ -18,7 +18,7 @@
         <h3>Active Stories</h3>
         <br>
         {% if stories %}
-            {% for story in stories|dictsortreversed:"count" %}
+            {% for story in stories|dictsortreversed:"object_count" %}
                     <a class="btn btn-success btn-md" style="background:black" href="/personas/story/{{ story.slug }}">
                     {% thumbnail story.image "40x40" crop="center" as im %}
                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}  {{ story.title }} - [{{ story.object_count }}]</a>
