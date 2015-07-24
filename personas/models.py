@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from PIL import Image
@@ -30,7 +31,10 @@ class Nation(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
+        self.story.object_count = F('object_count') + 1
+        self.story.save()
         slug = slugify("{}-{}".format(self.story.title, self.name))
+
         super(Nation, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -56,7 +60,10 @@ class Location(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
+        self.story.object_count = F('object_count') + 1
+        self.story.save()
         slug = slugify("{}-{}".format(self.story.title, self.name))
+        
         super(Location, self).save(*args, **kwargs)
 
 
@@ -286,6 +293,8 @@ class StoryObject(models.Model):
         help_text="Elements that are NOT published will only be viewable in your Workshop.")
 
     def save(self, slug=None, creator=None, *args, **kwargs):
+        self.story.object_count = F('object_count') + 1
+        self.story.save()
         slug = slugify("{}-{}".format(self.story.title, self.name))
         super(StoryObject, self).save(*args, **kwargs)
 
@@ -372,6 +381,8 @@ class Scene(models.Model):
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
+        self.story.object_count = F('object_count') + 1
+        self.story.save()
         slug = slugify("{}-{}".format(self.chapter.story.title, self.title))
         super(Scene, self).save(*args, **kwargs)
 
@@ -392,6 +403,8 @@ class Chapter(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
+        self.story.object_count = F('object_count') + 1
+        self.story.save()
         slug = slugify("{}-{}".format(self.story.title, self.title))
         super(Chapter, self).save(*args, **kwargs)
 
@@ -479,7 +492,7 @@ class Story(models.Model):
         max_length=24, default="Magic", blank=True)
     published = models.BooleanField(default=True,
         help_text="Elements that are NOT published will only be viewable in your Workshop.")
-
+    object_count = models.PositiveSmallIntegerField(default=0)
 
     slug = models.SlugField(unique=True)
 
@@ -501,6 +514,8 @@ class MainMap(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
+        self.story.object_count = F('object_count') + 1
+        self.story.save()
         slug = slugify(self.name)
         super(MainMap, self).save(*args, **kwargs)
 

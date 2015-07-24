@@ -52,16 +52,13 @@ def index(request):
     try:
         stories = Story.objects.filter(published=True)
 
-        for story in stories:
-            so = StoryObject.objects.filter(story=story)
-            story.count = so.count()
-
         context_dict['stories'] = stories
 
     except Story.DoesNotExist:
         pass
 
     return render(request, 'personas/index.html', context_dict)
+
 
 @login_required
 def workshop(request, user):

@@ -21,7 +21,7 @@
             {% for story in stories|dictsortreversed:"count" %}
                     <a class="btn btn-success btn-md" style="background:black" href="/personas/story/{{ story.slug }}">
                     {% thumbnail story.image "40x40" crop="center" as im %}
-                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}  {{ story.title }} - [{{ story.count }}]</a>
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}  {{ story.title }} - [{{ story.object_count }}]</a>
             {% endfor %}
         {% else %}
             <strong>There are no stories present.</strong>
