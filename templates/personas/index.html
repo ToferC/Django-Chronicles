@@ -1,6 +1,7 @@
 {% extends "personas/base.html" %}
 {% block title %}
 {% load staticfiles %}
+{% load django_markdown django_markdown_static %}
 {% load thumbnail %}
     <header id="header" class="">
         <h1>Welcome to Persona [BETA]</h1>
@@ -65,12 +66,8 @@
         <hr>
 <div class="container">
   <div class="jumbotron" style="color:white; background-color:black">
-    <h3>Persona News & Updates</h3>
-    <ul>
-    <li>First, a warm welcome to the site's new users. It may be rough right now, but it's already great to see what you're putting together.  I've set up a public board on <a href="https://trello.com/b/Bti7kOfl/personas-development">Trello</a> if you'd like to add anything to my "to-do" list there. :)</li>
-    <li>Tracked down and fixed a bug that was causing organizations and other story object types to transform into characters when edited. -- Thanks to Andy for pointing the bug out.</li>
-    <li>Added the Batch Add tab under "Add Content".  This allows you to create up to 8 story objects at the same time with skeleton information.  Very useful to flesh out existing settings quickly. -- Thanks to Jeorg for the great suggestion.</li>
-    </ul>
+    <h3>{{ poster.title }}</h3>
+    {{ poster.content|markdown }}
   </div>
 </div>
         <hr>

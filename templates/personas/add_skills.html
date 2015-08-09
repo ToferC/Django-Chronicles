@@ -22,7 +22,7 @@
         </div>
     {% endblock %}
     {% block column2 %}
-        <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+        <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
         <h3>Current Skills</h3>
                                 {% if type_1_skills %}
                                 <h3>{{ story.skill_type_name_1 }}:</h3>
@@ -48,11 +48,9 @@
                                     {% endfor %}
                                 {% endif %}
                             </table>
-                        </div>
-      {% endblock %}
-    {% block column3 %}
-    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
-                            {% if type_3_skills %}
+                    
+
+        {% if type_3_skills %}
                                 <h3>{{ story.skill_type_name_3 }}:</h3>
                             <table class="table table-condensed table-hover table-responsive">
                                     {% for skill in type_3_skills %}
@@ -78,8 +76,8 @@
                             </table>
                         </div>
     {% endblock %}
-    {% block column4 %}
-        <div class="col-md-1 col-sm-1 col-lg-1" id="col1">
+    {% block column3 %}
+        <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
             <h3>Add Skill</h3>
             {% crispy form %}
             <br><br><br>

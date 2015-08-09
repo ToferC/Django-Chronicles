@@ -532,3 +532,14 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Poster(models.Model):
+    author = models.ForeignKey(User, blank=True, null=True)
+    title = models.CharField(max_length=128)
+    content = MarkdownField(blank=True)
+    publication_date = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.content
+

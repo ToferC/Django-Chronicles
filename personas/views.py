@@ -14,7 +14,7 @@ from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateVi
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
 from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment
-from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad
+from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
 from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper
@@ -53,6 +53,7 @@ def index(request):
         stories = Story.objects.filter(published=True)
 
         context_dict['stories'] = stories
+        context_dict['poster'] = Poster.objects.latest('publication_date')
 
     except Story.DoesNotExist:
         pass
