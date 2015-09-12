@@ -17,6 +17,11 @@ urlpatterns = patterns('',
     url(r'^add_batch_storyobject/(?P<story_title_slug>[\w\-]+)/$', views.add_batch_storyobject, name='add_batch_storyobject'),
     url(r'^add_batch_relationship/(?P<story_title_slug>[\w\-]+)/$', views.add_batch_relationship, name='add_batch_relationship'),
 
+    url(r'^add_gamestats/(?P<storyobject_name_slug>[\w\-]+)/$', views.add_gamestats, name='add_gamestats'),
+
+    url(r'^delete_gamestats/(?P<pk>\d+)/$', views.delete_gamestats, name='delete_gamestats'),
+    url(r'^edit_gamestats/(?P<pk>\d+)/$', views.edit_gamestats, name='edit_gamestats'),
+
     url(r'^add_aspect/(?P<storyobject_name_slug>[\w\-]+)/$', views.add_aspect, name='add_aspect'),
     url(r'^delete_aspect/(?P<pk>\d+)/$', views.delete_aspect, name='delete_aspect'),
     url(r'^edit_aspect/(?P<pk>\d+)/$', views.edit_aspect, name='edit_aspect'),

@@ -1,0 +1,22 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load django_markdown %}
+
+{% block title %}
+    <header>
+        <h1>Add Game Stats: {{ storyobject.name }}</h1>
+    </header>
+{% endblock %}
+
+{% block content %}
+
+{% block column1 %}
+<div class="col-md-8 col-sm-8 col-lg-8" id="col1">
+    {% crispy form %}
+    {% markdown_media %}
+<hr>
+ </div>
+{% endblock %}
+
+{% endblock %}

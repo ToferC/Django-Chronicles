@@ -206,6 +206,12 @@ class Skill(models.Model):
         return "{}: {}".format(self.name, self.value)
 
 
+class GameStats(models.Model):
+    # Generic field for entering game information
+    storyobject = models.ForeignKey('StoryObject')
+    content = MarkdownField(blank=True)
+
+
 class Statistic(models.Model):
     TYPE_1 = "Type_1"
     TYPE_2 = "Type_2"
@@ -271,22 +277,26 @@ class StoryObject(models.Model):
         upload_to='profile_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')
     slug = models.SlugField(unique=True)
 
-    stats_toggle = models.BooleanField(default=True,
+    gamestats_toggle = models.BooleanField(default=True,
+     help_text='''Check to enable a markdown field for entering game statistics.
+        This is the default option, but you can choose specific tabbed fields below if you prefer.''',
+        verbose_name="Enable Game Stats field?")
+    stats_toggle = models.BooleanField(default=False,
      help_text="Check to enable statistics for this story object.",
         verbose_name="Enable Statistics?")
-    skill_toggle = models.BooleanField(default=True,
+    skill_toggle = models.BooleanField(default=False,
      help_text="Check to enable skills for this story object.",
         verbose_name="Enable Skills?")
-    combat_toggle = models.BooleanField(default=True,
+    combat_toggle = models.BooleanField(default=False,
      help_text="Check to enable combat info for this story object.",
         verbose_name="Enable Combat Info?")
-    equipment_toggle = models.BooleanField(default=True,
+    equipment_toggle = models.BooleanField(default=False,
      help_text="Check to enable equipment for this story object.",
         verbose_name="Enable Equipment?")
-    gallery_toggle = models.BooleanField(default=True,
+    gallery_toggle = models.BooleanField(default=False,
      help_text="Check to enable gallery images for this story object.",
         verbose_name="Enable Gallery Images?")
-    social_toggle = models.BooleanField(default=True,
+    social_toggle = models.BooleanField(default=False,
      help_text="Check to enable social functionality for this story object.",
         verbose_name="Enable Social Functions?")
     published = models.BooleanField(default=True,

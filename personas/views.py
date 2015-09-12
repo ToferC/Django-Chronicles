@@ -13,11 +13,11 @@ from django.db.models.base import ObjectDoesNotExist
 from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateView
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
-from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment
+from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment, GameStats
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
-from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper
+from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm
 
 from datetime import datetime
 import network_personas
@@ -342,6 +342,13 @@ def storyobject(request, storyobject_name_slug):
         context_dict['result'] = network_personas.return_json_graph(
             story_objects)
 
+        # Game statistics
+        try:
+            context_dict['gamestats'] = GameStats.objects.get(
+                storyobject__name=storyobject.name)
+        except GameStats.DoesNotExist:
+            context_dict['gamestats'] = None
+
         # Set up ScratchPad and Equipment for storyobject
 
         try:
@@ -432,6 +439,7 @@ def storyobject(request, storyobject_name_slug):
 
         # Membership.objects.filter(storyobject=storyobject)
 
+        context_dict['gamestats_toggle'] = storyobject.gamestats_toggle
         context_dict['stats_toggle'] = storyobject.stats_toggle
         context_dict['skill_toggle'] = storyobject.skill_toggle
         context_dict['combat_toggle'] = storyobject.combat_toggle
@@ -1221,6 +1229,40 @@ def add_ability(request, storyobject_name_slug):
 
 
 @login_required
+def add_gamestats(request, storyobject_name_slug):
+
+    storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
+    story = storyobject.story
+
+    if request.method == 'POST':
+
+        form = GameStatsForm(request.POST)
+
+        if form.is_valid():
+            form_data = form.cleaned_data
+
+            content = form_data.get('content')
+
+            gamestats = GameStats(storyobject=storyobject,
+                content=content)
+
+            gamestats.save()
+
+            return HttpResponseRedirect("/personas/storyobject/{}".format(
+                storyobject.slug))
+
+        else:
+            print (gamestats_form.errors)
+
+    else:
+        form = GameStatsForm()
+
+    return render(request, 'personas/add_gamestats.html', {
+        'slug': storyobject_name_slug, 'storyobject': storyobject,
+        'story':story, 'form':form})
+
+
+@login_required
 def add_relationships(request, storyobject_name_slug):
 
     storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
@@ -1856,3 +1898,28 @@ def edit_nation(request, pk, template_name='personas/edit_nation.html'):
         return HttpResponseRedirect('/personas/nation/{}'.format(nation.slug))
     return render(request, template_name, {'form': form, 'nation':nation, 'story':story})
 
+
+@login_required
+def delete_gamestats(request, pk, template_name='personas/delete_gamestats.html'):
+    gamestats = GameStats.objects.get(pk=pk)
+    storyobject = StoryObject.objects.get(gamestats=gamestats)
+    if request.user == storyobject.creator:
+        if request.method=='POST':
+            gamestats.delete()
+            return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
+    else:
+        return HttpResponse("You do not have permission to delete this.")
+    return render(request, template_name, {'object': gamestats})
+
+
+@login_required
+def edit_gamestats(request, pk, template_name='personas/edit_gamestats.html'):
+    gamestats = GameStats.objects.get(pk=pk)
+    storyobject = StoryObject.objects.get(gamestats=gamestats)
+    story = storyobject.story
+    form = GameStatsForm(request.POST or None, instance=gamestats)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
+    return render(request, template_name, {'form': form, 'object':gamestats, 'story':story,
+        'storyobject': storyobject})

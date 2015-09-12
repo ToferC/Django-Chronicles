@@ -5,7 +5,7 @@ from django.forms.models import modelform_factory, formset_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage, MainMap
-from personas.models import Statistic, CombatInfo, ScratchPad, Equipment
+from personas.models import Statistic, CombatInfo, ScratchPad, Equipment, GameStats
 from personas.personas_email import mail_format as mail_format
 from django_markdown.widgets import MarkdownWidget
 from django_markdown.fields import MarkdownFormField
@@ -235,6 +235,25 @@ class ScratchPadForm(forms.ModelForm):
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
                         href="/personas/storyobject/{{ storyobject.slug }}/#combat">Cancel</a>"""),
+                Submit('snapshot', 'Submit'),))
+
+
+class GameStatsForm(forms.ModelForm):
+    class Meta:
+        model = GameStats
+        fields = ['content',]
+
+    def __init__(self, *args, **kwargs):
+        super(GameStatsForm, self).__init__(*args, **kwargs)
+
+        #self.fields['content'] = forms.CharField(widget=MarkdownWidget())
+
+        self.helper = FormHelper(self)
+        self.layout = Layout(InlineField('content',))
+        self.helper.layout.append(
+            FormActions(
+                HTML("""<a role="button" class="btn btn-default"
+                        href="/personas/storyobject/{{ storyobject.slug }}/#gamestats">Cancel</a>"""),
                 Submit('snapshot', 'Submit'),))
 
 

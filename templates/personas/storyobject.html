@@ -19,6 +19,13 @@
                     <icon class="fa fa-home"></icon> Details
                 </a>
             </li>
+            {% if gamestats_toggle %}
+                <li>
+                    <a href="#gamestats" role="tab" data-toggle="tab">
+                        <i class="fa fa-user"></i> Game Stats
+                    </a>
+                </li>
+            {% endif %}
             {% if stats_toggle %}
                 <li>
                     <a href="#abilities" role="tab" data-toggle="tab">
@@ -88,6 +95,7 @@
     </div>
     <!-- Tab panes -->
     <div class="tab-content">
+        <!-- Start tab content for Tab 1 -->
         <div class="tab-pane fade active in" id="details">
             <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                 <div class="row">
@@ -122,7 +130,7 @@
                     <h3>Relationships:</h3>
         <div class="rel-container">
         
-        <!-- Nav tabs -->
+        <!-- Nav relationship tabs -->
             <ul class="nav nav-pills nav-inverse" role="tablist" id="rel_tabs">
                 <li class="active">
                     <a href="#mine" role="tab" data-toggle="tab">
@@ -250,6 +258,27 @@
         </div> <!-- Relationships Columns End -->
         </div> <!-- Details Tab Ends -->
 
+        <div class="tab-pane fade in" id="gamestats"> <!-- Tab one point five Starts -->
+        <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
+            <h3>Game Stats:</h3>
+            {% if gamestats %}
+                {{ gamestats.content|markdown }}
+                <hr>
+                {% if user == storyobject.creator or user == story.author %}
+
+                    <a role="button" class="btn btn-primary" href="{% url 'edit_gamestats' pk=gamestats.pk %}">Edit Game Stats  <span class="glyphicon glyphicon-cog"></span></a>
+                    <hr>
+
+                {% endif %}         
+            {% else %}
+            <strong>No Game Statistics in use for this {{ storyobject.c_type }}</strong>
+            <hr>
+            <a role="button" class="btn btn-primary" href="{% url 'add_gamestats' storyobject_name_slug=storyobject.slug %}">Add Game Stats  <span class="glyphicon glyphicon-cog"></span></a>
+            {% endif %}
+
+        </div>
+        </div>  <!-- end of Tab One point Five -->
+
         {% if stats_toggle %}
         <div class="tab-pane fade in" id="abilities"> <!-- Second Tab Starts -->
         <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
@@ -336,6 +365,7 @@
         </div>
     </div>
     {% endif %} <!-- endif for stats_toggle -->
+
     {% if skill_toggle %}
     <div class="tab-pane fade in" id="skills">
         <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
@@ -399,6 +429,7 @@
         </div>
     </div>
     {% endif %} <!-- endif for skill_toggle -->
+
     <!-- breaks fancybox if remomved "if combat_toggle" -->
     <div class="tab-pane fade in" id="combat"> <!-- Tab Four Starts -->
         <div class="col-md-8 col-sm-8 col-lg-8" id="col1">

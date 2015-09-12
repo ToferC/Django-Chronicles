@@ -1,5 +1,5 @@
 from django.contrib import admin
-from personas.models import StoryObject, Relationship, Location, Nation, Story, MainMap, Chapter, Scene, Ability, Aspect, Skill, Note, Communique, UserProfile, Statistic, CombatInfo, GalleryImage, ScratchPad, Equipment, Poster
+from personas.models import StoryObject, Relationship, Location, Nation, Story, MainMap, Chapter, Scene, Ability, Aspect, Skill, Note, Communique, UserProfile, Statistic, CombatInfo, GalleryImage, ScratchPad, Equipment, Poster, GameStats
 from personas.forms import RelationshipForm
 #from leaflet.admin import LeafletGeoAdmin
 
@@ -46,6 +46,9 @@ class CommuniqueAdmin(admin.ModelAdmin):
 class AbilityAdmin(admin.ModelAdmin):
     pass
 
+class GameStatsAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'storyobject', 'content')
+
 class RelationshipAdmin(admin.ModelAdmin):
     form = RelationshipForm
 
@@ -66,6 +69,7 @@ admin.site.register(Aspect, AspectAdmin)
 admin.site.register(Skill, SkillAdmin)
 admin.site.register(Note, NoteAdmin)
 admin.site.register(Statistic)
+admin.site.register(GameStats, GameStatsAdmin)
 admin.site.register(CombatInfo)
 admin.site.register(Equipment)
 admin.site.register(Communique, CommuniqueAdmin)

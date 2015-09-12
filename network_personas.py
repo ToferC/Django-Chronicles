@@ -33,6 +33,7 @@ def find_colour(story_object):
         node_shapes[story_object.name] = 's'
         node_colors[story_object.name] = 'y'
 
+
 def return_json_graph(story_objects):
 
     G = nx.MultiDiGraph()
