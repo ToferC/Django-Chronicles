@@ -851,11 +851,12 @@ def add_batch_storyobject(request, story_title_slug):
 
     story = Story.objects.get(slug=story_title_slug)
 
-    StoryObjectFormSet = formset_factory(BatchStoryObjectForm, extra=8)
+    StoryObjectFormSet = modelformset_factory(StoryObject,
+        form=BatchStoryObjectForm, extra=8)
 
     if request.method == 'POST':
 
-        formset = StoryObjectFormSet(request.POST, prefix="batch")
+        formset = StoryObjectFormSet(request.POST, request.FILES, prefix="batch")
         helper = BatchFormSetHelper()
         common_form = BatchCommonStoryObjectForm(request.POST, prefix="common")
 
@@ -864,12 +865,19 @@ def add_batch_storyobject(request, story_title_slug):
         if formset.is_valid() and common_form.is_valid():
             for form in formset:
                 so = StoryObject()
-                if form.cleaned_data['name']:
+                try:
                     so.name = form.cleaned_data['name']
                     so.story = story
                     so.creator = creator
                     so.role = form.cleaned_data['role']
                     so.c_type = form.cleaned_data['c_type']
+                    so.description = form.cleaned_data['description']
+                    so.image = form.cleaned_data['image']
+
+                    if common_form.cleaned_data['gamestats_toggle']:
+                        so.gamestats_toggle = True
+                    else:
+                        so.gamestats_toggle = False
 
                     if common_form.cleaned_data['stats_toggle']:
                         so.stats_toggle = True
@@ -911,14 +919,18 @@ def add_batch_storyobject(request, story_title_slug):
 
                     so.save()
 
-            return HttpResponseRedirect("/personas/story/{}".format(story.slug))
+                except KeyError as e:
+                    pass
+
+            return HttpResponseRedirect("/personas/story/{}#story_objects".format(story.slug))
 
         else:
             print (formset.errors, common_form.errors)
 
     else:
 
-        formset = StoryObjectFormSet(prefix="batch")
+        formset = StoryObjectFormSet(prefix="batch",
+            queryset=Relationship.objects.none())
         helper = BatchFormSetHelper()
         common_form = BatchCommonStoryObjectForm(prefix="common")
 

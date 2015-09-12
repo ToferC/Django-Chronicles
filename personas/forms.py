@@ -56,36 +56,22 @@ class StoryObjectForm(forms.ModelForm):
         return instance
 
 
-class BatchStoryObjectForm(forms.Form):
+###
+###
 
-    CHARACTER = "Character"
-    CREATURE = "Creature"
-    THING = "Thing"
-    FORCE = "Force"
-    ORGANIZATION = "Organization"
+class BatchStoryObjectForm(forms.ModelForm):
 
-    CHAR_CHOICES = (
-        (CHARACTER, "Character"),
-        (CREATURE, "Creature"),
-        (ORGANIZATION, "Organization"),
-        (THING, "Thing"),
-        (FORCE, "Force")
-    )
+    class Meta:
+        model = StoryObject
+        fields = ["name", "role", "c_type", "description", "image"]
 
-    name = forms.CharField(label="Name", max_length=100, required = False)
-    role = forms.CharField(label="Role", max_length=100, required = False)
-    c_type = forms.ChoiceField(label="Story Object Type", choices=CHAR_CHOICES,
-    help_text="Select a story object category.", required = False)
 
 class BatchFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
         super(BatchFormSetHelper, self).__init__(*args, **kwargs)
         #self.form_method = 'post'
         self.form_tag = False
-        self.layout = Layout(
-            'name',
-            'role',
-            'c_type',
+        self.layout = Layout('name','role','c_type', 'description', 'image'
             )
         self.render_required_fields = True
         #self.add_input(Submit("submit", "Save"))
@@ -93,8 +79,11 @@ class BatchFormSetHelper(FormHelper):
 
 class BatchCommonStoryObjectForm(forms.Form):
 
+    gamestats_toggle = forms.BooleanField(
+     help_text="Check to enable simple game stats for this story object.",
+        label="Enable Game Stats?", required = False, initial=True)
     stats_toggle = forms.BooleanField(
-     help_text="Check to enable statistics for this story object.",
+     help_text="Check to enable detailed statistics for this story object.",
         label="Enable Statistics?", required = False)
     skill_toggle = forms.BooleanField(
      help_text="Check to enable skills for this story object.",
@@ -122,7 +111,7 @@ class BatchCommonStoryObjectForm(forms.Form):
         self.helper.form_tag = False
         self.helper.layout.append(
             FormActions(
-                HTML("""<a role="button" class="btn btn-default"
+                HTML("""<a role="button" class="btn btn-default" enctype="multipart/form-data"
                         href="/personas/storyobject/{{ storyobject.slug }}/#combat">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
