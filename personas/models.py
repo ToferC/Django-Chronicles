@@ -44,7 +44,7 @@ class Nation(models.Model):
 class Location(models.Model):
     name = models.CharField(max_length=128)
     creator = models.ForeignKey(User, blank=True, null=True)
-    
+
     image = models.ImageField(upload_to='location_images/%Y/%m/%d/%H_%M_%S',
         default='profile_images/shadow_figure.jpeg')
     terrain = models.CharField(max_length=128)
@@ -63,7 +63,7 @@ class Location(models.Model):
         self.story.object_count = F('object_count') + 1
         self.story.save()
         slug = slugify("{}-{}".format(self.story.title, self.name))
-        
+
         super(Location, self).save(*args, **kwargs)
 
 

@@ -43,7 +43,7 @@ class StoryObjectForm(forms.ModelForm):
         self.helper = FormHelper(self)
         self.helper.layout.append(
             FormActions(
-                HTML("""<a role="button" class="btn btn-default"
+                HTML("""<a role="button" class="btn btn-default" enctype="multipart/form-data"
                         href="/personas/story/{{ story.slug }}/#storyobjects">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
@@ -69,12 +69,12 @@ class BatchStoryObjectForm(forms.ModelForm):
 class BatchFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
         super(BatchFormSetHelper, self).__init__(*args, **kwargs)
-        #self.form_method = 'post'
+        self.form_method = 'post'
         self.form_tag = False
         self.layout = Layout('name','role','c_type', 'description', 'image'
             )
         self.render_required_fields = True
-        #self.add_input(Submit("submit", "Save"))
+        self.add_input(Submit("submit", "Save"))
 
 
 class BatchCommonStoryObjectForm(forms.Form):
