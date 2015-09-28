@@ -148,9 +148,9 @@
                         <hr>
                     </div>
                     <div class="row">
-                        <h3>Locations:</h3>
-                        {% if locations %}
-                                {% for storyobject in locations %}
+                        <h3>Places:</h3>
+                        {% if places %}
+                                {% for storyobject in places %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/place/{{ storyobject.slug }}">
                                     {% thumbnail storyobject.image "30x30" crop="center" as im %}
                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>

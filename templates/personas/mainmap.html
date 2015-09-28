@@ -26,10 +26,10 @@
 {% block column2 %}
 
     <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
-    <h3>Locations: </h3>
-    {% for location in locations %}
+    <h3>Places: </h3>
+    {% for place in places %}
         <ul>
-            <li><a href="/personas/location/{{ location.slug }}">{{ location }}</a></li>
+            <li><a href="/personas/place/{{ place.slug }}">{{ place }}</a></li>
         </ul>
     {% endfor %}
 
@@ -52,9 +52,9 @@
             id: 'examples.map-i875mjb7'
         }).addTo(map);
 
-        {% for location in locations %}
-        L.marker([{{ location.latitude|floatformat:6 }}, {{ location.longitude|floatformat:6 }}], 6).addTo(map)
-        .bindPopup( "{{location.name}}" ).openPopup();
+        {% for place in places %}
+        L.marker([{{ place.latitude|floatformat:6 }}, {{ place.longitude|floatformat:6 }}], 6).addTo(map)
+        .bindPopup( "{{place.name}}" ).openPopup();
         {% endfor %}
 
         var popup = L.popup();

@@ -34,19 +34,19 @@
         {% endblock %}
         {% block column2 %}
             <div class="col-md-3 col-sm-4 col-lg-3" id="col2">
-                    <h3>Locations</h3>
-                    {% if locations %}
+                    <h3>Places</h3>
+                    {% if places %}
                         <ul>
-                            {% for location in locations %}
+                            {% for place in places %}
                                 <div class="btn-group-vertical">
                                 
-                                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:gray; white-space:normal" href="/personas/location/{{ location.slug }}"><img src="{{ location.image.url }}" style="max-height:40px; float:left">  {{ location.name }}</a><br>
+                                    <a class="btn btn btn-inverse" style="width:300px; height:50px; justify:center; background:gray; white-space:normal" href="/personas/place/{{ place.slug }}"><img src="{{ location.image.url }}" style="max-height:40px; float:left">  {{ place.name }}</a><br>
                                     
                             </div>
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <strong>There are no locations present.</strong>
+                        <strong>There are no places present.</strong>
                         <br /><br />
                     {% endif %}
             </div>

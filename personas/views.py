@@ -28,8 +28,8 @@ def return_object(s_object):
 
     if s_object.__class__.__name__ == 'StoryObject':
         so_type = "storyobject"
-    elif s_object.__class__.__name__ == 'Location':
-        so_type = "location"
+    elif s_object.__class__.__name__ == 'Place':
+        so_type = "place"
     elif s_object.__class__.__name__ == 'Chapter':
         so_type = "chapter"
     elif s_object.__class__.__name__ == 'Scene':
@@ -99,10 +99,10 @@ def workshop(request, user):
             creator=user).filter(published=False).order_by("story", "name")
 
         # Set up Locations
-        context_dict['published_locations'] = Location.objects.filter(
+        context_dict['published_places'] = Place.objects.filter(
             creator=user).filter(published=True).order_by("story", "name")
 
-        context_dict['unpublished_locations'] = Location.objects.filter(
+        context_dict['unpublished_places'] = Place.objects.filter(
             creator=user).filter(published=False).order_by("story", "name")
 
         # Set up Organizations
@@ -157,13 +157,13 @@ def workshop(request, user):
 
 
 def collections(request):
-    storyobject_list = StoryObject.objects.all()
-    location_list = Location.objects.all()
+    storyobject_list = StoryObject.objects.exclude(c_type="Place")
+    place_list = Place.objects.all()
     organization_list = StoryObject.objects.filter(
         c_type="Organization").distinct().order_by('name')
 
     context_dict = {'boldmessage': "Personas", 'storyobjects': storyobject_list,
-        'locations': location_list, 'organizations': organization_list}
+        'places': place_list, 'organizations': organization_list}
 
     return render(request, 'personas/collections.html', context_dict)
 
@@ -178,7 +178,7 @@ def location(request, location_name_slug):
     context_dict = {}
 
     try:
-        location = Place.objects.get(slug=location_name_slug)
+        location = Location.objects.get(slug=location_name_slug)
         story = location.story
 
         context_dict['story'] = Story.objects.get(location=location)
@@ -389,7 +389,7 @@ def place(request, place_name_slug):
                     noteform.save(
                         creator=creator, storyobject=note_subject, commit=True)
 
-                    return HttpResponseRedirect("/personas/place/{}/#notes".format(storyobject_name_slug))
+                    return HttpResponseRedirect("/personas/place/{}/#notes".format(place_name_slug))
 
                 else:
                     print (context_dict['noteform'].errors)
@@ -652,8 +652,9 @@ def chapter(request, chapter_name_slug):
         context_dict['scenes'] = scenes
 
         context_dict['storyobjects'] = StoryObject.objects.filter(
-            scene__chapter__title=chapter.title).filter(published=True).distinct()
-        context_dict['locations'] = Location.objects.filter(
+            scene__chapter__title=chapter.title).filter(published=True).exclude(
+            c_type="Place").distinct()
+        context_dict['places'] = Place.objects.filter(
             scene__chapter__title=chapter.title).filter(published=True).distinct()
 
 
@@ -738,10 +739,9 @@ def story(request, story_name_slug):
                 published=True).filter(
                 c_type="Force").distinct().order_by('name')
 
-        context_dict['locations'] = StoryObject.objects.filter(
+        context_dict['places'] = Place.objects.filter(
                 story=story).filter(
-                published=True).filter(
-                c_type="Place").distinct().order_by('name')
+                published=True).distinct().order_by('name')
 
         context_dict['organizations'] = StoryObject.objects.filter(
             story=story).filter(
@@ -798,7 +798,7 @@ def mainmap(request, mainmap_slug):
         context_dict['base_longitude'] = mainmap.base_longitude
         context_dict['tile'] = mainmap.tiles
 
-        context_dict['locations'] = Location.objects.filter(
+        context_dict['places'] = Place.objects.filter(
             story=mainmap.story).distinct()
 
     except MainMap.DoesNotExist:
@@ -1591,7 +1591,7 @@ def add_nation(request, story_title_slug):
 
     story = Story.objects.get(slug=story_title_slug)
 
-    nations = Nation.objects.filter(location__story=story)
+    nations = Nation.objects.filter(story=story)
 
     if request.method == 'POST':
 
@@ -2010,8 +2010,6 @@ def delete_note(request, pk, template_name='personas/delete_note.html'):
 
     if note.storyobject:
         target = note.storyobject
-    elif note.location:
-        target = note.location
     elif note.story:
         target = note.story
     elif note.chapter:
@@ -2037,8 +2035,6 @@ def edit_note(request, pk, template_name='personas/edit_note.html'):
 
     if note.storyobject:
         target = note.storyobject
-    elif note.location:
-        target = note.location
     elif note.story:
         target = note.story
     elif note.chapter:

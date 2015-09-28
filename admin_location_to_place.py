@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 import django
 django.setup()
 
-from personas.models import StoryObject, Place, Relationship, Location, Nation
+from personas.models import StoryObject, Place, Relationship, Location, Nation, Note
 
 
 def transform():
@@ -31,6 +31,17 @@ def transform():
 
         print("Tranformed location {}".format(location.name))
 
+        notes = Note.objects.filter(location=location)
+
+        if notes:
+
+            for note in notes:
+                note.storyobject = StoryObject.objects.get(name=location.name)
+                note.location = None
+                note.save()
+                print("Updated note {}".format(note.title))
+
+
     print("***Finished converting locations***\n")
     storyobjects = StoryObject.objects.exclude(c_type="Place")
 
@@ -51,6 +62,12 @@ def transform():
             print("No base for {}".format(storyobject.name))
             print(storyobject.base_of_operations)
 
+    scenes = Scene.objects.all()
+
+    for scene in scenes:
+        scene.place = Place.objects.get(name=scene.location.name)
+        scene.save()
+        print("Updated scene {}".format(scene.title))
 
 # Start execution here
 if __name__ == '__main__':

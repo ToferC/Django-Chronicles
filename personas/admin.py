@@ -41,7 +41,7 @@ class SkillAdmin(admin.ModelAdmin):
     list_display = ('storyobject', 's_type', 'name', 'value')
 
 class NoteAdmin(admin.ModelAdmin):
-    list_display = ('creator', 'date', 'storyobject', 'location',
+    list_display = ('creator', 'date', 'storyobject', 'place',
         'scene', 'chapter', 'story', 'rating')
 
 class CommuniqueAdmin(admin.ModelAdmin):

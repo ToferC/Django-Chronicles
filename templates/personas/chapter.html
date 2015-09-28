@@ -47,18 +47,18 @@
     </div>
 
     <div class="row">
-        <h3>Locations:</h3>
-        {% if locations %}
+        <h3>Places:</h3>
+        {% if places %}
             <ul>
-                {% for location in locations %}
-                    <li><a href="/personas/location/{{ location.slug }}">{{ location }}</a></li>
+                {% for place in places %}
+                    <li><a href="/personas/place/{{ place.slug }}">{{ place }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
-            <strong>{{ chapter_title }} has no locations.</strong>
+            <strong>{{ chapter_title }} has no places.</strong>
             <br />
         {% endif %}
-        <a href="/personas/add_location/{{ story.slug }}" style="color:gray">Add Location <span class="glyphicon glyphicon-pencil"></span></a>
+        <a href="/personas/add_place/{{ story.slug }}" style="color:gray">Add Place <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
     </div>
 
