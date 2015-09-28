@@ -81,7 +81,7 @@
         {% if storyobject_name %}
             <br>
                 {% thumbnail storyobject.image "400" crop="center" as im %}
-                <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" align="middle">{% empty %}
+                <img class="img-responsive" src="{{ im.url }}" width="100%" align="middle">{% empty %}
             {% endthumbnail %}
             <p>
                 Created by {{ creator }}
@@ -102,9 +102,26 @@
                     <h3>Details:</h3>
                     <ul>
                         <li>Type: {{ storyobject.c_type }}</li>
-                        <li>Nationality/Area: {% if nationality %}<a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a>{% else %}None{% endif %}</li>
-                        <li>Location: {% if base_of_operations %}<a href="/personas/location/{{ base_of_operations.slug }}">{{ base_of_operations }}</a>{% else %} None{% endif %}</li>
+                        <li>Faction: {% if nationality %}<a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a>{% else %}None{% endif %}</li>
                     </ul>
+                    <hr>
+                    <h3>Places:</h3>
+                    {% if places %}
+                        <ul>
+                            {% for relationship in places %}
+                            <li>
+                                {{ relationship.relationship_class }} <a href="/personas/place/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
+
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        {{ storyobject.name }} has no related places.
+                    {% endif %}
                     <hr>
                 </div>
                 <div class="row">
@@ -151,7 +168,6 @@
 
         <div class="tab-content">
         <div class="tab-pane fade active in" id="mine">
-            <div class="row">
                     <h3>Organizational:</h3>
                     {% if my_memberships %}
                         <ul>
@@ -169,9 +185,7 @@
                         {% else %}
                         {{ storyobject.name }} has no organizational relationships.
                         {% endif %}
-            </div>
 
-            <div class="row">
                 <h3>Personal:</h3>
                 {% if my_relationships %}
                     <ul>
@@ -188,10 +202,8 @@
                     {% else %}
                         {{ storyobject.name }} has no personal relationships.
                     {% endif %}
-            </div>
         </div> <!-- My Rels Tab Ends -->
         <div class="tab-pane fade in" id="others">
-            <div class="row">
             <h3>Organizational:</h3>
                 {% if other_memberships %}
                         <ul>
@@ -209,9 +221,7 @@
                     {% else %}
                     {{ storyobject.name }} has no organizational relationships.
                     {% endif %}
-            </div>
                 
-            <div class="row">
             <h3>Personal:</h3>
                 {% if other_relationships %}
                     <ul>
@@ -230,13 +240,10 @@
                 {% else %}
                 {{ storyobject.name }} has no personal relationships.
                 {% endif %}
-            </div>
         </div> <!-- Others Rels Tab Ends -->
         <div class="tab-pane fade in" id="map">
-            <div class="row">
                 
                         <div id="graph_frame" style="background-color:white; max-width=100%; height=400"></div>
-            </div>
         </div> <!-- Map Rels Tab Ends -->
         <hr>
         <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=storyobject.slug %}"> Full Screen Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
@@ -248,7 +255,6 @@
                 {% else %}{% endif %}
                 {% if user == storyobject.creator or user == story.author %}
                 <a role="button" class="btn btn-primary" href="{% url 'edit_storyobject' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
-                <hr>
                 {% else %}{% endif %}
             </div> <!-- Container Ends -->
             </div> <!-- Row ends -->

@@ -14,6 +14,11 @@ urlpatterns = patterns('',
     url(r'^delete_storyobject/(?P<pk>\d+)/$', views.delete_storyobject, name='delete_storyobject'),
     url(r'^edit_storyobject/(?P<pk>\d+)/$', views.edit_storyobject, name='edit_storyobject'),
 
+    url(r'^place/(?P<place_name_slug>[\w\-]+)/$', views.place, name='place'),
+    url(r'^add_place/(?P<story_title_slug>[\w\-]+)/$', views.add_place, name='add_place'),
+    url(r'^delete_place/(?P<pk>\d+)/$', views.delete_place, name='delete_place'),
+    url(r'^edit_place/(?P<pk>\d+)/$', views.edit_place, name='edit_place'),
+
     url(r'^add_batch_storyobject/(?P<story_title_slug>[\w\-]+)/$', views.add_batch_storyobject, name='add_batch_storyobject'),
     url(r'^add_batch_relationship/(?P<story_title_slug>[\w\-]+)/$', views.add_batch_relationship, name='add_batch_relationship'),
 

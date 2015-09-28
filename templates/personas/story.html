@@ -150,15 +150,16 @@
                     <div class="row">
                         <h3>Locations:</h3>
                         {% if locations %}
-                            <ul>
-                                {% for location in locations %}
-                                    <li><a href="/personas/location/{{ location.slug }}">{{ location }}</a></li>
+                                {% for storyobject in locations %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/place/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                                 {% endfor %}
-                            </ul>
                         {% else %}
-                            <strong>{{ story.title }} has no locations.</strong><br><br>
+                            <strong>{{ story.title }} has no Places.</strong><br>
                         {% endif %}
-                        <a href="/personas/add_location/{{ story.slug }}" style="color:gray">Add Location <span class="glyphicon glyphicon-pencil"></span></a>
+                        <br><br>
+                        <a href="/personas/add_place/{{ story.slug }}" style="color:gray">Add Place <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
                     </div>
                     <div class="row">

@@ -13,11 +13,11 @@ from django.db.models.base import ObjectDoesNotExist
 from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateView
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
-from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment, GameStats
+from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment, GameStats, Place
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
-from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm
+from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm, PlaceForm
 
 from datetime import datetime
 import network_personas
@@ -178,7 +178,7 @@ def location(request, location_name_slug):
     context_dict = {}
 
     try:
-        location = Location.objects.get(slug=location_name_slug)
+        location = Place.objects.get(slug=location_name_slug)
         story = location.story
 
         context_dict['story'] = Story.objects.get(location=location)
@@ -280,8 +280,8 @@ def nation(request, nation_name_slug):
 
         context_dict['nation'] = nation
         context_dict['story'] = story
-        context_dict['locations'] = Location.objects.filter(
-            nation=nation).filter(published=True).distinct()
+        context_dict['places'] = Place.objects.filter(
+            nationality=nation).filter(published=True).distinct()
 
         context_dict['notes'] = Note.objects.filter(
             nation__name=nation.name)[0:10]
@@ -309,6 +309,101 @@ def nation(request, nation_name_slug):
     return render(request, 'personas/nation.html', context_dict)
 
 
+def place(request, place_name_slug):
+
+    context_dict = {}
+
+    try:
+        storyobject = Place.objects.get(slug=place_name_slug)
+
+        context_dict['name'] = storyobject.name
+        context_dict['storyobject'] = storyobject
+        context_dict['creator'] = storyobject.creator
+        context_dict['story'] = storyobject.story
+        context_dict['role'] = storyobject.role
+        context_dict['c_type'] = storyobject.c_type
+        context_dict['description'] = storyobject.description
+
+        # Get Latitude & Longitud
+        context_dict['latitude'] = storyobject.latitude
+        context_dict['longitude'] = storyobject.longitude
+
+        # Return JSON object for relationship map
+
+        associated_places = Relationship.objects.filter(
+            (Q(from_storyobject__name=storyobject.name) &
+            Q(to_storyobject__c_type="Place")) |
+            (Q(to_storyobject__name=storyobject.name) &
+                Q(from_storyobject__c_type="Place"))
+            ).order_by('-weight')
+
+        story_objects = {}
+
+        story_objects[storyobject] = storyobject
+
+        for rel in associated_places:
+            story_objects[rel.to_storyobject] = rel.to_storyobject
+            story_objects[rel.from_storyobject] = rel.from_storyobject
+
+        context_dict['associated_places'] = associated_places
+        context_dict['result'] = network_personas.return_json_graph(
+            story_objects)
+
+        # Game statistics
+        try:
+            context_dict['gamestats'] = GameStats.objects.get(
+                storyobject__name=storyobject.name)
+        except GameStats.DoesNotExist:
+            context_dict['gamestats'] = None
+
+        context_dict['aspects'] = Aspect.objects.filter(
+            storyobject__name=storyobject.name)
+
+        context_dict['associated_storyobjects'] = Relationship.objects.filter(
+            Q(to_storyobject__name=storyobject.name) &
+                ~Q(from_storyobject__c_type="Place")).order_by('-weight')
+
+        context_dict['notes'] = Note.objects.filter(
+            storyobject__name=storyobject.name)
+
+        context_dict['gallery_images'] = GalleryImage.objects.filter(
+            storyobject=storyobject)
+
+        context_dict['nationality'] = storyobject.nationality
+
+        context_dict['gamestats_toggle'] = storyobject.gamestats_toggle
+        context_dict['gallery_toggle'] = storyobject.gallery_toggle
+
+        # Note Form Section
+        noteform = NoteForm(request.POST, prefix="note")
+
+        if request.method == 'POST':
+
+            if 'save' in request.POST:
+                creator = request.user
+                note_subject = storyobject
+
+                noteform = NoteForm(request.POST)
+
+                if noteform.is_valid():
+                    noteform.save(
+                        creator=creator, storyobject=note_subject, commit=True)
+
+                    return HttpResponseRedirect("/personas/place/{}/#notes".format(storyobject_name_slug))
+
+                else:
+                    print (context_dict['noteform'].errors)
+
+        else:
+
+            context_dict['noteform'] = NoteForm()
+
+    except storyobject.DoesNotExist:
+        pass
+
+    return render(request, 'personas/place.html', context_dict)
+
+
 def storyobject(request, storyobject_name_slug):
 
     context_dict = {}
@@ -323,6 +418,8 @@ def storyobject(request, storyobject_name_slug):
         context_dict['role'] = storyobject.role
         context_dict['c_type'] = storyobject.c_type
         context_dict['description'] = storyobject.description
+
+        # Get Latitude & Longitud
 
         # Return JSON object for relationship map
 
@@ -404,12 +501,12 @@ def storyobject(request, storyobject_name_slug):
         context_dict['my_relationships'] = Relationship.objects.filter(
             Q(from_storyobject__name=storyobject.name) &
             (~Q(to_storyobject__c_type="Organization") &
-            ~Q(from_storyobject__c_type="Organization"))).order_by('-weight')
+                ~Q(to_storyobject__c_type="Place"))).order_by('-weight')
 
         context_dict['other_relationships'] = Relationship.objects.filter(
             Q(to_storyobject__name=storyobject.name) &
-            (~Q(to_storyobject__c_type="Organization") &
-            ~Q(from_storyobject__c_type="Organization"))).order_by('-weight')
+            (~Q(from_storyobject__c_type="Organization") &
+                ~Q(from_storyobject__c_type="Place"))).order_by('-weight')
 
         context_dict['abilities'] = Ability.objects.filter(
             storyobject__name=storyobject.name)
@@ -425,7 +522,11 @@ def storyobject(request, storyobject_name_slug):
             Q(receiver__name=storyobject.name))
 
         context_dict['nationality'] = storyobject.nationality
-        context_dict['base_of_operations'] = storyobject.base_of_operations
+
+        context_dict['places'] = Relationship.objects.filter(
+            (Q(from_storyobject__name=storyobject.name) &
+            Q(to_storyobject__c_type="Place"))
+            ).order_by('-weight')
 
         context_dict['my_memberships'] = Relationship.objects.filter(
             Q(from_storyobject__name=storyobject.name) &
@@ -637,9 +738,10 @@ def story(request, story_name_slug):
                 published=True).filter(
                 c_type="Force").distinct().order_by('name')
 
-        context_dict['locations'] = Location.objects.filter(
-                story__title=story.title).filter(
-                published=True).distinct().order_by('name')
+        context_dict['locations'] = StoryObject.objects.filter(
+                story=story).filter(
+                published=True).filter(
+                c_type="Place").distinct().order_by('name')
 
         context_dict['organizations'] = StoryObject.objects.filter(
             story=story).filter(
@@ -832,7 +934,7 @@ def add_storyobject(request, story_title_slug, c_type):
             storyobject_form.save(creator=creator, story=story,
                 commit=True)
 
-            return HttpResponseRedirect("/personas/add_aspect/{}".format(slug))
+            return HttpResponseRedirect("/personas/storyobject/{}".format(slug))
 
         else:
             print (storyobject_form.errors)
@@ -844,6 +946,47 @@ def add_storyobject(request, story_title_slug, c_type):
     return render(request, 'personas/add_storyobject.html',
         {'storyobject_form': storyobject_form, 'story':story, "c_type":c_type})
 
+
+@login_required
+def add_place(request, story_title_slug):
+
+    story = Story.objects.get(slug=story_title_slug)
+
+    mainmap = MainMap.objects.filter(story=story).first()
+
+    if mainmap:
+        pass
+    else:
+        mainmap = MainMap(base_latitude=50.000, base_longitude=-1.3,
+            story=story,
+            tiles="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+
+    c_type = 'Place'
+
+    if request.method == 'POST':
+        place_form = PlaceForm(request.POST, request.FILES)
+
+        creator = request.user
+
+        if place_form.is_valid():
+            slug = slugify("{}-{}".format(
+                story.title, place_form.cleaned_data['name']))
+
+            place_form.save(creator=creator, story=story,
+                commit=True)
+
+            return HttpResponseRedirect("/personas/place/{}".format(slug))
+
+        else:
+            print (place_form.errors)
+
+    else:
+
+        place_form = PlaceForm(story=story)
+
+    return render(request, 'personas/add_place.html',
+        {'place_form': place_form, 'story':story, "c_type":c_type,
+        'mainmap': mainmap})
 
 
 @login_required
@@ -1734,6 +1877,33 @@ def edit_storyobject(request, pk, template_name='personas/edit_storyobject.html'
         return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
     return render(request, template_name, {'form': form, 'storyobject':storyobject,
         'story':story})
+
+
+@login_required
+def delete_place(request, pk, template_name='personas/delete_place.html'):
+    place = Place.objects.get(pk=pk)
+    if request.user == place.creator:
+        if request.method=='POST':
+            place.delete()
+            return HttpResponseRedirect('/personas/')
+    else:
+        return HttpResponse("You do not have permission to delete this.")
+    return render(request, template_name, {'object': place})
+
+
+@login_required
+def edit_place(request, pk, template_name='personas/edit_place.html'):
+    place = Place.objects.get(pk=pk)
+    story = place.story
+    user = request.user
+    form = PlaceForm(request.POST or None, request.FILES or None, instance=place,
+        story=story)
+    if form.is_valid():
+        form.save(creator=place.creator, story=story)
+        return HttpResponseRedirect('/personas/place/{}'.format(place.slug))
+    return render(request, template_name, {'form': form, 'place':place,
+        'story':story})
+
 
 
 @login_required

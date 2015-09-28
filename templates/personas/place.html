@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+{% extends "personas/base.html" %}
+{% load crispy_forms_tags %}
+{% load django_markdown django_markdown_static %}
+{% load leaflet_tags %}
+{% load thumbnail %}
+{% block title %}
+    <header>
+        <h1>{{ name }} <span color="grey">({{ role }})</span></h1>
+    </header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+        
+        <!-- Nav tabs -->
+        <ul class="nav nav-pills nav-inverse" role="tablist" id="char_tabs">
+            <li class="active">
+                <a href="#details" role="tab" data-toggle="tab">
+                    <icon class="fa fa-home"></icon> Details
+                </a>
+            </li>
+            {% if gamestats_toggle %}
+                <li>
+                    <a href="#gamestats" role="tab" data-toggle="tab">
+                        <i class="fa fa-user"></i> Game Stats
+                    </a>
+                </li>
+            {% endif %}
+            {% if gallery_toggle %}
+                <li>
+                    <a href="#images" role="tab" data-toggle="tab">
+                        <i class="fa fa-cog"></i> Images
+                    </a>
+                </li>
+            {% endif %}
+            <li>
+                <a href="#notes" role="tab" data-toggle="tab">
+                    <i class="fa fa-cog"></i> Notes
+                </a>
+            </li>
+    </ul>
+
+    <div class="col-md-6 col-sm-6 col-lg-6" id="col1">
+        {% thumbnail storyobject.image "400" crop="center" as im %}
+        <img class="img-responsive" src="{{ im.url }}" width="100%" align="middle">
+        {% empty %}
+    {% endthumbnail %}
+    <p>
+        Created by {{ creator }}
+    </p>
+    <hr>
+        <h3>Description</h3>
+        {{ description|markdown }}
+    <hr>
+    
+        <p><strong>Faction:
+        {% if nation %}
+        <a href="/personas/nation/{{ nation.slug }}">{{ nation }}</a>
+        {% else %}
+        None
+        {% endif %}</strong></p>
+        <hr>
+
+        <h3>Related Places:</h3>
+                    {% if associated_places %}
+                        <ul>
+                            {% for relationship in associated_places %}
+                            <li>
+                                {{ relationship.relationship_class }} <a href="/personas/place/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
+
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        {{ storyobject.name }} has no related locations.
+                    {% endif %}
+                    <hr>
+
+        <div id="map" style="width: 100%; height: 350px"></div>
+</div>
+
+<div class="tab-content">
+        <!-- Start tab content for Tab 1 -->
+    <div class="tab-pane fade active in" id="details">
+        <div class="col-md-6 col-sm-6 col-lg-6" id="col1">
+                    <h3>Aspects:</h3>
+                    {% if aspects %}
+                        <ul>
+                            {% for aspect in aspects %}
+                                <li>{{ aspect }}
+                                    {% if user == storyobject.creator or user == story.author %}
+                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_aspect' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                    {% else %}{% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if user == storyobject.creator or user == story.author %}
+                    <a href="/personas/add_aspect/{{ storyobject.slug }}" style="color:lightgray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+                    <hr>
+
+        <h3>Relationships:</h3>
+        <div class="rel-container">
+        
+        <!-- Nav relationship tabs -->
+            <ul class="nav nav-pills nav-inverse" role="tablist" id="rel_tabs">
+                <li class="active">
+                    <a href="#associated" role="tab" data-toggle="tab">
+                        <i class="fa fa-user"></i> Characters
+                    </a>
+                </li>
+                <li>
+                    <a href="#rel_map" role="tab" data-toggle="tab">
+                        <i class="fa fa-user"></i> Places
+                    </a>
+                </li>
+                <li>
+                    <a href="#scenes" role="tab" data-toggle="tab">
+                        <i class-"fa fa-user"></i> Scenes
+                    </a>
+                </li>
+            </ul>
+
+        <div class="tab-content">
+        <div class="tab-pane active fade in" id="associated">
+            <h3>Associated Characters:</h3>
+                {% if associated_storyobjects %}
+                        <ul>
+                            {% for relationship in associated_storyobjects %}
+                            <li>
+                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }} 
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                    {{ storyobject.name }} has no associated characters.<br>
+                    {% endif %}
+                {% if user == storyobject.creator or user == story.author %}
+                <a href="/personas/add_relationships/{{ storyobject.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
+                {% else %}{% endif %}
+        </div> <!-- Others Rels Tab Ends -->
+        <div class="tab-pane fade in" id="rel_map">
+                
+                        <div id="graph_frame" style="background-color:white; max-width=100%; height=400"></div>
+        </div> <!-- Map Rels Tab Ends -->
+
+        <div class="tab-pane fade in" id="scenes">
+            <h3>Scenes:</h3>
+        {% if scenes %}
+            <ul>
+                {% for scene in scenes %}
+                    <li><a href="/personas/scene/{{ scene.slug }}">{{ scene }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>{{ name }} has no scenes.</strong>
+            <br>
+        {% endif %}
+        <br>
+        <a href="/personas/add_scene/{{ story.slug }}" style="color:gray">Add Scene <span class="glyphicon glyphicon-pencil"></span></a>
+        </div>
+        <hr>
+        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=storyobject.slug %}"> Full Screen Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
+    </div> <!-- Relationship Tab Content Ends -->
+    <br>
+                {% if user == storyobject.creator or user == story.author %}
+                <a role="button" class="btn btn-primary" href="{% url 'edit_place' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
+                {% else %}{% endif %}
+</div> <!-- Container Ends -->
+</div> <!-- Tab content ends -->
+</div> <!-- End of details tab -->
+
+<div class="tab-pane fade in" id="gamestats"> <!-- Tab one point five Starts -->
+        <div class="col-md-6 col-sm-6 col-lg-6" id="col1">
+            <h3>Game Stats:</h3>
+            {% if gamestats %}
+                {{ gamestats.content|markdown }}
+                <hr>
+                {% if user == storyobject.creator or user == story.author %}
+
+                    <a role="button" class="btn btn-primary" href="{% url 'edit_gamestats' pk=gamestats.pk %}">Edit Game Stats  <span class="glyphicon glyphicon-cog"></span></a>
+                    <hr>
+
+                {% endif %}         
+            {% else %}
+            <strong>No Game Statistics in use for this {{ storyobject.c_type }}</strong>
+            <hr>
+            <a role="button" class="btn btn-primary" href="{% url 'add_gamestats' storyobject_name_slug=storyobject.slug %}">Add Game Stats  <span class="glyphicon glyphicon-cog"></span></a>
+            {% endif %}
+
+        </div>
+</div>  <!-- end of Tab One point Five -->
+
+<div class="tab-pane fade in" id="notes"> <!-- Tab Six Starts -->
+<div class="col-md-6 col-sm-6 col-lg-6" id="BBoard">
+    <h3>Notes:</h3>
+    {% if notes %}
+        {% for note in notes %}
+            <div class="note" style="color:black"><strong>{{ note.title }}</strong><br>{{ note|truncatechars:256 }} <a href="{% url 'note' story_slug=story.slug pk=note.pk %}" >... Expand.</a><br>Posted by <b>{{ note.creator }}</b> on {{ note.date }}</div><br>
+        {% endfor %}
+    {% else %}
+        <strong>{{ storyobject_name }} has no notes.</strong><br />
+        <br />
+    {% endif %}
+    <div>
+        <label>Add a new note:</label>
+            {% crispy noteform %}
+    </div>
+</div>
+</div> <!-- End of Tab Six -->
+
+    {% if gallery_toggle %}
+<div class="tab-pane fade in" id="images"> <!-- Tab Seven Starts -->
+<div class="col-md-6 col-sm-6 col-lg-6" id="col1">
+<h3>Images:</h3>
+{% if gallery_images %}
+    {% for g_image in gallery_images %}
+            {% thumbnail g_image.image "150x150" crop="center" as im %}
+
+            <a class="fancybox" rel="gallery1" href="{{ g_image.image.url }}" title="{{ g_image.title }}">
+                <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            </a>
+        {% endthumbnail %}
+        <p>{{ g_image.title }}</p>
+{% endfor %}
+{% else %}
+<strong>{{ storyobject_name }} has no images.</strong><br />
+<br />
+{% endif %}
+<hr>
+{% if user == storyobject.creator or user == story.author %}
+    <a role="button" class="btn btn-primary" href="{% url 'add_gallery_image' storyobject_slug=storyobject.slug %}">Add Gallery Image   <span class="glyphicon glyphicon-cog"></span></a>
+{% else %}{% endif %}
+</div>
+</div> <!-- End of Tab Five -->
+{% endif %} <!-- endif for gallery_toggle -->
+</div> <!-- End of container -->
+</div> <!-- End of tab content -->
+
+
+<script type="text/javascript">
+        var map = L.map('map').setView([{{ latitude|floatformat:6 }}, {{ longitude|floatformat:6 }}], 6);
+
+        L.tileLayer("{{ story.map_tile }}", {
+            maxZoom: 30,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'examples.map-i875mjb7'
+        }).addTo(map);
+
+
+        L.marker([{{ latitude|floatformat:6 }}, {{ longitude|floatformat:6 }}], 6).addTo(map)
+        .bindPopup( "{{name}}" ).openPopup();
+
+        var popup = L.popup();
+
+</script>
+
+<script type="text/javascript">
+
+    var w = 400;
+    var h = 400;
+    var linkDistance=150;
+    var minRadius = 10;
+    var maxRadius = 20;
+    var scale = d3.scale.linear().range([minRadius,maxRadius]);
+
+    var colors = d3.scale.category10()
+      .domain(['r', 'b', 'g', 'c', 'y']);
+
+    var dataset = {{ result|safe }};
+ 
+    var svg = d3.select("#graph_frame")
+        .append("svg")
+        .attr({"width":w,"height":h});
+
+    var force = d3.layout.force()
+        .nodes(dataset.nodes)
+        .links(dataset.links)
+        .size([w,h])
+        .linkDistance([linkDistance])
+        .charge([-500])
+        .theta(0.1)
+        .gravity(0.05)
+        .start();
+
+    var edges = svg.selectAll("line")
+      .data(dataset.links)
+      .enter()
+      .append("line")
+      .attr("id",function(d,i) {return 'edge'+i})
+      .attr('marker-end','url(#arrowhead)')
+      .style("stroke","#ccc")
+      .style("pointer-events", "none");
+    
+    var nodes = svg.selectAll("circle")
+      .data(dataset.nodes)
+      .enter().append("svg:a")
+      .attr("xlink:href", function(d){return d.url;})
+      .append("circle")
+      .attr("r", function(d) { 
+        if(d.children)
+            return scale(d.children.length);
+        else if(d._children)
+            return scale(d._children.length);
+        else
+            return minRadius;
+    })
+      .style("fill",function(d,i){return colors(d.node_color);})
+      .call(force.drag)
+      .on("mouseover", fade(.1))
+      .on("mouseout", fade(1));
+
+    var linkedByIndex = {};
+    dataset.links.forEach(function(d) {
+        linkedByIndex[d.source.index + "," + d.target.index] = 1;
+    });
+
+    function isConnected(a, b) {
+        return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
+    }
+
+    var nodelabels = svg.selectAll(".nodelabel") 
+       .data(dataset.nodes)
+       .enter()
+       .append("text")
+       .attr({"x":function(d){return d.x;},
+              "y":function(d){return d.y;},
+              "class":"nodelabel",
+              "stroke":"black"})
+       .text(function(d){return d.id;});
+
+    var edgepaths = svg.selectAll(".edgepath")
+        .data(dataset.links)
+        .enter()
+        .append('path')
+        .attr({'d': function(d) {return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y},
+               'class':'edgepath',
+               'fill-opacity':0,
+               'stroke-opacity':0,
+               'fill':'blue',
+               'stroke':'red',
+               'id':function(d,i) {return 'edgepath'+i}})
+        .style("pointer-events", "none");
+
+    var edgelabels = svg.selectAll(".edgelabel")
+        .data(dataset.links)
+        .enter()
+        .append('text')
+        .style("pointer-events", "none")
+        .attr({'class':'edgelabel',
+               'id':function(d,i){return 'edgelabel'+i},
+               'dx':80,
+               'dy':-5,
+               'font-size':10,
+               'opacity':1,
+               'fill':'#aaa'});
+
+    edgelabels.append('textPath')
+        .attr('xlink:href',function(d,i) {return '#edgepath'+i})
+        .style("pointer-events", "none")
+        .text(function(d){return d.label});
+
+
+    svg.append('defs').append('marker')
+        .attr({'id':'arrowhead',
+               'viewBox':'-0 -5 10 10',
+               'refX':25,
+               'refY':0,
+               //'markerUnits':'strokeWidth',
+               'orient':'auto',
+               'markerWidth':10,
+               'markerHeight':10,
+               'xoverflow':'visible'})
+        .append('svg:path')
+            .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+            .attr('fill', '#ccc')
+            .attr('stroke','#ccc');
+            
+
+    force.on("tick", function(){
+
+        edges.attr({"x1": function(d){return d.source.x;},
+                    "y1": function(d){return d.source.y;},
+                    "x2": function(d){return d.target.x;},
+                    "y2": function(d){return d.target.y;}
+        });
+
+        nodes.attr({"cx":function(d){return d.x;},
+                    "cy":function(d){return d.y;}
+        });
+
+        nodelabels.attr("x", function(d) { return d.x; }) 
+                  .attr("y", function(d) { return d.y; });
+
+        edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
+                                           //console.log(d)
+                                           return path});       
+
+        edgelabels.attr('transform',function(d,i){
+            if (d.target.x<d.source.x){
+                bbox = this.getBBox();
+                rx = bbox.x+bbox.width/2;
+                ry = bbox.y+bbox.height/2;
+                return 'rotate(180 '+rx+' '+ry+')';
+                }
+            else {
+                return 'rotate(0)';
+                }
+        });
+
+    });
+
+function fade(opacity) {
+        return function(d) {
+            nodes.style("stroke-opacity", function(o) {
+                thisOpacity = isConnected(d, o) ? 1 : opacity;
+                this.setAttribute('fill-opacity', thisOpacity);
+                return thisOpacity;
+            });
+
+            nodelabels.style("stroke-opacity", function(o) {
+                thisOpacity = isConnected(d, o) ? 1 : opacity;
+                this.setAttribute('fill-opacity', thisOpacity);
+                return thisOpacity;
+            });
+
+            edges.style("stroke-opacity", function(o) {
+                return o.source === d || o.target === d ? 1 : opacity;
+            });
+
+            edgelabels.style("opacity", function(o) {
+                return o.source === d || o.target === d ? 1 : opacity;
+            });
+        };
+      };
+
+</script>
+
+{% endblock content %}

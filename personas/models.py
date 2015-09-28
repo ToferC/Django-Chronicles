@@ -252,12 +252,14 @@ class StoryObject(models.Model):
     THING = "Thing"
     FORCE = "Force"
     ORGANIZATION = "Organization"
+    PLACE = "Place"
 
     CHAR_CHOICES = (
         (FORCE, "Force"),
         (CHARACTER, "Character"),
         (CREATURE, "Creature"),
         (ORGANIZATION, "Organization"),
+        (PLACE, "Place"),
         (THING, "Thing"),
     )
 
@@ -310,6 +312,11 @@ class StoryObject(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Place(StoryObject):
+    latitude = models.FloatField(default=50.0)
+    longitude = models.FloatField(default=-1.0)
 
 
 class Relationship(models.Model):

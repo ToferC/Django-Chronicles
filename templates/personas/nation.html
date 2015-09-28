@@ -5,7 +5,7 @@
 {% load thumbnail %}
 {% block title %}
     <header>
-        <h1>Area - {{ nation.name }}</h1>
+        <h1>Faction - {{ nation.name }}</h1>
     </header>
 {% endblock %}
 
@@ -28,7 +28,7 @@
             <h3>Description:</h3>
             {{ nation.description }}
         </div>
-        <h3>Area Statistics</h3>
+        <h3>Faction Statistics</h3>
             <table class="table table-condensed table-hover table-responsive">
                 <tr>
                     <td>Might</td>
@@ -60,21 +60,21 @@
 {% block column2 %}
     <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
         <div class="row">
-        <h3>Locations</h3>
-        {% if locations %}
-        {% for location in locations %}
-            <a class="btn btn-success btn-sm" style="background:black" href="/personas/location/{{ location.slug }}">
-            {% thumbnail location.image "30x30" crop="center" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ location.name }}</a>
+        <h3>Places</h3>
+        {% if places %}
+        {% for place in places %}
+            <a class="btn btn-success btn-sm" style="background:black" href="/personas/place/{{ place.slug }}">
+            {% thumbnail place.image "30x30" crop="center" as im %}
+            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ place.name }}</a>
         {% endfor %}
         {% else %}
-        <strong>{{ nation.name }} has no locations.</strong><br>
+        <strong>{{ nation.name }} has no associated places.</strong><br>
         {% endif %}
         <br><br>
-        <a href="/personas/add_location/{{ story.slug }}" style="color:gray">Add Location <span class="glyphicon glyphicon-pencil"></span></a>
+        <a href="/personas/add_place/{{ story.slug }}" style="color:gray">Add Place <span class="glyphicon glyphicon-pencil"></span></a>
             <hr>
             {% if user == nation.creator or user == story.author %}
-            <a role="button" class="btn btn-primary" href="{% url 'edit_nation' pk=nation.pk %}">Edit Area<span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
+            <a role="button" class="btn btn-primary" href="{% url 'edit_nation' pk=nation.pk %}">Edit Faction<span class="glyphicon glyphicon-cog"></span></a>{% else %}{% endif %}
         </div>
     </div>
 {% endblock %}

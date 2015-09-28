@@ -5,7 +5,7 @@ from django.forms.models import modelform_factory, formset_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage, MainMap
-from personas.models import Statistic, CombatInfo, ScratchPad, Equipment, GameStats
+from personas.models import Statistic, CombatInfo, ScratchPad, Equipment, GameStats, Place
 from personas.personas_email import mail_format as mail_format
 from django_markdown.widgets import MarkdownWidget
 from django_markdown.fields import MarkdownFormField
@@ -55,6 +55,40 @@ class StoryObjectForm(forms.ModelForm):
         instance.save()
         return instance
 
+
+class PlaceForm(forms.ModelForm):
+    class Meta:
+        model = Place
+        fields = "__all__"
+        exclude = ['slug', 'creator', 'story', 'c_type', 'base_of_operations']
+
+    def __init__(self, *args, **kwargs):
+        try:
+            self.story = kwargs.pop('story')
+        except KeyError:
+            self.story = None
+
+        super(PlaceForm, self).__init__(*args, **kwargs)
+        if self.story:
+            self.fields['nationality'].queryset = Nation.objects.filter(
+                story=self.story).filter(published=True).order_by('name')
+
+
+        self.helper = FormHelper(self)
+        self.helper.layout.append(
+            FormActions(
+                HTML("""<a role="button" class="btn btn-default" enctype="multipart/form-data"
+                        href="/personas/story/{{ story.slug }}/#geography">Cancel</a>"""),
+                Submit('save', 'Submit'),))
+
+    def save(self, creator, story=None, commit=True):
+        instance = super(PlaceForm, self).save(commit=False)
+        instance.slug = slugify("{}-{}".format(story.title, instance.name))
+        instance.creator = creator
+        instance.c_type = "Place"
+        instance.story = story
+        instance.save()
+        return instance
 
 ###
 ###
