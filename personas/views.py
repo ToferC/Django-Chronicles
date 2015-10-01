@@ -234,7 +234,7 @@ def scene(request, scene_name_slug):
         context_dict['scene'] = scene
         context_dict['scene_title'] = scene.title
         context_dict['slug'] = scene_name_slug
-        context_dict['location'] = scene.location
+        context_dict['place'] = scene.place
         context_dict['purpose'] = scene.purpose
         context_dict['resolution'] = scene.resolution
         context_dict['description'] = scene.description
@@ -363,6 +363,8 @@ def place(request, place_name_slug):
             Q(to_storyobject__name=storyobject.name) &
                 ~Q(from_storyobject__c_type="Place")).order_by('-weight')
 
+        context_dict['scenes'] = Scene.objects.filter(place=storyobject)
+
         context_dict['notes'] = Note.objects.filter(
             storyobject__name=storyobject.name)
 
@@ -411,6 +413,10 @@ def storyobject(request, storyobject_name_slug):
     try:
         storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
+        # Catch exceptions from Forms directing Places to StoryObject
+        if storyobject.c_type == "Place":
+            return HttpResponseRedirect("/personas/place/{}/#details".format(storyobject_name_slug))
+
         context_dict['storyobject_name'] = storyobject.name
         context_dict['storyobject'] = storyobject
         context_dict['creator'] = storyobject.creator
@@ -418,8 +424,6 @@ def storyobject(request, storyobject_name_slug):
         context_dict['role'] = storyobject.role
         context_dict['c_type'] = storyobject.c_type
         context_dict['description'] = storyobject.description
-
-        # Get Latitude & Longitud
 
         # Return JSON object for relationship map
 
@@ -1113,7 +1117,6 @@ def add_batch_relationship(request, story_title_slug):
         {'formset': formset, 'helper':helper,'story':story})
 
 
-
 @login_required
 def create_story(request):
 
@@ -1410,7 +1413,7 @@ def add_gamestats(request, storyobject_name_slug):
             print (gamestats_form.errors)
 
     else:
-        form = GameStatsForm()
+        form = GameStatsForm(c_type=storyobject.c_type)
 
     return render(request, 'personas/add_gamestats.html', {
         'slug': storyobject_name_slug, 'storyobject': storyobject,
@@ -1689,7 +1692,7 @@ def delete_skill(request, pk, template_name='personas/delete_skill.html'):
         if request.method=='POST':
             skill.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#skills'.format(storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#skills'.format(return_object(storyobject), storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': skill})
@@ -1703,7 +1706,7 @@ def edit_skill(request, pk, template_name='personas/edit_skill.html'):
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#skills'.format(storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#skills'.format(return_object(storyobject), storyobject.slug)})
     return render(request, template_name, {'form': form, 'storyobject': storyobject,
         'skill': skill, 'story':story})
 
@@ -1716,8 +1719,7 @@ def delete_combat_info(request, pk, template_name='personas/delete_combat_info.h
         if request.method=='POST':
             combat_info.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/storyobject/{}/#skills'.format(
-                storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#combat'.format(return_object(storyobject), storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to edit this.")
     return render(request, template_name, {'object': combat_info})
@@ -1731,7 +1733,7 @@ def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#combat'.format(storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#combat'.format(return_object(storyobject), storyobject.slug)})
     return render(request, template_name, {'form': form, 'storyobject': storyobject,
         'combat_info': combat_info, 'story':story})
 
@@ -1744,8 +1746,7 @@ def delete_relationship(request, pk, template_name='personas/delete_relationship
         if request.method=='POST':
             relationship.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/storyobject/{}/#details'.format(
-                storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#details'.format(return_object(storyobject), storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': relationship})
@@ -1760,8 +1761,7 @@ def edit_relationship(request, pk, template_name='personas/edit_relationship.htm
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#details'.format(
-            storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#details'.format(return_object(storyobject), storyobject.slug)})
     return render(request, template_name, {'form': form, 'from_storyobject':storyobject,
         'relationship': relationship, 'story':story})
 
@@ -1774,8 +1774,7 @@ def delete_statistic(request, pk, template_name='personas/delete_statistic.html'
         if request.method=='POST':
             statistic.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/storyobject/{}/#abilities'.format(
-                storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#abilities'.format(return_object(storyobject), storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': statistic})
@@ -1790,7 +1789,7 @@ def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#abilities'.format(storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#abilities'.format(return_object(storyobject), storyobject.slug)})
     return render(request, template_name, {'form': form, 'storyobject':storyobject,
         'statistic': statistic, 'story':story})
 
@@ -1803,8 +1802,7 @@ def delete_ability(request, pk, template_name='personas/delete_ability.html'):
         if request.method=='POST':
             ability.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/storyobject/{}/#details'.format(
-                storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#abilities'.format(return_object(storyobject), storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': ability})
@@ -1819,7 +1817,7 @@ def edit_ability(request, pk, template_name='personas/edit_ability.html'):
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#abilities'.format(storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#abilities'.format(return_object(storyobject), storyobject.slug)})
     return render(request, template_name, {'form': form, 'storyobject': storyobject,
         'ability': ability, 'story':story})
 
@@ -1832,8 +1830,7 @@ def delete_aspect(request, pk, template_name='personas/delete_aspect.html'):
         if request.method=='POST':
             aspect.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
-             {'redirect_url':'/personas/storyobject/{}/#details'.format(
-                storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#details'.format(return_object(storyobject), storyobject.slug)})
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': aspect})
@@ -1848,7 +1845,7 @@ def edit_aspect(request, pk, template_name='personas/edit_aspect.html'):
     if form.is_valid():
         form.save()
         return TemplateResponse(request, 'personas/redirect_template.html',
-         {'redirect_url':'/personas/storyobject/{}/#details'.format(storyobject.slug)})
+         {'redirect_url':'/personas/{}/{}/#details'.format(return_object(storyobject), storyobject.slug)})
     return render(request, template_name, {'form': form, 'storyobject':storyobject, 'aspect': aspect,
         'story':story})
 
@@ -1903,7 +1900,6 @@ def edit_place(request, pk, template_name='personas/edit_place.html'):
         return HttpResponseRedirect('/personas/place/{}'.format(place.slug))
     return render(request, template_name, {'form': form, 'place':place,
         'story':story})
-
 
 
 @login_required
@@ -2084,7 +2080,8 @@ def delete_gamestats(request, pk, template_name='personas/delete_gamestats.html'
     if request.user == storyobject.creator:
         if request.method=='POST':
             gamestats.delete()
-            return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
+            return HttpResponseRedirect('/personas/{}/{}'.format(return_object(storyobject),
+                storyobject.slug))
     else:
         return HttpResponse("You do not have permission to delete this.")
     return render(request, template_name, {'object': gamestats})
@@ -2098,6 +2095,7 @@ def edit_gamestats(request, pk, template_name='personas/edit_gamestats.html'):
     form = GameStatsForm(request.POST or None, instance=gamestats)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
+        return HttpResponseRedirect('/personas/{}/{}'.format(return_object(storyobject),
+            storyobject.slug))
     return render(request, template_name, {'form': form, 'object':gamestats, 'story':story,
         'storyobject': storyobject})

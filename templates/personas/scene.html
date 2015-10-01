@@ -12,13 +12,23 @@
 
 {% block content %}
 
-{% block l_content %}
-    <div class="col-md-1 col-sm-1 col-lg-1">
-    </div>
-{% endblock %}
+<div class="container">
+        
+        <!-- Nav tabs -->
+        <ul class="nav nav-pills nav-inverse" role="tablist" id="char_tabs">
+            <li class="active">
+                <a href="#details" role="tab" data-toggle="tab">
+                    <icon class="fa fa-home"></icon> Details
+                </a>
+            </li>
+            <li>
+                <a href="#notes" role="tab" data-toggle="tab">
+                    <i class="fa fa-cog"></i> Notes
+                </a>
+            </li>
+    </ul>
 
-{% block column1 %}
-    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
+    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
 
     <div class="row">
         <h3>Scene Information:</h3>
@@ -37,31 +47,34 @@
         <hr>
     </div>
     </div>
-{% endblock %}
 
-{% block column2 %}
-    <div class="col-md-3 col-sm-3 col-lg-3" id="col1">
+<div class="tab-content">
+        <!-- Start tab content for Tab 1 -->
+    <div class="tab-pane fade active in" id="details">
+
+    <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
     <div class="row">
         <h3>Place:</h3>
-        <a href="/personas/place/{{ place.slug }}">{{ place }}</a>
+        <a class="btn btn-success btn-sm" style="background:black" href="/personas/place/{{ place.slug }}">
+        {% thumbnail place.image "30x30" crop="center" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ place.name }}</a>
         <hr>
     </div>
     <div class="row">
         <h3>Characters:</h3>
         {% if storyobjects %}
-                {% for storyobject in storyobjects %}
-
-                    <a class="btn btn-success btn-md" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
-                    {% thumbnail storyobject.image "40x40" crop="center" as im %}
-                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
-
-                {% endfor %}
-        {% else %}
-            <strong>{{ scene_title }} has no characters.</strong>
-        {% endif %}
-        <br><br>
-        <a href="/personas/add_storyobject/{{ story.slug }}/Character" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
-        <hr>
+            {% for storyobject in storyobjects %}
+                <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+            {% endfor %}
+    {% else %}
+        <strong>{{ scene_title }} has no Characters.</strong><br><br>
+    {% endif %}
+    <br><br>
+    <a href="/personas/add_storyobject/{{ story.slug }}/Character" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
+    <br>
+    <hr>
     </div>
     <div class="row">
     {% if user == scene.creator or user == story.author %}
@@ -69,10 +82,10 @@
     {% else %}{% endif %}
     </div>
     </div>
-{% endblock %}
+</div> <!-- end tab1 content -->
 
-{% block column3 %}
-    <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+    <div class="tab-pane fade in" id="notes"> <!-- Tab Six Starts -->
+    <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
     <div id="BBoard">
     <h3>Notes:</h3>
     {% if notes %}
@@ -92,11 +105,7 @@
     </div>
     </div>
     </div>
-{% endblock %}
-
-{% block r_content %}
-    <div class="col-md-1 col-sm-1 col-lg-1">
-    </div>
-{% endblock %}
+    </div> <!-- End tab2 content -->
+</div> <!-- End Container -->
 
 {% endblock content %}

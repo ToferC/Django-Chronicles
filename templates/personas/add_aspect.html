@@ -48,14 +48,11 @@
         {% crispy form %}
     <br><br><br>
     <h4>Finished adding Aspects?</h4>
-            <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/add_statistics/{{ storyobject.slug }}">I'm done. Next Step!</a>
-            </div>
-        <hr>
-        <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#details">Take me straight<br>to my {{ storyobject.c_type }}.</a>
-            </div>
-    </div>
+            {% if storyobject.c_type == "Place" %}
+                <a role="button" class="btn btn-primary" href="/personas/place/{{ storyobject.slug }}/#details">Take me to my <br>{{ storyobject.c_type }}.</a>
+            {% else %}
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#details">Take me to my <br>{{ storyobject.c_type }}.</a>
+            {% endif %}
 {% endblock %}
 
 {% block r_content %}

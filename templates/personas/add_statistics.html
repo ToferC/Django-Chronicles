@@ -85,12 +85,11 @@
             {% crispy form %}
             <br><br><br>
             <h4>Finished adding stats?</h4>
-            <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/add_skills/{{ storyobject.slug }}">I'm done. Next Step!</a>
-            </div><br>
-            <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#abilities">Take me straight<br>to my {{ storyobject.c_type }}.</a>
-            </div>
+            {% if storyobject.c_type == "Place" %}
+                <a role="button" class="btn btn-primary" href="/personas/place/{{ storyobject.slug }}/#abilities">Take me to my <br>{{ storyobject.c_type }}.</a>
+            {% else %}
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#abilities">Take me to my <br>{{ storyobject.c_type }}.</a>
+            {% endif %}
         </div>
     {% endblock %}
     {% block r_content %}

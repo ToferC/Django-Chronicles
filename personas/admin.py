@@ -8,11 +8,11 @@ class FlatPageAdmin(admin.ModelAdmin):
 
 class StoryObjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'story', 'c_type')
+    list_display = ('name', 'story', 'c_type', 'role')
 
 class PlaceAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'story', 'c_type')
+    list_display = ('name', 'story', 'nationality', 'role')
 
 class LocationAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
@@ -35,7 +35,7 @@ class AspectAdmin(admin.ModelAdmin):
     pass
 
 class PosterAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('pk', 'publication_date')
 
 class SkillAdmin(admin.ModelAdmin):
     list_display = ('storyobject', 's_type', 'name', 'value')

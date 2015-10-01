@@ -27,10 +27,11 @@
             <h3>Add Image</h3>
             {% crispy image_form %}
             <h4>Finished adding gallery images?</h4>
-            <hr>
-            <div tyle="padding-left:50px">
-                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#images">Take me straight<br>to my {{ storyobject.c_type }}.</a>
-            </div>
+            {% if storyobject.c_type == "Place" %}
+                <a role="button" class="btn btn-primary" href="/personas/place/{{ storyobject.slug }}/#images">Take me to my <br>{{ storyobject.c_type }}.</a>
+            {% else %}
+                <a role="button" class="btn btn-primary" href="/personas/storyobject/{{ storyobject.slug }}/#images">Take me to my <br>{{ storyobject.c_type }}.</a>
+            {% endif %}
         </div>
     {% endblock %}
     {% block r_content %}

@@ -60,7 +60,9 @@ class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
         fields = "__all__"
-        exclude = ['slug', 'creator', 'story', 'c_type', 'base_of_operations']
+        exclude = ['slug', 'creator', 'story', 'c_type', 'base_of_operations',
+        'stats_toggle', 'combat_toggle', 'skill_toggle', 'equipment_toggle',
+        'social_toggle']
 
     def __init__(self, *args, **kwargs):
         try:
@@ -484,7 +486,8 @@ class ChapterForm(forms.ModelForm):
 
 
 class SceneForm(forms.ModelForm):
-    storyobjects = forms.ModelMultipleChoiceField(queryset = StoryObject.objects.all())
+    storyobjects = forms.ModelMultipleChoiceField(
+        queryset = StoryObject.objects.exclude(c_type="Place"))
 
     class Meta:
         model = Scene
@@ -727,4 +730,3 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('website', 'image')
-

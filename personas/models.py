@@ -398,8 +398,8 @@ class Scene(models.Model):
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.story.object_count = F('object_count') + 1
-        self.story.save()
+        self.chapter.story.object_count = F('object_count') + 1
+        self.chapter.story.save()
         slug = slugify("{}-{}".format(self.chapter.story.title, self.title))
         super(Scene, self).save(*args, **kwargs)
 

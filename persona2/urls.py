@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
-from personas.models import StoryObject, Story, Location, Skill, Nation, Chapter, Scene, Ability, Statistic, Relationship
+from personas.models import StoryObject, Story, Location, Skill, Nation, Chapter, Scene, Ability, Statistic, Relationship, Place
 from rest_framework import serializers, viewsets, routers, generics, pagination
 from rest_framework.response import Response
 
@@ -21,6 +21,10 @@ class StoryObjectSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         source='aspect_set')
 
+    gamestats = serializers.StringRelatedField(
+        read_only=True,
+        source='gamestats_set')
+
     statistics = serializers.StringRelatedField(
         many=True,
         read_only=True,
@@ -36,6 +40,10 @@ class StoryObjectSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         source='combatinfo_set')
 
+    equipment = serializers.StringRelatedField(
+        read_only=True,
+        source='equipment_set')
+
     to_relationships = serializers.StringRelatedField(
         many=True,
         read_only=True,
@@ -49,7 +57,7 @@ class StoryObjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = StoryObject
         fields = ("name", "story", "c_type", "role", "image", "nationality",
-            "base_of_operations", "description",
+            "base_of_operations", "description", "gamestats", "equipment",
             "aspects", "abilities", "statistics", "skills", "combatinfo",
             "to_relationships", "from_relationships", "url")
 
@@ -57,6 +65,41 @@ class StoryObjectSerializer(serializers.HyperlinkedModelSerializer):
 class StoryObjectViewSet(viewsets.ModelViewSet):
     queryset = StoryObject.objects.all()
     serializer_class = StoryObjectSerializer
+
+
+# Place API
+class PlaceSerializer(serializers.HyperlinkedModelSerializer):
+
+    aspects = serializers.StringRelatedField(
+        many=True,
+        read_only=True,
+        source='aspect_set')
+
+    gamestats = serializers.StringRelatedField(
+        read_only=True,
+        source='gamestats_set')
+
+    to_relationships = serializers.StringRelatedField(
+        many=True,
+        read_only=True,
+        source='to_storyobject')
+
+    from_relationships = serializers.StringRelatedField(
+        many=True,
+        read_only=True,
+        source='from_storyobject')
+
+    class Meta:
+        model = Place
+        fields = ("name", "story", "c_type", "role", "image", "nationality",
+            "base_of_operations", "description", "gamestats",
+            "aspects", "latitude", "longitude",
+            "to_relationships", "from_relationships", "url")
+
+
+class PlaceViewSet(viewsets.ModelViewSet):
+    queryset = Place.objects.all()
+    serializer_class = PlaceSerializer
 
 
 # Relationship API
@@ -106,7 +149,7 @@ class SceneSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Scene
         fields = ("title", "scene_type", "purpose", "description",
-            "resolution", "location", "chapter", "order", "url", "storyobjects")
+            "resolution", "place", "chapter", "order", "url", "storyobjects")
 
 
 class SceneViewSet(viewsets.ModelViewSet):
@@ -153,16 +196,10 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
         view_name="nation-detail",
         source="nation_set")
 
-    locations = serializers.HyperlinkedRelatedField(
-        queryset = Location.objects.all(),
-        many=True,
-        view_name="location-detail",
-        source="location_set")
-
     class Meta:
         model = Story
         fields = ("title", "setting", "themes", "description", "genre", "url",
-            "chapters", "storyobjects", "nations", "locations")
+            "chapters", "storyobjects", "nations")
 
 
 class StoryViewSet(viewsets.ModelViewSet):
@@ -173,6 +210,7 @@ class StoryViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'story', StoryViewSet)
 router.register(r'chapters', ChapterViewSet)
+router.register(r'places', PlaceViewSet)
 router.register(r'storyobjects', StoryObjectViewSet)
 router.register(r'scenes', SceneViewSet)
 router.register(r'nations', NationViewSet)
