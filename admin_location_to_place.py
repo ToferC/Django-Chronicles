@@ -14,6 +14,7 @@ def transform():
     locations = Location.objects.all()
 
     for location in locations:
+        print("Starting transformation of {}".format(location.name))
         p = Place.objects.get_or_create(
             name=location.name,
             creator=location.creator,
