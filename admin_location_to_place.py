@@ -31,7 +31,10 @@ def transform():
 
         print("Tranformed location {}".format(location.name))
 
-        notes = Note.objects.filter(location=location)
+        try:
+            notes = Note.objects.filter(location=location)
+        except KeyError:
+            pass
 
         if notes:
 
