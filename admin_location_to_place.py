@@ -31,19 +31,6 @@ def transform():
 
         print("Tranformed location {}".format(location.name))
 
-        try:
-            notes = Note.objects.filter(location=location)
-        except KeyError:
-            pass
-
-        if notes:
-
-            for note in notes:
-                note.storyobject = StoryObject.objects.get(name=location.name)
-                note.location = None
-                note.save()
-                print("Updated note {}".format(note.title))
-
 
     print("***Finished converting locations***\n")
     storyobjects = StoryObject.objects.exclude(c_type="Place")
