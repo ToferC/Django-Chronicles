@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 import django
 django.setup()
 
-from personas.models import StoryObject, Place, Relationship, Location, Nation, Note
+from personas.models import StoryObject, Place, Relationship, Location, Nation, Note, Scene
 
 
 def transform():
