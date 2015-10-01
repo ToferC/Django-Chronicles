@@ -18,7 +18,7 @@ def transform():
             name=location.name,
             creator=location.creator,
             c_type="Place",
-            role=location.terrain,
+            role=str(location.terrain)[:49],
             description="{}\nFeatures: {}".format(location.description,
                 location.features),
             nationality=location.nation,
