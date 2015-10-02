@@ -40,7 +40,7 @@ def relationship_transform():
 
     print("***Starting to add relationships***\n")
     for storyobject in storyobjects:
-        if storyobject.base_of_operations is not None:
+        if storyobject.base_of_operations:
             try:
                 r = Relationship.objects.get_or_create(
                     from_storyobject=storyobject,
@@ -67,4 +67,4 @@ def scene_transform():
 if __name__ == '__main__':
     print('Starting population script')
     relationship_transform()
-
+    scene_transform()
