@@ -34,6 +34,8 @@ def transform():
 
 
     print("***Finished converting locations***\n")
+
+def relationship_transform():
     storyobjects = StoryObject.objects.exclude(c_type="Place")
 
     print("***Starting to add relationships***\n")
@@ -53,6 +55,7 @@ def transform():
             print("No base for {}".format(storyobject.name))
             print(storyobject.base_of_operations)
 
+def scene_transform():
     scenes = Scene.objects.all()
 
     for scene in scenes:
@@ -63,4 +66,5 @@ def transform():
 # Start execution here
 if __name__ == '__main__':
     print('Starting population script')
-    transform()
+    relationship_transform()
+
