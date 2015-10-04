@@ -44,7 +44,8 @@ def relationship_transform():
             try:
                 r = Relationship.objects.get_or_create(
                     from_storyobject=storyobject,
-                    to_storyobject__name=storyobject.base_of_operations.name,
+                    to_storyobject__name=StoryObject.objects.get(
+                        name=storyobject.base_of_operations.name),
                     relationship_class="Operates out of",
                     weight=5,
                     relationship_description="Home base")
@@ -55,16 +56,7 @@ def relationship_transform():
             print("No base for {}".format(storyobject.name))
             print(storyobject.base_of_operations)
 
-def scene_transform():
-    scenes = Scene.objects.all()
-
-    for scene in scenes:
-        scene.place = Place.objects.get(name=scene.location.name)
-        scene.save()
-        print("Updated scene {}".format(scene.title))
-
 # Start execution here
 if __name__ == '__main__':
     print('Starting population script')
     relationship_transform()
-    scene_transform()

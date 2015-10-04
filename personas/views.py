@@ -330,22 +330,30 @@ def place(request, place_name_slug):
 
         # Return JSON object for relationship map
 
-        associated_places = Relationship.objects.filter(
-            (Q(from_storyobject__name=storyobject.name) &
-            Q(to_storyobject__c_type="Place")) |
-            (Q(to_storyobject__name=storyobject.name) &
-                Q(from_storyobject__c_type="Place"))
+        to_places = Relationship.objects.filter(
+            Q(from_storyobject__name=storyobject.name) &
+            Q(to_storyobject__c_type="Place")
+            ).order_by('-weight')
+
+        from_places = Relationship.objects.filter(
+            Q(to_storyobject__name=storyobject.name) &
+                Q(from_storyobject__c_type="Place")
             ).order_by('-weight')
 
         story_objects = {}
 
         story_objects[storyobject] = storyobject
 
-        for rel in associated_places:
+        for rel in to_places:
             story_objects[rel.to_storyobject] = rel.to_storyobject
             story_objects[rel.from_storyobject] = rel.from_storyobject
 
-        context_dict['associated_places'] = associated_places
+        for rel in from_places:
+            story_objects[rel.to_storyobject] = rel.to_storyobject
+            story_objects[rel.from_storyobject] = rel.from_storyobject
+
+        context_dict['to_places'] = to_places
+        context_dict['from_places'] = from_places
         context_dict['result'] = network_personas.return_json_graph(
             story_objects)
 
@@ -706,7 +714,6 @@ def story(request, story_name_slug):
         context_dict['publication_date'] = story.publication_date
         context_dict['image'] = story.image
         context_dict['genre'] = story.genre
-        #context_dict['artifacts'] = Item.objects.filter(story=story).distinct()
 
         mainmaps = MainMap.objects.filter(
             story__title=story.title)
