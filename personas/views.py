@@ -508,12 +508,14 @@ def storyobject(request, storyobject_name_slug):
         context_dict['my_relationships'] = Relationship.objects.filter(
             Q(from_storyobject__name=storyobject.name) &
             (~Q(to_storyobject__c_type="Organization") &
-                ~Q(to_storyobject__c_type="Place"))).order_by('-weight')
+                ~Q(to_storyobject__c_type="Place") &
+                ~Q(to_storyobject__c_type="Faction"))).order_by('-weight')
 
         context_dict['other_relationships'] = Relationship.objects.filter(
             Q(to_storyobject__name=storyobject.name) &
             (~Q(from_storyobject__c_type="Organization") &
-                ~Q(from_storyobject__c_type="Place"))).order_by('-weight')
+                ~Q(from_storyobject__c_type="Place") &
+                ~Q(to_storyobject__c_type="Faction"))).order_by('-weight')
 
         context_dict['abilities'] = Ability.objects.filter(
             storyobject__name=storyobject.name)
