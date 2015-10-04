@@ -30,7 +30,7 @@ def find_colour(story_object):
         node_shapes[story_object.name] = '^'
         node_colors[story_object.name] = 'g'
         node_model[story_object.name] = 'storyobject'
-    elif story_object.c_type == "Force":
+    elif story_object.c_type == "Faction":
         node_shapes[story_object.name] = 'v'
         node_colors[story_object.name] = 'c'
         node_model[story_object.name] = 'storyobject'

@@ -98,55 +98,40 @@
             {% block column2 %}
             <div class="tab-pane fade in" id="organizations"> <!-- Start Tab Two -->
                 <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
-                    <div class="row">
-                        <h3>Organizations:</h3>
-                        {% if organizations %}
-                                {% for storyobject in organizations %}
+                <div class="row">
+                        <h3>Factions:</h3>
+                        {% if factions %}
+                                {% for storyobject in factions %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
                                     {% thumbnail storyobject.image "30x30" crop="center" as im %}
                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                                 {% endfor %}
                         {% else %}
-                            <strong>{{ story.title }} has no Organizations.</strong><br><br>
+                            <strong>{{ story.title }} has no Factions.</strong><br>
                         {% endif %}
                         <br><br>
-                        <a href="/personas/add_storyobject/{{ story.slug }}/Organization" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="/personas/add_storyobject/{{ story.slug }}/Force" style="color:gray">Add Faction <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
-                    </div>
-                    <div class="row">
-                        <h3>Forces:</h3>
-                        {% if forces %}
-                                {% for storyobject in forces %}
-                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
-                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
-                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
-                                {% endfor %}
-                        {% else %}
-                            <strong>{{ story.title }} has no Forces.</strong><br>
-                        {% endif %}
-                        <br><br>
-                        <a href="/personas/add_storyobject/{{ story.slug }}/Force" style="color:gray">Add Force <span class="glyphicon glyphicon-pencil"></span></a>
-                        <hr>
-                    </div>
+                </div>
+                <div class="row">
+                    <h3>Organizations:</h3>
+                    {% if organizations %}
+                            {% for storyobject in organizations %}
+                                <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+                            {% endfor %}
+                    {% else %}
+                        <strong>{{ story.title }} has no Organizations.</strong><br><br>
+                    {% endif %}
+                    <br><br>
+                    <a href="/personas/add_storyobject/{{ story.slug }}/Organization" style="color:gray">Add Organization <span class="glyphicon glyphicon-pencil"></span></a>
+                    <hr>
+                </div>
                 </div>
                 </div> <!-- End Tab Two -->
                 <div class="tab-pane fade in" id="geography"> <!-- Start Tab Three -->
                 <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
-                    <div class="row">
-                        <h3>Areas:</h3>
-                        {% if nations %}
-                            <ul>
-                                {% for nation in nations %}
-                                    <li><a href="/personas/nation/{{ nation.slug }}">{{ nation }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <strong>{{ story.title }} has no areas.</strong>
-                            <br><br>
-                        {% endif %}
-                        <a href="/personas/add_nation/{{ story.slug }}" style="color:gray">Add Area <span class="glyphicon glyphicon-pencil"></span></a>
-                        <hr>
-                    </div>
                     <div class="row">
                         <h3>Places:</h3>
                         {% if places %}

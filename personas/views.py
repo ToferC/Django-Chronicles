@@ -91,13 +91,6 @@ def workshop(request, user):
         context_dict['unpublished_scenes'] = Scene.objects.filter(
             creator=user).filter(published=False).order_by("chapter__story", "chapter", "order")
 
-        # Set up Nations
-        context_dict['published_nations'] = Nation.objects.filter(
-            creator=user).filter(published=True).order_by("story", "name")
-
-        context_dict['unpublished_nations'] = Nation.objects.filter(
-            creator=user).filter(published=False).order_by("story", "name")
-
         # Set up Locations
         context_dict['published_places'] = Place.objects.filter(
             creator=user).filter(published=True).order_by("story", "name")
@@ -115,11 +108,11 @@ def workshop(request, user):
             published=False).order_by("story", "name")
 
         # Set up Forces
-        context_dict['published_forces'] = StoryObject.objects.filter(
+        context_dict['published_factions'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Force").filter(
             published=True).order_by("story", "name")
 
-        context_dict['unpublished_forces'] = StoryObject.objects.filter(
+        context_dict['unpublished_factions'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Force").filter(
             published=False).order_by("story", "name")
 
@@ -379,7 +372,9 @@ def place(request, place_name_slug):
         context_dict['gallery_images'] = GalleryImage.objects.filter(
             storyobject=storyobject)
 
-        context_dict['nationality'] = storyobject.nationality
+        context_dict['factions'] = Relationship.objects.filter(
+            Q(from_storyobject__name=storyobject.name) &
+                Q(to_storyobject__c_type="Faction")).order_by('-weight')
 
         context_dict['gamestats_toggle'] = storyobject.gamestats_toggle
         context_dict['gallery_toggle'] = storyobject.gallery_toggle
@@ -533,11 +528,18 @@ def storyobject(request, storyobject_name_slug):
             Q(author__name=storyobject.name) |
             Q(receiver__name=storyobject.name))
 
-        context_dict['nationality'] = storyobject.nationality
+        context_dict['factions'] = Relationship.objects.filter(
+            Q(from_storyobject__name=storyobject.name) &
+                Q(to_storyobject__c_type="Faction")).order_by('-weight')
 
-        context_dict['places'] = Relationship.objects.filter(
-            (Q(from_storyobject__name=storyobject.name) &
-            Q(to_storyobject__c_type="Place"))
+        context_dict["to_places"] = Relationship.objects.filter(
+            Q(from_storyobject__name=storyobject.name) &
+            Q(to_storyobject__c_type="Place")
+            ).order_by('-weight')
+
+        context_dict["from_places"] = Relationship.objects.filter(
+            Q(to_storyobject__name=storyobject.name) &
+                Q(from_storyobject__c_type="Place")
             ).order_by('-weight')
 
         context_dict['my_memberships'] = Relationship.objects.filter(
@@ -745,10 +747,10 @@ def story(request, story_name_slug):
                 published=True).filter(
                 c_type="Creature").distinct().order_by('name')
 
-        context_dict['forces'] = StoryObject.objects.filter(
+        context_dict['factions'] = StoryObject.objects.filter(
                 story=story).filter(
                 published=True).filter(
-                c_type="Force").distinct().order_by('name')
+                c_type="Faction").distinct().order_by('name')
 
         context_dict['places'] = Place.objects.filter(
                 story=story).filter(
@@ -758,10 +760,6 @@ def story(request, story_name_slug):
             story=story).filter(
             published=True).filter(
             c_type="Organization").distinct().order_by('name')
-
-        context_dict['nations'] = Nation.objects.filter(
-            story=story).filter(
-            published=True).distinct().order_by('name')
 
         form = NoteForm(request.POST or None)
         context_dict['form'] = form

@@ -250,12 +250,12 @@ class StoryObject(models.Model):
     CHARACTER = "Character"
     CREATURE = "Creature"
     THING = "Thing"
-    FORCE = "Force"
+    FACTION = "Faction"
     ORGANIZATION = "Organization"
     PLACE = "Place"
 
     CHAR_CHOICES = (
-        (FORCE, "Force"),
+        (FACTION, "Faction"),
         (CHARACTER, "Character"),
         (CREATURE, "Creature"),
         (ORGANIZATION, "Organization"),
