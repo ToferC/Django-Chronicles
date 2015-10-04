@@ -170,9 +170,6 @@
                     {% else %}
                     {{ storyobject.name }} has no associated characters.<br>
                     {% endif %}
-                {% if user == storyobject.creator or user == story.author %}
-                <a href="/personas/add_relationships/{{ storyobject.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
-                {% else %}{% endif %}
         </div> <!-- Others Rels Tab Ends -->
         <div class="tab-pane fade in" id="rel_map">
                 
@@ -199,7 +196,9 @@
     </div> <!-- Relationship Tab Content Ends -->
     <br>
                 {% if user == storyobject.creator or user == story.author %}
+                <a role="button" class="btn btn-success" href="/personas/add_relationships/{{ storyobject.slug }}">Add Relationship  <span class="glyphicon glyphicon-pencil"></span></a>
                 <a role="button" class="btn btn-primary" href="{% url 'edit_place' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
+                
                 {% else %}{% endif %}
 </div> <!-- Container Ends -->
 </div> <!-- Tab content ends -->

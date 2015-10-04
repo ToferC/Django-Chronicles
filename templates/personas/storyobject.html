@@ -278,11 +278,10 @@
         <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=storyobject.slug scope='Single' %}"> Full Screen Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
     </div> <!-- Relationship Tab Content Ends -->
                 <hr>
+
                 {% if user == storyobject.creator or user == story.author %}
-                <a href="/personas/add_relationships/{{ storyobject.slug }}" style="color:lightgray">Add Relationship <span class="glyphicon glyphicon-pencil"></span></a>
-                <hr>
-                {% else %}{% endif %}
-                {% if user == storyobject.creator or user == story.author %}
+                <a role="button" class="btn btn-success" href="/personas/add_relationships/{{ storyobject.slug }}">Add Relationship  <span class="glyphicon glyphicon-pencil"></span></a>
+
                 <a role="button" class="btn btn-primary" href="{% url 'edit_storyobject' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
                 {% else %}{% endif %}
             </div> <!-- Container Ends -->
