@@ -8,7 +8,7 @@ from django.db.models.base import ObjectDoesNotExist
 import django
 django.setup()
 
-from personas.models import StoryObject, Relationship, Nation
+from personas.models import StoryObject, Relationship, Nation, Note
 
 n = Nation.objects.all()
 
@@ -38,19 +38,6 @@ for i in n:
             published = i.published,
             )
         print("{} is converted to a Faction".format(i.name))
-
-    try:
-        notes = Note.objects.filter(nation=n)
-    except KeyError:
-        pass
-
-    if notes:
-
-        for note in notes:
-            note.storyobject = StoryObject.objects.get(name=n.name)
-            note.nation = None
-            note.save()
-            print("Updated note {}".format(note.title))
 
 
 print("Starting to convert existing story objects from Force to Faction.")
