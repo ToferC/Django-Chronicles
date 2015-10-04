@@ -40,13 +40,16 @@ print("Starting to convert nationalities to relationship")
 
 for i in s:
     if i.nationality:
+
+        if i.c_type in  "Place Organization Creature Thing":
+            insert_RC = "Located in"
+        else:
+            insert_RC = "Citizen of"
+
         r = Relationship(
             from_storyobject = i,
             to_storyobject = StoryObject.objects.filter(name=i.nationality.name).first(),
-            if i.c_type in  "Place Organization Creature Thing":
-                elationship_class = "Located in"
-            else:
-                relationship_class = "Citizen of",
+            relationship_class = insert_RC,
             relationship_description = "Default",
             weight = 5)
         r.save()
