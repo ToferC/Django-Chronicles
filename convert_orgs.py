@@ -2,6 +2,8 @@ import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'persona2.settings')
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.db.models.base import ObjectDoesNotExist
+
 
 import django
 django.setup()
