@@ -273,7 +273,7 @@
                         <div id="graph_frame" style="background-color:white; max-width=100%; height=400"></div>
         </div> <!-- Map Rels Tab Ends -->
         <hr>
-        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=storyobject.slug %}"> Full Screen Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
+        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=storyobject.slug scope=Single %}"> Full Screen Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
     </div> <!-- Relationship Tab Content Ends -->
                 <hr>
                 {% if user == storyobject.creator or user == story.author %}

@@ -816,11 +816,12 @@ def mainmap(request, mainmap_slug):
     return render(request, 'personas/mainmap.html', context_dict)
 
 
-def relationship_map(request, slug):
+def relationship_map(request, slug, scope):
 
     story_objects = {}
 
-    try:
+    if scope == "Single": #options: Single, Story, Place, Faction
+
         storyobject = StoryObject.objects.get(slug=slug)
         title = storyobject.name
         story = storyobject.story
@@ -835,7 +836,18 @@ def relationship_map(request, slug):
             story_objects[rel.to_storyobject] = rel.to_storyobject
             story_objects[rel.from_storyobject] = rel.from_storyobject
 
-    except ObjectDoesNotExist:
+    elif scope == "Faction":
+        story = Story.objects.get(slug=slug)
+        title = story.title
+        story_objects = StoryObject.objects.filter(story=story).filter(
+            Q(c_type="Faction") | Q(c_type="Organization"))
+
+    elif scope == "Place":
+        story = Story.objects.get(slug=slug)
+        title = story.title
+        story_objects = Place.objects.filter(story=story)
+
+    else:
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story)

@@ -54,12 +54,21 @@
         {{ description|markdown }}
     <hr>
     
-        <p><strong>Faction:
-        {% if nationality %}
-        <a href="/personas/nation/{{ nationality.slug }}">{{ nationality }}</a>
+        <p><strong>Factions:</strong></p>
+        {% if factions %}
+            <ul>
+            {% for faction in factions %}
+                <li>
+                    {{ relationship.relationship_class }} <a href="/personas/place/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                     ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                    {% if user == storyobject.creator or user == story.author %}
+                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
         {% else %}
         None
-        {% endif %}</strong></p>
+        {% endif %}
         <hr>
 
         <h3>Related Places:</h3>
@@ -93,6 +102,8 @@
                 {{ storyobject.name }} has no related places.
             {% endif %}
                     <hr>
+                    <hr>
+                        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=story.slug scope=Place%}"> Place Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
 
         <div id="map" style="width: 100%; height: 350px"></div>
 </div>

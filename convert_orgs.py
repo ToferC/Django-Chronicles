@@ -16,6 +16,8 @@ print("Starting to convert nations to StoryObjects\n")
 
 for i in n:
 
+    print("Trying to convert {}".format(i.name))
+
     try:
         so = StoryObject.objects.get(name=i.name)
     except ObjectDoesNotExist:
