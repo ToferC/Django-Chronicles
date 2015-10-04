@@ -19,14 +19,13 @@ for i in n:
     print("Trying to convert {}".format(i.name))
 
     try:
-        so = StoryObject.objects.get(name=i.name)
+        so = StoryObject.objects.filter(name=i.name)
     except ObjectDoesNotExist:
         so = None
 
     if so:
         pass
     else:
-
         s = StoryObject.objects.update_or_create(
             name = i.name,
             creator = i.creator,
