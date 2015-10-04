@@ -102,8 +102,8 @@
                 {{ storyobject.name }} has no related places.
             {% endif %}
                     <hr>
+                        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=story.slug scope='Place' %}"> Place Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
                     <hr>
-                        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=story.slug scope=Place%}"> Place Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
 
         <div id="map" style="width: 100%; height: 350px"></div>
 </div>
@@ -194,7 +194,7 @@
         <a href="/personas/add_scene/{{ story.slug }}" style="color:gray">Add Scene <span class="glyphicon glyphicon-pencil"></span></a>
         </div>
         <hr>
-        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=storyobject.slug %}"> Full Screen Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
+        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=storyobject.slug scope='Single' %}"> Full Screen Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
     </div> <!-- Relationship Tab Content Ends -->
     <br>
                 {% if user == storyobject.creator or user == story.author %}
