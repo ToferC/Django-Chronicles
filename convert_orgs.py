@@ -13,18 +13,28 @@ n = Nation.objects.all()
 print("Starting to convert nations to StoryObjects\n")
 
 for i in n:
-    s = StoryObject.objects.update_or_create(
-        name = i.name,
-        creator = i.creator,
-        story = i.story,
-        c_type = "Faction",
-        role = "Faction",
-        description = i.description,
-        image = i.image,
-        slug = slugify("{}-{}".format(i.story.title, i.name)),
-        published = i.published,
-        )
-    print("{} is converted to a Faction".format(i.name))
+
+    try:
+        so = StoryObject.objects.get(name=i.name)
+    except ObjectDoesNotExist:
+        so = None
+
+    if so:
+        pass
+    else:
+
+        s = StoryObject.objects.update_or_create(
+            name = i.name,
+            creator = i.creator,
+            story = i.story,
+            c_type = "Faction",
+            role = "Faction",
+            description = i.description,
+            image = i.image,
+            slug = slugify("{}-{}".format(i.story.title, i.name)),
+            published = i.published,
+            )
+        print("{} is converted to a Faction".format(i.name))
 
 s = StoryObject.objects.all()
 
