@@ -9,12 +9,12 @@
 
 {% block content %}
 
-<div id="graph_frame" style="background-color:white" width="100%"></div>
+<div id="graph_frame" class="svg-continer" style="background-color:white"></div>
 
 <script type="text/javascript">
 
-    var w = 1600;
-    var h = 1600;
+    var w = 1200;
+    var h = 900;
     var linkDistance=150;
 
     var colors = d3.scale.category10()
@@ -24,7 +24,10 @@
  
     var svg = d3.select("#graph_frame")
         .append("svg")
-        .attr({"width":w,"height":h});
+        .attr("preverveAspectRation", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + w + " " + h)
+        .classed("svg-content-responsive", true);
+        //.attr({"width":w,"height":h});
 
     var force = d3.layout.force()
         .nodes(dataset.nodes)
@@ -95,7 +98,7 @@
         .style("pointer-events", "none")
         .attr({'class':'edgelabel',
                'id':function(d,i){return 'edgelabel'+i},
-               'dx':80,
+               'dx':40,
                'dy':-5,
                'font-size':10,
                'opacity':1,
