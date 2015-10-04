@@ -57,7 +57,7 @@
         <p><strong>Factions:</strong></p>
         {% if factions %}
             <ul>
-            {% for faction in factions %}
+            {% for relationship in factions %}
                 <li>
                     {{ relationship.relationship_class }} <a href="/personas/place/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
                      ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |

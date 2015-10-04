@@ -35,7 +35,7 @@ class AspectAdmin(admin.ModelAdmin):
     pass
 
 class PosterAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'publication_date')
+    list_display = ('title', 'publication_date')
 
 class SkillAdmin(admin.ModelAdmin):
     list_display = ('storyobject', 's_type', 'name', 'value')
