@@ -36,6 +36,21 @@ for i in n:
             )
         print("{} is converted to a Faction".format(i.name))
 
+    try:
+        notes = Note.objects.filter(nation=n)
+    except KeyError:
+        pass
+
+    if notes:
+
+        for note in notes:
+            note.storyobject = StoryObject.objects.get(name=n.name)
+            note.nation = None
+            note.save()
+            print("Updated note {}".format(note.title))
+
+
+print("Starting to convert existing story objects from Force to Faction.")
 s = StoryObject.objects.all()
 
 for i in s:
@@ -65,5 +80,6 @@ for i in s:
         r.save()
         print("Added relationship from {} to {}".format(
             i, i.nationality))
+
 
 print("Finished execution")
