@@ -70,6 +70,8 @@ for i in s:
         r.save()
         print("Added relationship from {} to {}".format(
             i, i.nationality))
+        i.nationality = None
+        i.save()
 
 
 print("Finished execution")
