@@ -847,7 +847,8 @@ def relationship_map(request, slug, scope):
     elif scope == "Place":
         story = Story.objects.get(slug=slug)
         title = story.title
-        story_objects = Place.objects.filter(story=story)
+        story_objects = StoryObject.objects.filter(story=story).filter(
+            c_type="Place")
 
     else:
         story = Story.objects.get(slug=slug)

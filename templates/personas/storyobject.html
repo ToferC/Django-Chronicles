@@ -116,7 +116,9 @@
                         {% endfor %}
                         </ul>
                     {% else %}
-                    None
+                    <ul><li>
+                    {{ storyobject.name }} has no faction relationships.</li>
+                    </ul>
                     {% endif %}
                     <hr>
                     <h3>Places:</h3>
@@ -144,8 +146,8 @@
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% endif %}
                             </li>
                         {% endfor %}
-                        </ul>
                     {% endif %}
+                    </ul>
                 {% else %}
                 {{ storyobject.name }} has no related places.
             {% endif %}

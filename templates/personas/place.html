@@ -59,7 +59,7 @@
             <ul>
             {% for relationship in factions %}
                 <li>
-                    {{ relationship.relationship_class }} <a href="/personas/place/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                    {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
                      ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
                     {% if user == storyobject.creator or user == story.author %}
                     <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% endif %}
@@ -73,8 +73,8 @@
 
         <h3>Related Places:</h3>
             {% if from_places or to_places %}
+                <ul>
                     {% if from_places %}
-                        <ul>
                             {% for relationship in from_places %}
                             <li>
                                 <a href="/personas/place/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }} 
@@ -90,14 +90,15 @@
                     {% if to_places %}
                         {% for relationship in to_places %}
                             <li>
-                                {{ relationship.relationship_class }} <a href="/personas/place/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
                                  ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
                                 {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% endif %}
                             </li>
                         {% endfor %}
-                        </ul>
+                        
                     {% endif %}
+                    </ul>
                 {% else %}
                 {{ storyobject.name }} has no related places.
             {% endif %}
