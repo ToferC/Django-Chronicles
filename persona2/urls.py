@@ -224,6 +224,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^personas/', include('personas.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     url('^markdown/', include( 'django_markdown.urls')),
     url(r'^captcha/', include('captcha.urls')),
     url('^', include('django.contrib.auth.urls')),

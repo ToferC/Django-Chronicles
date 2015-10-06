@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block column1 %}
-    <div class="col-md-12 col-sm-12 col-lg-12" id="col1">
+    <div class="col-md-6 col-sm-6 col-lg-6" id="col1">
     <fieldset>
-        <h3 style="color:white">Login</h3>
+        <h3 style="color:white">Email Login</h3>
     <form id="login_form" method="post" action="/personas/login/" style="color:black">
             {% csrf_token %}
             <label>Username: </label>  <input type="text" name="username" value="" size="50" />
@@ -18,6 +18,11 @@
             <input class="btn btn-inverse" type="submit" value="login"/>
     </form>
     </fieldset>
+    </div>
+
+    <div class="col-md-6 col-sm-6 col-lg-6" id="col1">
+        <a href="/accounts/google/login/?process=login">
+        Sign Up / Login with Google</a>
     </div>
 
 {% endblock %}

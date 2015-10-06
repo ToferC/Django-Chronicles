@@ -601,7 +601,9 @@ window.location.hash = e.target.hash;
  
     var svg = d3.select("#graph_frame")
         .append("svg")
-        .attr({"width":w,"height":h});
+        .attr("preverveAspectRation", "xMinYMin meet")
+        .attr("viewBox", "0 0 400 400")
+        .classed("svg-content-responsive", true);
 
     var force = d3.layout.force()
         .nodes(dataset.nodes)
@@ -679,7 +681,7 @@ window.location.hash = e.target.hash;
         .style("pointer-events", "none")
         .attr({'class':'edgelabel',
                'id':function(d,i){return 'edgelabel'+i},
-               'dx':80,
+               'dx':50,
                'dy':-5,
                'font-size':10,
                'opacity':1,

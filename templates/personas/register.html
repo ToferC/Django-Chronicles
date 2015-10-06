@@ -8,11 +8,16 @@
 {% endblock %}
 
 {% block column1 %}
-<div class="col-md-12 col-sm-12 col-lg-12" id="col1" style="color:black">
+<div class="col-md-12 col-sm-12 col-lg-12" id="col1">
     {% if registered %}
     <strong>Thank you for registering!</strong>
     <a href="/personas/">Return to the Homepage</a>
     {% else %}
+
+    <a class="btn btn-inverse" style="background-color:darkslategray " href="/accounts/google/login/?process=login">Google Connect</a>
+    <br><br>
+    OR
+    <br><br>
     <strong>Register Here!</strong>
 
     {% crispy user_form %}
