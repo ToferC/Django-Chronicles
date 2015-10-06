@@ -123,8 +123,8 @@
                     <hr>
                     <h3>Places:</h3>
                     {% if from_places or to_places %}
+                    <ul>
                     {% if from_places %}
-                        <ul>
                             {% for relationship in from_places %}
                             <li>
                                 <a href="/personas/place/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }} 
@@ -280,7 +280,7 @@
                 <hr>
 
                 {% if user == storyobject.creator or user == story.author %}
-                <a role="button" class="btn btn-success" href="/personas/add_relationships/{{ storyobject.slug }}">Add Relationship  <span class="glyphicon glyphicon-pencil"></span></a>
+                <a role="button" class="btn btn-primary" href="/personas/add_relationships/{{ storyobject.slug }}">Add Relationship  <span class="glyphicon glyphicon-pencil"></span></a>
 
                 <a role="button" class="btn btn-primary" href="{% url 'edit_storyobject' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
                 {% else %}{% endif %}
