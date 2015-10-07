@@ -11,65 +11,6 @@ from personas.personas_email import mail_format as mail_format
 #from treasuremap.fields import LatLongField
 import collections
 
-class Nation(models.Model):
-    name = models.CharField(max_length=128)
-    description = models.TextField(blank=True)
-    creator = models.ForeignKey(User)
-    might = models.PositiveSmallIntegerField(default=0,
-        help_text='''This field and the fields below can be used to set values for
-        the relative power of different areas or regions in a game.''')
-    intrigue = models.PositiveSmallIntegerField(default=0)
-    magic = models.PositiveSmallIntegerField(default=0)
-    wealth = models.PositiveSmallIntegerField(default=0)
-    influence = models.PositiveSmallIntegerField(default=0)
-    defense = models.PositiveSmallIntegerField(default=0)
-    image = models.ImageField(upload_to='nation_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')
-
-    story = models.ForeignKey('Story')
-    published = models.BooleanField(default=True,
-        help_text="Elements that are NOT published will only be viewable in your Workshop.")
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        self.story.object_count = F('object_count') + 1
-        self.story.save()
-        slug = slugify("{}-{}".format(self.story.title, self.name))
-
-        super(Nation, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
-class Location(models.Model):
-    name = models.CharField(max_length=128)
-    creator = models.ForeignKey(User, blank=True, null=True)
-
-    image = models.ImageField(upload_to='location_images/%Y/%m/%d/%H_%M_%S',
-        default='profile_images/shadow_figure.jpeg')
-    terrain = models.CharField(max_length=128)
-    features = models.CharField(max_length=500)
-    description = models.TextField(blank=True)
-    nation = models.ForeignKey(Nation, blank=True, null=True)
-    latitude = models.FloatField(default=50.0)
-    longitude = models.FloatField(default=-1.0)
-    story = models.ForeignKey('Story', default=1)
-    #geom = PointField()
-    published = models.BooleanField(default=True,
-        help_text="Elements that are NOT published will only be viewable in your Workshop.")
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        self.story.object_count = F('object_count') + 1
-        self.story.save()
-        slug = slugify("{}-{}".format(self.story.title, self.name))
-
-        super(Location, self).save(*args, **kwargs)
-
-
-    def __str__(self):
-        return self.name
-
 
 class Aspect(models.Model):
     CORE = "CO"
@@ -116,7 +57,6 @@ class Note(models.Model):
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
     place = models.ForeignKey("Place", blank=True, null=True, related_name="loc2note")
-    nation = models.ForeignKey("Nation", blank=True, null=True)
     scene = models.ForeignKey("Scene", blank=True, null=True)
     chapter = models.ForeignKey("Chapter", blank=True, null=True)
     story = models.ForeignKey("Story", blank=True, null=True)
@@ -136,7 +76,6 @@ class GalleryImage(models.Model):
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
     place = models.ForeignKey("Place", blank=True, null=True, related_name="loc2image")
-    nation = models.ForeignKey("Nation", blank=True, null=True)
     scene = models.ForeignKey("Scene", blank=True, null=True)
     chapter = models.ForeignKey("Chapter", blank=True, null=True)
     story = models.ForeignKey("Story", blank=True, null=True)
@@ -271,9 +210,6 @@ class StoryObject(models.Model):
         help_text="Select a story object category.")
     role = models.CharField(max_length=256)
     description = MarkdownField(blank=True)
-    nationality = models.ForeignKey(Nation, blank=True, null=True)
-    base_of_operations = models.ForeignKey(Location, related_name='active_in', 
-        blank=True, null=True )
 
     image = models.ImageField(
         upload_to='profile_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')
@@ -427,6 +363,71 @@ class Chapter(models.Model):
 
     def __str__(self):
         return "{} - {}".format(self.number, self.title)
+
+
+class StoryOptions(models.Model):
+
+    story = models.ForeignKey("Story")
+
+    LIGHT = "Light"
+    DARK = "Dark"
+
+    THEME_CHOICES = (
+        (LIGHT, 'Light'),
+        (DARK, 'Dark'))
+
+    colour_theme = models.CharField(
+        max_length=12, choices=THEME_CHOICES, default='Dark',
+        help_text="Please note that the LIGHT field is not yet optimized.")
+    map_tile = models.CharField(
+        max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        help_text='''This field is used for Leaflet maps in the engine.
+        The default tile set is openstreetmap.
+        You probably shouldn't touch this unless you have another tileset in mind.''')
+    skill_type_name_1 = models.CharField(
+        max_length=24, default="General", blank=True,
+        help_text='''This field and the skill fields below set the name for different skill types in a game.
+        They are optional, but if you are using skills of some kind, the first value should be set.''')
+    skill_type_name_2 = models.CharField(
+        max_length=24, default="Investigative", blank=True)
+    skill_type_name_3 = models.CharField(
+        max_length=24, default="Combat", blank=True)
+    skill_type_name_4 = models.CharField(
+        max_length=24, default="Knowledge", blank=True)
+
+    statistic_type_name_1 = models.CharField(
+        max_length=24, default="Physical", blank=True,
+        help_text='''This field and the statistic fields below set the name for different stat types in a game.
+        They are optional, but if you are using statistics of some kind, the first value should be set.''')
+    statistic_type_name_2 = models.CharField(
+        max_length=24, default="Mental", blank=True)
+    statistic_type_name_3 = models.CharField(
+        max_length=24, default="Social", blank=True)
+    statistic_type_name_4 = models.CharField(
+        max_length=24, default="Magic", blank=True)
+
+    gamestats_toggle = models.BooleanField(default=True,
+     help_text='''Check to enable a markdown field for entering game statistics.
+        This is the default option, but you can choose specific tabbed fields below if you prefer.''',
+        verbose_name="Enable Game Stats field?")
+    stats_toggle = models.BooleanField(default=False,
+     help_text="Check to enable statistics for this story object.",
+        verbose_name="Enable Statistics?")
+    skill_toggle = models.BooleanField(default=False,
+     help_text="Check to enable skills for this story object.",
+        verbose_name="Enable Skills?")
+    combat_toggle = models.BooleanField(default=False,
+     help_text="Check to enable combat info for this story object.",
+        verbose_name="Enable Combat Info?")
+    equipment_toggle = models.BooleanField(default=False,
+     help_text="Check to enable equipment for this story object.",
+        verbose_name="Enable Equipment?")
+    gallery_toggle = models.BooleanField(default=False,
+     help_text="Check to enable gallery images for this story object.",
+        verbose_name="Enable Gallery Images?")
+    social_toggle = models.BooleanField(default=False,
+     help_text="Check to enable social functionality for this story object.",
+        verbose_name="Enable Social Functions?")
 
 
 class Story(models.Model):

@@ -12,10 +12,6 @@ class PersonasConfig(AppConfig):
     def ready(self):
         StoryObject = self.get_model("StoryObject")
         watson.register(StoryObject.objects.filter(published=True))
-        Location = self.get_model("Location")
-        watson.register(Location.objects.filter(published=True))
-        Nation = self.get_model("Nation")
-        watson.register(Nation.objects.filter(published=True))
         Story = self.get_model("Story")
         watson.register(Story.objects.filter(published=True))
         Chapter = self.get_model("Chapter")

@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.forms.models import modelform_factory, formset_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage, MainMap
+from personas.models import StoryObject, Relationship, Aspect, Ability, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage, MainMap
 from personas.models import Statistic, CombatInfo, ScratchPad, Equipment, GameStats, Place
 from personas.personas_email import mail_format as mail_format
 from django_markdown.widgets import MarkdownWidget
@@ -27,18 +27,8 @@ class StoryObjectForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        try:
-            self.story = kwargs.pop('story')
-        except KeyError:
-            self.story = None
 
         super(StoryObjectForm, self).__init__(*args, **kwargs)
-        if self.story:
-            self.fields['base_of_operations'].queryset = Place.objects.filter(
-                story=self.story).filter(published=True).order_by('name')
-            self.fields['nationality'].queryset = Nation.objects.filter(
-                story=self.story).filter(published=True).order_by('name')
-
 
         self.helper = FormHelper(self)
         self.helper.layout.append(
@@ -60,21 +50,13 @@ class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
         fields = "__all__"
-        exclude = ['slug', 'creator', 'story', 'c_type', 'base_of_operations',
+        exclude = ['slug', 'creator', 'story', 'c_type',
         'stats_toggle', 'combat_toggle', 'skill_toggle', 'equipment_toggle',
         'social_toggle']
 
     def __init__(self, *args, **kwargs):
-        try:
-            self.story = kwargs.pop('story')
-        except KeyError:
-            self.story = None
 
         super(PlaceForm, self).__init__(*args, **kwargs)
-        if self.story:
-            self.fields['nationality'].queryset = Nation.objects.filter(
-                story=self.story).filter(published=True).order_by('name')
-
 
         self.helper = FormHelper(self)
         self.helper.layout.append(
@@ -440,7 +422,8 @@ class StoryForm(forms.ModelForm):
     class Meta:
         model = Story
         fields = "__all__"
-        exclude = ['slug', 'author', 'publication_date']
+        exclude = ['slug', 'author', 'publication_date',
+        'object_count']
 
     def __init__(self, *args, **kwargs):
         super(StoryForm, self).__init__(*args, **kwargs)
@@ -520,32 +503,6 @@ class SceneForm(forms.ModelForm):
                 Submit('save', 'Submit'),))
 
 
-class LocationForm(forms.ModelForm):
-    class Meta:
-        model = Location
-        fields = ["name", "terrain", "features", "description",
-        "nation", "latitude", "longitude", "image", "published"]
-
-    def __init__(self, *args, **kwargs):
-        try:
-            self.story = kwargs.pop('story')
-        except KeyError:
-            self.story = None
-
-        super(LocationForm, self).__init__(*args, **kwargs)
-
-        if self.story:
-            self.fields['nation'].queryset = Nation.objects.filter(
-                story=self.story).filter(published=True).order_by('name')
-
-        self.helper = FormHelper(self)
-        self.helper.layout.append(
-            FormActions(
-                HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/story/{{ story.slug }}/#geography">Cancel</a>"""),
-                Submit('save', 'Submit'),))
-
-
 class MainMapForm(forms.ModelForm):
     class Meta:
         model = MainMap
@@ -564,29 +521,6 @@ class MainMapForm(forms.ModelForm):
             FormActions(
                 HTML("""<a role="button" class="btn btn-default"
                         href="/personas/story/{{ story.slug }}/#geography">Cancel</a>"""),
-                Submit('save', 'Submit'),))
-
-
-class NationForm(forms.ModelForm):
-    class Meta:
-        model = Nation
-        fields = ["name", "description", "might",
-        "intrigue", "magic", "wealth", "influence", "defense", "image",
-        "published"]
-
-    def __init__(self, *args, **kwargs):
-        try:
-            self.story = kwargs.pop('story')
-        except KeyError:
-            self.story = None
-
-        super(NationForm, self).__init__(*args, **kwargs)
-
-        self.helper = FormHelper(self)
-        self.helper.layout.append(
-            FormActions(
-                HTML("""<a role="button" class="btn btn-default"
-                        href="/personas/story/{{ story.slug }}/#political">Cancel</a>"""),
                 Submit('save', 'Submit'),))
 
 
@@ -652,13 +586,6 @@ class NoteForm(forms.ModelForm):
         except KeyError:
             pass
 
-        try:
-            instance.nation = kwargs.pop('nation')
-            mail_format(instance.nation, instance.nation.name,
-                instance.creator, instance.title, instance.content)
-
-        except KeyError:
-            pass
         instance.save()
         return instance
 

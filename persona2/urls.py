@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
-from personas.models import StoryObject, Story, Location, Skill, Nation, Chapter, Scene, Ability, Statistic, Relationship, Place
+from personas.models import StoryObject, Story, Skill, Chapter, Scene, Ability, Statistic, Relationship, Place
 from rest_framework import serializers, viewsets, routers, generics, pagination
 from rest_framework.response import Response
 
@@ -56,8 +56,8 @@ class StoryObjectSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = StoryObject
-        fields = ("name", "story", "c_type", "role", "image", "nationality",
-            "base_of_operations", "description", "gamestats", "equipment",
+        fields = ("name", "story", "c_type", "role", "image",
+            "description", "gamestats", "equipment",
             "aspects", "abilities", "statistics", "skills", "combatinfo",
             "to_relationships", "from_relationships", "url")
 
@@ -91,9 +91,8 @@ class PlaceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Place
-        fields = ("name", "story", "c_type", "role", "image", "nationality",
-            "base_of_operations", "description", "gamestats",
-            "aspects", "latitude", "longitude",
+        fields = ("name", "story", "c_type", "role", "image",
+            "description", "gamestats", "aspects", "latitude", "longitude",
             "to_relationships", "from_relationships", "url")
 
 
@@ -113,34 +112,6 @@ class RelationshipSerializer(serializers.HyperlinkedModelSerializer):
 class RelationshipViewSet(viewsets.ModelViewSet):
     queryset = Relationship.objects.all()
     serializer_class = RelationshipSerializer
-
-
-# Nation API
-class NationSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Nation
-        fields = ("name", "image", "description", "might", "intrigue",
-            'magic', "wealth", "influence", "defense", "story", "url")
-
-
-class NationViewSet(viewsets.ModelViewSet):
-    queryset = Nation.objects.all()
-    serializer_class = NationSerializer
-
-
-# Location API
-class LocationSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Location
-        fields = ("name", "image", "terrain", "features", "description",
-            "nation", "latitude", "longitude", "story", "url")
-
-
-class LocationViewSet(viewsets.ModelViewSet):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
 
 
 # Scene API
@@ -190,12 +161,6 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
         view_name="storyobject-detail",
         source="storyobject_set")
 
-    nations = serializers.HyperlinkedRelatedField(
-        queryset = Nation.objects.all(),
-        many=True,
-        view_name="nation-detail",
-        source="nation_set")
-
     class Meta:
         model = Story
         fields = ("title", "setting", "themes", "description", "genre", "url",
@@ -213,8 +178,6 @@ router.register(r'chapters', ChapterViewSet)
 router.register(r'places', PlaceViewSet)
 router.register(r'storyobjects', StoryObjectViewSet)
 router.register(r'scenes', SceneViewSet)
-router.register(r'nations', NationViewSet)
-router.register(r'locations', LocationViewSet)
 
 
 urlpatterns = patterns('',

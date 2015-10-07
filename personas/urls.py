@@ -63,14 +63,6 @@ urlpatterns = patterns('',
     url(r'^delete_scene/(?P<pk>\d+)/$', views.delete_scene, name='delete_scene'),
     url(r'^edit_scene/(?P<pk>\d+)/$', views.edit_scene, name='edit_scene'),
 
-    url(r'^add_location/(?P<story_title_slug>[\w\-]+)/$', views.add_location, name='add_location'),
-    url(r'^delete_location/(?P<pk>\d+)/$', views.delete_location, name='delete_location'),
-    url(r'^edit_location/(?P<pk>\d+)/$', views.edit_location, name='edit_location'),
-
-    url(r'^add_nation/(?P<story_title_slug>[\w\-]+)/$', views.add_nation, name='add_nation'),
-    url(r'^delete_nation/(?P<pk>\d+)/$', views.delete_nation, name='delete_nation'),
-    url(r'^edit_nation/(?P<pk>\d+)/$', views.edit_nation, name='edit_nation'),
-
     url(r'^add_mainmap/(?P<story_title_slug>[\w\-]+)/$', views.add_mainmap, name='add_mainmap'),
     url(r'^relationship_map/(?P<slug>[\w\-]+)/(?P<scope>[\w\-]+)/$', views.relationship_map, name='relationship_map'),
 
@@ -86,8 +78,6 @@ urlpatterns = patterns('',
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^mainmap/(?P<mainmap_slug>[\w\-]+)/$', views.mainmap, name='mainmap'),
     url(r'^storyobject/(?P<storyobject_name_slug>[\w\-]+)/$', views.storyobject, name='storyobject'),
-    url(r'^location/(?P<location_name_slug>[\w\-]+)/$', views.location, name='location'),
-    url(r'^nation/(?P<nation_name_slug>[\w\-]+)/$', views.nation, name='nation'),
     url(r'^scene/(?P<scene_name_slug>[\w\-]+)/$', views.scene, name='scene'),
     url(r'^chapter/(?P<chapter_name_slug>[\w\-]+)/$', views.chapter, name='chapter'),
     url(r'^story/(?P<story_name_slug>[\w\-]+)/$', views.story, name='story'),

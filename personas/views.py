@@ -13,10 +13,10 @@ from django.db.models.base import ObjectDoesNotExist
 from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateView
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
-from personas.models import Nation, Location, StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment, GameStats, Place
+from personas.models import StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment, GameStats, Place
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
-from personas.forms import StoryForm, ChapterForm, SceneForm, LocationForm, StatisticForm, CombatInfoForm, NationForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
+from personas.forms import StoryForm, ChapterForm, SceneForm, StatisticForm, CombatInfoForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
 from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm, PlaceForm
 
 from datetime import datetime
@@ -91,7 +91,7 @@ def workshop(request, user):
         context_dict['unpublished_scenes'] = Scene.objects.filter(
             creator=user).filter(published=False).order_by("chapter__story", "chapter", "order")
 
-        # Set up Locations
+        # Set up Places
         context_dict['published_places'] = Place.objects.filter(
             creator=user).filter(published=True).order_by("story", "name")
 
@@ -107,7 +107,7 @@ def workshop(request, user):
             creator=user).filter(c_type="Organization").filter(
             published=False).order_by("story", "name")
 
-        # Set up Forces
+        # Set up Factions
         context_dict['published_factions'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Force").filter(
             published=True).order_by("story", "name")
@@ -166,57 +166,6 @@ def about(request):
     return render(request, 'personas/about.html', context_dict)
 
 
-def location(request, location_name_slug):
-
-    context_dict = {}
-
-    try:
-        location = Location.objects.get(slug=location_name_slug)
-        story = location.story
-
-        context_dict['story'] = Story.objects.get(location=location)
-
-        context_dict['location'] = location
-        context_dict['location_name'] = location.name
-        context_dict['creator'] = location.creator
-        context_dict['image'] = location.image
-        context_dict['terrain'] = location.terrain
-        context_dict['features'] = location.features
-        context_dict['description'] = location.description
-        context_dict['nation'] = location.nation
-        context_dict['latitude'] = location.latitude
-        context_dict['longitude'] = location.longitude
-        context_dict['slug'] = location.slug
-        context_dict['scenes'] = Scene.objects.filter(
-            location__name=location.name).filter(published=True).order_by("order")
-        context_dict['organizations'] = StoryObject.objects.filter(
-                base_of_operations=location).filter(c_type="Organization").filter(published=True).distinct().order_by('name')
-        context_dict['storyobjects'] = StoryObject.objects.filter(
-            base_of_operations__name=location.name).filter(published=True).filter(~Q(c_type="Organization"))
-
-        context_dict['notes'] = Note.objects.filter(location__name=location.name)
-
-        form = NoteForm(request.POST or None)
-        context_dict['form'] = form
-
-        if request.method == 'POST':
-            if form.is_valid():
-
-                form = context_dict['form']
-                form.save(location=location, creator=request.user, commit=True)
-
-                return HttpResponseRedirect("")
-
-        else:
-
-            context_dict['form'] = NoteForm()
-
-    except Location.DoesNotExist:
-        pass
-
-    return render(request, 'personas/location.html', context_dict)
-
-
 def scene(request, scene_name_slug):
 
     context_dict = {}
@@ -261,45 +210,6 @@ def scene(request, scene_name_slug):
         pass
 
     return render(request, 'personas/scene.html', context_dict)
-
-
-def nation(request, nation_name_slug):
-
-    context_dict = {}
-
-    try:
-        nation = Nation.objects.get(slug=nation_name_slug)
-        story = Story.objects.get(nation=nation)
-
-        context_dict['nation'] = nation
-        context_dict['story'] = story
-        context_dict['places'] = Place.objects.filter(
-            nationality=nation).filter(published=True).distinct()
-
-        context_dict['notes'] = Note.objects.filter(
-            nation__name=nation.name)[0:10]
-
-        form = NoteForm(request.POST or None)
-        context_dict['form'] = form
-
-        if request.method == 'POST':
-            if form.is_valid():
-
-                form = context_dict['form']
-                post_nation = nation
-                post_creator = request.user
-                form.save(nation=post_nation, creator=post_creator, commit=True)
-
-                return HttpResponseRedirect("")
-
-        else:
-
-            context_dict['form'] = NoteForm()
-
-    except Nation.DoesNotExist:
-        pass
-
-    return render(request, 'personas/nation.html', context_dict)
 
 
 def place(request, place_name_slug):
@@ -965,7 +875,7 @@ def add_storyobject(request, story_title_slug, c_type):
 
     else:
 
-        storyobject_form = StoryObjectForm(story=story)
+        storyobject_form = StoryObjectForm()
 
     return render(request, 'personas/add_storyobject.html',
         {'storyobject_form': storyobject_form, 'story':story, "c_type":c_type})
@@ -1006,7 +916,7 @@ def add_place(request, story_title_slug):
 
     else:
 
-        place_form = PlaceForm(story=story)
+        place_form = PlaceForm()
 
     return render(request, 'personas/add_place.html',
         {'place_form': place_form, 'story':story, "c_type":c_type,
@@ -1567,81 +1477,6 @@ def add_scene(request, story_title_slug):
 
 
 @login_required
-def add_location(request, story_title_slug):
-
-
-    story = Story.objects.get(slug=story_title_slug)
-
-    mainmap = MainMap.objects.filter(story=story).first()
-
-    if mainmap:
-        pass
-    else:
-        mainmap = MainMap(base_latitude=50.000, base_longitude=-1.3,
-            story=story,
-            tiles="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
-
-
-    locations = Location.objects.filter(story__slug=story_title_slug)
-
-    if request.method == 'POST':
-
-        location_form = LocationForm(request.POST, request.FILES)
-
-        if location_form.is_valid():
-            location = location_form.save(commit=False)
-            location.creator = request.user
-            location.story = story
-            location.slug = slugify("{}-{}".format(story.title, location.name))
-            location.save()
-            #location_form.save_m2m()
-
-            return HttpResponseRedirect("/personas/location/{}".format(location.slug))
-
-        else:
-            print (location_form.errors)
-
-    else:
-        location_form = LocationForm(story=story)
-
-    return render(request, 'personas/add_location.html', {
-        'slug': story_title_slug, 'story':story, 'locations': locations,
-        'location_form':location_form, 'mainmap':mainmap})
-
-
-@login_required
-def add_nation(request, story_title_slug):
-
-    story = Story.objects.get(slug=story_title_slug)
-
-    nations = Nation.objects.filter(story=story)
-
-    if request.method == 'POST':
-
-        nation_form = NationForm(request.POST, request.FILES or None, story=story)
-
-        if nation_form.is_valid():
-            nation = nation_form.save(commit=False)
-            nation.creator = request.user
-            nation.story = story
-            nation.slug = slugify(
-                "{}-{}".format(story.title, nation.name))
-            nation.save()
-
-            return HttpResponseRedirect("/personas/nation/{}".format(nation.slug))
-
-        else:
-            print (nation_form.errors)
-
-    else:
-        nation_form = NationForm(story=story)
-
-    return render(request, 'personas/add_nation.html', {
-        'slug': story_title_slug, 'story':story, 'nations': nations,
-        'nation_form':nation_form})
-
-
-@login_required
 def add_gallery_image(request, storyobject_slug):
 
 
@@ -1946,31 +1781,6 @@ def edit_story(request, pk, template_name='personas/edit_story.html'):
 
 
 @login_required
-def delete_location(request, pk, template_name='personas/delete_location.html'):
-    location = Location.objects.get(pk=pk)
-    story = Story.objects.get(location=location)
-    if request.user == location.creator:
-        if request.method=='POST':
-            location.delete()
-            return HttpResponseRedirect('/personas/{}'.format(story.slug))
-    else:
-        return HttpResponse("You do not have permission to delete this.")
-    return render(request, template_name, {'object': location})
-
-
-@login_required
-def edit_location(request, pk, template_name='personas/edit_location.html'):
-    location = Location.objects.get(pk=pk)
-    story = location.story
-    user = request.user
-    form = LocationForm(request.POST or None, request.FILES or None, instance=location, story=story)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect('/personas/location/{}'.format(location.slug))
-    return render(request, template_name, {'form': form, 'location':location, 'story':story})
-
-
-@login_required
 def delete_chapter(request, pk, template_name='personas/delete_chapter.html'):
     chapter = Chapter.objects.get(pk=pk)
     story = Story.objects.get(chapter=chapter)
@@ -2066,31 +1876,6 @@ def edit_note(request, pk, template_name='personas/edit_note.html'):
         return HttpResponseRedirect('/personas/{}/{}'.format(pointer,
             target.slug))
     return render(request, template_name, {'form': form, 'object': note})
-
-
-@login_required
-def delete_nation(request, pk, template_name='personas/delete_nation.html'):
-    nation = Nation.objects.get(pk=pk)
-    story = Story.objects.get(nation=nation)
-    if request.user == story.author:
-        if request.method=='POST':
-            nation.delete()
-            return HttpResponseRedirect('/personas/{}'.format(story.slug))
-    else:
-        return HttpResponse("You do not have permission to delete this.")
-    return render(request, template_name, {'object': nation})
-
-
-@login_required
-def edit_nation(request, pk, template_name='personas/edit_nation.html'):
-    nation = Nation.objects.get(pk=pk)
-    story = Story.objects.get(nation=nation)
-    user = request.user
-    form = NationForm(request.POST or None, request.FILES or None, instance=nation, story=story)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect('/personas/nation/{}'.format(nation.slug))
-    return render(request, template_name, {'form': form, 'nation':nation, 'story':story})
 
 
 @login_required

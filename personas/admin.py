@@ -1,10 +1,10 @@
 from django.contrib import admin
-from personas.models import StoryObject, Relationship, Location, Nation, Story, MainMap, Chapter, Scene, Ability, Aspect, Skill, Note, Communique, UserProfile, Statistic, CombatInfo, GalleryImage, ScratchPad, Equipment, Poster, GameStats, Place
+from personas.models import StoryObject, Relationship, Story, MainMap, Chapter, Scene, Ability, Aspect, Skill, Note, Communique, UserProfile, Statistic, CombatInfo, GalleryImage, ScratchPad, Equipment, Poster, GameStats, Place
 from personas.forms import RelationshipForm
 #from leaflet.admin import LeafletGeoAdmin
 
 class FlatPageAdmin(admin.ModelAdmin):
-    fields = ('last_name', 'first_name', 'nationality', 'base_of_operations')
+    fields = ('last_name', 'first_name')
 
 class StoryObjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
@@ -12,14 +12,7 @@ class StoryObjectAdmin(admin.ModelAdmin):
 
 class PlaceAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'story', 'nationality', 'role')
-
-class LocationAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'story', 'nation', 'terrain', 'features')
-
-class NationAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
+    list_display = ('name', 'story', 'role')
 
 class StoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
@@ -64,8 +57,6 @@ class ScratchPadAdmin(admin.ModelAdmin):
 admin.site.register(StoryObject, StoryObjectAdmin)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Relationship)
-admin.site.register(Location, LocationAdmin)
-admin.site.register(Nation, NationAdmin)
 admin.site.register(Story, StoryAdmin)
 admin.site.register(Chapter, ChapterAdmin)
 admin.site.register(Scene, SceneAdmin)
