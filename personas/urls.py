@@ -55,6 +55,9 @@ urlpatterns = patterns('',
     url(r'^delete_story/(?P<pk>\d+)/$', views.delete_story, name='delete_story'),
     url(r'^edit_story/(?P<pk>\d+)/$', views.edit_story, name='edit_story'),
 
+    url(r'^edit_storyoptions/(?P<pk>\d+)/$', views.edit_storyoptions, name='edit_storyoptions'),
+
+
     url(r'^add_chapter/(?P<story_title_slug>[\w\-]+)/$', views.add_chapter, name='add_chapter'),
     url(r'^delete_chapter/(?P<pk>\d+)/$', views.delete_chapter, name='delete_chapter'),
     url(r'^edit_chapter/(?P<pk>\d+)/$', views.edit_chapter, name='edit_chapter'),

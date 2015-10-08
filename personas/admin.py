@@ -1,5 +1,5 @@
 from django.contrib import admin
-from personas.models import StoryObject, Relationship, Story, MainMap, Chapter, Scene, Ability, Aspect, Skill, Note, Communique, UserProfile, Statistic, CombatInfo, GalleryImage, ScratchPad, Equipment, Poster, GameStats, Place
+from personas.models import StoryObject, Relationship, Story, MainMap, Chapter, Scene, Ability, Aspect, Skill, Note, Communique, UserProfile, Statistic, CombatInfo, GalleryImage, ScratchPad, Equipment, Poster, GameStats, Place, StoryOptions
 from personas.forms import RelationshipForm
 #from leaflet.admin import LeafletGeoAdmin
 
@@ -9,6 +9,9 @@ class FlatPageAdmin(admin.ModelAdmin):
 class StoryObjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     list_display = ('name', 'story', 'c_type', 'role')
+
+class StoryOptionsAdmin(admin.ModelAdmin):
+    list_display = ('story',)
 
 class PlaceAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
@@ -58,6 +61,7 @@ admin.site.register(StoryObject, StoryObjectAdmin)
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Relationship)
 admin.site.register(Story, StoryAdmin)
+admin.site.register(StoryOptions, StoryOptionsAdmin)
 admin.site.register(Chapter, ChapterAdmin)
 admin.site.register(Scene, SceneAdmin)
 admin.site.register(Ability, AbilityAdmin)

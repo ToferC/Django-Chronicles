@@ -14,9 +14,9 @@ from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateVi
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
 from personas.models import StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment, GameStats, Place
-from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster
+from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster, StoryOptions
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
-from personas.forms import StoryForm, ChapterForm, SceneForm, StatisticForm, CombatInfoForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm
+from personas.forms import StoryForm, ChapterForm, SceneForm, StatisticForm, CombatInfoForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm, StoryOptionsForm
 from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm, PlaceForm
 
 from datetime import datetime
@@ -219,10 +219,13 @@ def place(request, place_name_slug):
     try:
         storyobject = Place.objects.get(slug=place_name_slug)
 
+        storyoptions = StoryOptions.objects.get(story=storyobject.story)
+
         context_dict['name'] = storyobject.name
         context_dict['storyobject'] = storyobject
         context_dict['creator'] = storyobject.creator
         context_dict['story'] = storyobject.story
+        context_dict['storyoptions'] = storyoptions
         context_dict['role'] = storyobject.role
         context_dict['c_type'] = storyobject.c_type
         context_dict['description'] = storyobject.description
@@ -286,8 +289,8 @@ def place(request, place_name_slug):
             Q(from_storyobject__name=storyobject.name) &
                 Q(to_storyobject__c_type="Faction")).order_by('-weight')
 
-        context_dict['gamestats_toggle'] = storyobject.gamestats_toggle
-        context_dict['gallery_toggle'] = storyobject.gallery_toggle
+        context_dict['gamestats_toggle'] = storyoptions.gamestats_toggle
+        context_dict['gallery_toggle'] = storyoptions.gallery_toggle
 
         # Note Form Section
         noteform = NoteForm(request.POST, prefix="note")
@@ -330,10 +333,13 @@ def storyobject(request, storyobject_name_slug):
         if storyobject.c_type == "Place":
             return HttpResponseRedirect("/personas/place/{}/#details".format(storyobject_name_slug))
 
+        storyoptions = StoryOptions.objects.get(story=storyobject.story)
+
         context_dict['storyobject_name'] = storyobject.name
         context_dict['storyobject'] = storyobject
         context_dict['creator'] = storyobject.creator
         context_dict['story'] = storyobject.story
+        context_dict['storyoptions'] = storyoptions
         context_dict['role'] = storyobject.role
         context_dict['c_type'] = storyobject.c_type
         context_dict['description'] = storyobject.description
@@ -466,13 +472,13 @@ def storyobject(request, storyobject_name_slug):
 
         # Membership.objects.filter(storyobject=storyobject)
 
-        context_dict['gamestats_toggle'] = storyobject.gamestats_toggle
-        context_dict['stats_toggle'] = storyobject.stats_toggle
-        context_dict['skill_toggle'] = storyobject.skill_toggle
-        context_dict['combat_toggle'] = storyobject.combat_toggle
-        context_dict['equipment_toggle'] = storyobject.equipment_toggle
-        context_dict['gallery_toggle'] = storyobject.gallery_toggle
-        context_dict['social_toggle'] = storyobject.social_toggle
+        context_dict['gamestats_toggle'] = storyoptions.gamestats_toggle
+        context_dict['stats_toggle'] = storyoptions.stats_toggle
+        context_dict['skill_toggle'] = storyoptions.skill_toggle
+        context_dict['combat_toggle'] = storyoptions.combat_toggle
+        context_dict['equipment_toggle'] = storyoptions.equipment_toggle
+        context_dict['gallery_toggle'] = storyoptions.gallery_toggle
+        context_dict['social_toggle'] = storyoptions.social_toggle
 
         # Note Form Section
         noteform = NoteForm(request.POST, prefix="note")
@@ -715,6 +721,7 @@ def mainmap(request, mainmap_slug):
     try:
         context_dict['map_name'] = mainmap.name
         context_dict['story'] = mainmap.story
+        context_dict['storyoptions'] = mainmap.story.storyoptions
         context_dict['base_latitude'] = mainmap.base_latitude
         context_dict['base_longitude'] = mainmap.base_longitude
         context_dict['tile'] = mainmap.tiles
@@ -1127,6 +1134,7 @@ def add_skills(request, storyobject_name_slug):
     storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
     story = storyobject.story
+    storyoptions = StoryOptions.objects.get(story=story)
 
     type_1_skills = Skill.objects.filter(
             storyobject__slug=storyobject_name_slug).filter(s_type="Type_1")
@@ -1174,7 +1182,7 @@ def add_skills(request, storyobject_name_slug):
         'slug': storyobject_name_slug, 'storyobject': storyobject,
         'type_1_skills': type_1_skills, 'type_2_skills': type_2_skills,
         'type_3_skills': type_3_skills, 'type_4_skills': type_4_skills,
-        'story':story})
+        'story':story, 'storyoptions':storyoptions})
 
 
 @login_required
@@ -1188,6 +1196,7 @@ def add_statistics(request, storyobject_name_slug):
     storyobject = StoryObject.objects.get(slug=storyobject_name_slug)
 
     story = storyobject.story
+    storyoptions = StoryOptions.objects.get(story=story)
 
     type_1_statistics = Statistic.objects.filter(
             storyobject__slug=storyobject_name_slug).filter(stat_type="Type_1")
@@ -1231,7 +1240,7 @@ def add_statistics(request, storyobject_name_slug):
         'slug': storyobject_name_slug, 'storyobject': storyobject,
         'type_1_statistics': type_1_statistics, 'type_2_statistics': type_2_statistics,
         'type_3_statistics': type_3_statistics, 'type_4_statistics': type_4_statistics,
-        'story':story})
+        'story':story, 'storyoptions':storyoptions})
 
 
 @login_required
@@ -1512,6 +1521,7 @@ def add_gallery_image(request, storyobject_slug):
 def add_mainmap(request, story_title_slug):
 
     story = Story.objects.get(slug=story_title_slug)
+    storyoptions = StoryOptions.objects.get(story=story)
 
     if request.method == 'POST':
 
@@ -1533,7 +1543,7 @@ def add_mainmap(request, story_title_slug):
         mainmap_form = MainMapForm(story=story)
 
     return render(request, 'personas/add_mainmap.html', {
-        'slug': story_title_slug, 'story':story,
+        'slug': story_title_slug, 'story':story, 'storyoptions':storyoptions,
         'mainmap_form':mainmap_form})
 
 
@@ -1722,8 +1732,7 @@ def edit_storyobject(request, pk, template_name='personas/edit_storyobject.html'
     storyobject = StoryObject.objects.get(pk=pk)
     story = storyobject.story
     user = request.user
-    form = StoryObjectForm(request.POST or None, request.FILES or None, instance=storyobject,
-        story=story)
+    form = StoryObjectForm(request.POST or None, request.FILES or None, instance=storyobject)
     if form.is_valid():
         form.save(creator=storyobject.creator, story=story)
         return HttpResponseRedirect('/personas/storyobject/{}'.format(storyobject.slug))
@@ -1778,6 +1787,18 @@ def edit_story(request, pk, template_name='personas/edit_story.html'):
         form.save(author=story.author)
         return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
     return render(request, template_name, {'form': form, 'story':story})
+
+
+@login_required
+def edit_storyoptions(request, pk, template_name='personas/edit_storyoptions.html'):
+    story = Story.objects.get(pk=pk)
+    storyoptions = get_object_or_404(StoryOptions, story=story)
+    form = StoryOptionsForm(request.POST or None, instance=storyoptions)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
+    return render(request, template_name, {'form': form, 'story':story,
+        'storyoptions': storyoptions})
 
 
 @login_required

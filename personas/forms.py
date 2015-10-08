@@ -5,7 +5,7 @@ from django.forms.models import modelform_factory, formset_factory
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from personas.models import StoryObject, Relationship, Aspect, Ability, Story, Scene, Chapter, Skill, Note, Communique, UserProfile, GalleryImage, MainMap
-from personas.models import Statistic, CombatInfo, ScratchPad, Equipment, GameStats, Place
+from personas.models import Statistic, CombatInfo, ScratchPad, Equipment, GameStats, Place, StoryOptions
 from personas.personas_email import mail_format as mail_format
 from django_markdown.widgets import MarkdownWidget
 from django_markdown.fields import MarkdownFormField
@@ -147,11 +147,12 @@ class SkillForm(forms.ModelForm):
             self.storyobject = None
 
         choice_story = Story.objects.get(storyobject=self.storyobject)
+        storyoptions = StoryOptions.objects.get(story=choice_story)
 
-        context_choices = [('Type_1', getattr(choice_story, 'skill_type_name_1')),
-            ('Type_2', getattr(choice_story, 'skill_type_name_2')),
-            ('Type_3', getattr(choice_story, 'skill_type_name_3')),
-            ('Type_4', getattr(choice_story, 'skill_type_name_4'))]
+        context_choices = [('Type_1', getattr(storyoptions, 'skill_type_name_1')),
+            ('Type_2', getattr(storyoptions, 'skill_type_name_2')),
+            ('Type_3', getattr(storyoptions, 'skill_type_name_3')),
+            ('Type_4', getattr(storyoptions, 'skill_type_name_4'))]
 
         INITIAL_CHOICES = [1, 2, 3 ,4]
 
@@ -185,11 +186,12 @@ class StatisticForm(forms.ModelForm):
             self.storyobject = None
 
         choice_story = Story.objects.get(storyobject=self.storyobject)
+        storyoptions = StoryOptions.objects.get(story=choice_story)
 
-        context_choices = [('Type_1', getattr(choice_story, 'statistic_type_name_1')),
-            ('Type_2', getattr(choice_story, 'statistic_type_name_2')),
-            ('Type_3', getattr(choice_story, 'statistic_type_name_3')),
-            ('Type_4', getattr(choice_story, 'statistic_type_name_4'))]
+        context_choices = [('Type_1', getattr(storyoptions, 'statistic_type_name_1')),
+            ('Type_2', getattr(storyoptions, 'statistic_type_name_2')),
+            ('Type_3', getattr(storyoptions, 'statistic_type_name_3')),
+            ('Type_4', getattr(storyoptions, 'statistic_type_name_4'))]
 
         INITIAL_CHOICES = [1, 2, 3 ,4]
 
@@ -441,6 +443,22 @@ class StoryForm(forms.ModelForm):
         instance.publication_date = datetime.datetime.now()
         instance.save()
         return instance
+
+
+class StoryOptionsForm(forms.ModelForm):
+    class Meta:
+        model = StoryOptions
+        fields = "__all__"
+        exclude = ['story',]
+
+    def __init__(self, *args, **kwargs):
+        super(StoryOptionsForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.layout.append(
+            FormActions(
+                HTML("""<a role="button" class="btn btn-default"
+                        href="/personas/">Cancel</a>"""),
+                Submit('save', 'Submit'),))
 
 
 class ChapterForm(forms.ModelForm):

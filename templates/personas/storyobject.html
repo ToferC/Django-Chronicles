@@ -319,7 +319,7 @@
         <div class="row">
         <h3>Statistics</h3>
             {% if type_1_statistics %}
-                <h3>{{ story.statistic_type_name_1 }}:</h3>
+                <h3>{{ storyoptions.statistic_type_name_1 }}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for stat in type_1_statistics %}
                         <tr>
@@ -333,7 +333,7 @@
                 {% endif %}
             </table>
             {% if type_2_statistics %}
-                <h3>{{ story.statistic_type_name_2 }}:</h3>
+                <h3>{{ storyoptions.statistic_type_name_2 }}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for stat in type_2_statistics %}
                         <tr>
@@ -347,7 +347,7 @@
                 {% endif %}
             </table>
             {% if type_3_statistics %}
-                <h3>{{ story.statistic_type_name_3 }}:</h3>
+                <h3>{{ storyoptions.statistic_type_name_3 }}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for stat in type_3_statistics %}
                         <tr>
@@ -361,7 +361,7 @@
                 {% endif %}
             </table>
             {% if type_4_statistics %}
-                <h3>{{ story.statistic_type_name_4 }}:</h3>
+                <h3>{{ storyoptions.statistic_type_name_4 }}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for stat in type_4_statistics %}
                         <tr>
@@ -405,7 +405,7 @@
         <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
         <h3>Skills</h3>
             {% if type_1_skills %}
-                <h3>{{ story.skill_type_name_1}}:</h3>
+                <h3>{{ storyoptions.skill_type_name_1}}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for skill in type_1_skills %}
                         <tr>
@@ -418,7 +418,7 @@
                 </table>
             {% endif %}
             {% if type_2_skills %}
-                <h3>{{ story.skill_type_name_2}}:</h3>
+                <h3>{{ storyoptions.skill_type_name_2}}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for skill in type_2_skills %}
                         <tr>
@@ -435,7 +435,7 @@
         </div>
         <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
             {% if type_3_skills %}
-                <h3>{{ story.skill_type_name_3}}:</h3>
+                <h3>{{ storyoptions.skill_type_name_3}}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for skill in type_3_skills %}
                         <tr>
@@ -448,7 +448,7 @@
                 </table>
             {% endif %}
             {% if type_4_skills %}
-                <h3>{{ story.skill_type_name_4}}:</h3>
+                <h3>{{ storyoptions.skill_type_name_4}}:</h3>
                 <table class="table table-condensed table-hover table-responsive" style="background:black">
                     {% for skill in type_4_skills %}
                         <tr>

@@ -1,10 +1,10 @@
 {% extends "personas/base.html" %}
 {% load staticfiles %}
-{% load thumbnail %}
 {% load crispy_forms_tags %}
+{% load thumbnail %}
 {% block title %}
     <header>
-        <h1>Edit Story "{{ story.title }}"</h1>
+        <h1>Edit Options for "{{ story.title }}"</h1>
     </header>
 {% endblock %}
 
@@ -17,13 +17,6 @@
 {% block column1 %}
 <div class="col-md-6 col-sm-6 col-lg-6" id="col1">
     {% crispy form %}
-
-<hr>
-<p>Advanced story options can be edited by selecting "Edit Story Options", below.</p>
-
-<a role="button" class="btn btn-primary" href="{% url 'edit_storyoptions' pk=story.pk %}"> Edit Story Options  <span class="glyphicon glyphicon-cog"></span></a>
- <a href="{% url 'delete_story' pk=story.pk %}" class="btn btn-danger">Delete Story</a>
-<br><br>
 </div>
 {% endblock %}
 

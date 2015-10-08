@@ -22,7 +22,7 @@
         <div class="col-md-2 col-sm-2 col-lg-2" id="col2">
         <h3>Current Statistics</h3>
                                 {% if type_1_statistics %}
-                                <h3>{{ story.statistic_type_name_1 }}:</h3>
+                                <h3>{{ storyoptions.statistic_type_name_1 }}:</h3>
                             <table class="table table-condensed table-hover table-responsive">
                                     {% for stat in type_1_statistics %}
                                         <tr>
@@ -35,7 +35,7 @@
                                 {% endif %}
                             </table>
         {% if type_2_statistics %}
-                                <h3>{{ story.statistic_type_name_2 }}:</h3>
+                                <h3>{{ storyoptions.statistic_type_name_2 }}:</h3>
                             <table class="table table-condensed table-hover table-responsive">
                                     {% for stat in type_2_statistics %}
                                         <tr>
@@ -52,7 +52,7 @@
     {% block column3 %}
     <div class="col-md-2 col-sm-2 col-lg-2" id="col1">
                             {% if type_3_statistics %}
-                                <h3>{{ story.statistic_type_name_3 }}:</h3>
+                                <h3>{{ storyoptions.statistic_type_name_3 }}:</h3>
                             <table class="table table-condensed table-hover table-responsive">
                                     {% for stat in type_3_statistics %}
                                         <tr>
@@ -65,7 +65,7 @@
                                 {% endif %}
                             </table>
                             {% if type_4_statistics %}
-                                <h3>{{ story.statistic_type_name_4 }}:</h3>
+                                <h3>{{ storyoptions.statistic_type_name_4 }}:</h3>
                             <table class="table table-condensed table-hover table-responsive">
                                     {% for stat in type_4_statistics %}
                                         <tr>

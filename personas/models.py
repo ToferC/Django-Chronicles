@@ -215,28 +215,6 @@ class StoryObject(models.Model):
         upload_to='profile_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')
     slug = models.SlugField(unique=True)
 
-    gamestats_toggle = models.BooleanField(default=True,
-     help_text='''Check to enable a markdown field for entering game statistics.
-        This is the default option, but you can choose specific tabbed fields below if you prefer.''',
-        verbose_name="Enable Game Stats field?")
-    stats_toggle = models.BooleanField(default=False,
-     help_text="Check to enable statistics for this story object.",
-        verbose_name="Enable Statistics?")
-    skill_toggle = models.BooleanField(default=False,
-     help_text="Check to enable skills for this story object.",
-        verbose_name="Enable Skills?")
-    combat_toggle = models.BooleanField(default=False,
-     help_text="Check to enable combat info for this story object.",
-        verbose_name="Enable Combat Info?")
-    equipment_toggle = models.BooleanField(default=False,
-     help_text="Check to enable equipment for this story object.",
-        verbose_name="Enable Equipment?")
-    gallery_toggle = models.BooleanField(default=False,
-     help_text="Check to enable gallery images for this story object.",
-        verbose_name="Enable Gallery Images?")
-    social_toggle = models.BooleanField(default=False,
-     help_text="Check to enable social functionality for this story object.",
-        verbose_name="Enable Social Functions?")
     published = models.BooleanField(default=True,
         help_text="Elements that are NOT published will only be viewable in your Workshop.")
 
@@ -376,9 +354,6 @@ class StoryOptions(models.Model):
         (LIGHT, 'Light'),
         (DARK, 'Dark'))
 
-    colour_theme = models.CharField(
-        max_length=12, choices=THEME_CHOICES, default='Dark',
-        help_text="Please note that the LIGHT field is not yet optimized.")
     map_tile = models.CharField(
         max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         help_text='''This field is used for Leaflet maps in the engine.
@@ -476,38 +451,9 @@ class Story(models.Model):
     image = models.ImageField(
         upload_to='story_images/%Y/%m/%d/%H_%M_%S',
         default='profile_images/shadow_figure.jpeg')
-    background = models.ImageField(
-        upload_to='story_backgrounds/%Y/%m/%d/%H_%M_%S',
-        default='profile_images/shadow_figure.jpeg')
     colour_theme = models.CharField(
         max_length=12, choices=THEME_CHOICES, default='Dark',
         help_text="Please note that the LIGHT field is not yet optimized.")
-    map_tile = models.CharField(
-        max_length=128, default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        help_text='''This field is used for Leaflet maps in the engine.
-        The default tile set is openstreetmap.
-        You probably shouldn't touch this unless you have another tileset in mind.''')
-    skill_type_name_1 = models.CharField(
-        max_length=24, default="General", blank=True,
-        help_text='''This field and the skill fields below set the name for different skill types in a game.
-        They are optional, but if you are using skills of some kind, the first value should be set.''')
-    skill_type_name_2 = models.CharField(
-        max_length=24, default="Investigative", blank=True)
-    skill_type_name_3 = models.CharField(
-        max_length=24, default="Combat", blank=True)
-    skill_type_name_4 = models.CharField(
-        max_length=24, default="Knowledge", blank=True)
-
-    statistic_type_name_1 = models.CharField(
-        max_length=24, default="Physical", blank=True,
-        help_text='''This field and the statistic fields below set the name for different stat types in a game.
-        They are optional, but if you are using statistics of some kind, the first value should be set.''')
-    statistic_type_name_2 = models.CharField(
-        max_length=24, default="Mental", blank=True)
-    statistic_type_name_3 = models.CharField(
-        max_length=24, default="Social", blank=True)
-    statistic_type_name_4 = models.CharField(
-        max_length=24, default="Magic", blank=True)
     published = models.BooleanField(default=True,
         help_text="Elements that are NOT published will only be viewable in your Workshop.")
     object_count = models.PositiveSmallIntegerField(default=0)
@@ -517,6 +463,8 @@ class Story(models.Model):
     def save(self, *args, **kwargs):
         slug = slugify(self.title)
         super(Story, self).save(*args, **kwargs)
+        storyoptions = StoryOptions.objects.get_or_create(
+            story=self)
 
     def __str__(self):
         return self.title
