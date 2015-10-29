@@ -592,6 +592,7 @@ window.location.hash = e.target.hash;
     var linkDistance=150;
     var minRadius = 10;
     var maxRadius = 20;
+    
     var scale = d3.scale.linear().range([minRadius,maxRadius]);
 
     var colors = d3.scale.category10()
@@ -629,14 +630,7 @@ window.location.hash = e.target.hash;
       .enter().append("svg:a")
       .attr("xlink:href", function(d){return d.url;})
       .append("circle")
-      .attr("r", function(d) { 
-        if(d.children)
-            return scale(d.children.length);
-        else if(d._children)
-            return scale(d._children.length);
-        else
-            return minRadius;
-    })
+      .attr({"r":10})
       .style("fill",function(d,i){return colors(d.node_color);})
       .call(force.drag)
       .on("mouseover", fade(.1))
@@ -681,7 +675,7 @@ window.location.hash = e.target.hash;
         .style("pointer-events", "none")
         .attr({'class':'edgelabel',
                'id':function(d,i){return 'edgelabel'+i},
-               'dx':50,
+               'dx':40,
                'dy':-5,
                'font-size':10,
                'opacity':1,
@@ -707,7 +701,7 @@ window.location.hash = e.target.hash;
             .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
             .attr('fill', '#ccc')
             .attr('stroke','#ccc');
-            
+     
 
     force.on("tick", function(){
 
