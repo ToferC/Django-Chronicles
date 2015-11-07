@@ -7,7 +7,7 @@ dj-static==0.0.6
 Django==1.8.5
 django-allauth==0.23.0
 django-appconf==1.0.1
-django-crispy-forms==1.5.2
+django-crispy-forms==1.4.0
 django-filter==0.10.0
 django-geojson==2.6.0
 django-herokuapp==0.9.19
