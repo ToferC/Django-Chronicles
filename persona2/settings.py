@@ -23,7 +23,7 @@ else:
     from keys import *
     SECRET_KEY = os.environ['SECRET_KEY']
 
-DEBUG = True #not ON_PAAS
+DEBUG = not ON_PAAS
 DEBUG = DEBUG or 'DEBUG' in os.environ
 if ON_PAAS and DEBUG:
     print("*** Warning - Debug mode is on ***")
