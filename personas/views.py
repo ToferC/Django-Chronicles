@@ -71,42 +71,74 @@ def workshop(request, user):
         context_dict['user'] = user
 
         # Set up Stories
+        context_dict['published_stories'] = Story.objects.filter(
+            author=user).filter(published=True)
+
         context_dict['unpublished_stories'] = Story.objects.filter(
             author=user).filter(published=False)
 
         # Set up Chapters
+        context_dict['published_chapters'] = Chapter.objects.filter(
+            creator=user).filter(published=True).order_by("story", "number")
+
         context_dict['unpublished_chapters'] = Chapter.objects.filter(
             creator=user).filter(published=False).order_by("story", "number")
 
         # Set up Scenes
+        context_dict['published_scenes'] = Scene.objects.filter(
+            creator=user).filter(published=True).order_by("chapter__story", "chapter", "order")
+
         context_dict['unpublished_scenes'] = Scene.objects.filter(
             creator=user).filter(published=False).order_by("chapter__story", "chapter", "order")
 
         # Set up Places
+        context_dict['published_places'] = Place.objects.filter(
+            creator=user).filter(published=True).order_by("story", "name")
+
         context_dict['unpublished_places'] = Place.objects.filter(
             creator=user).filter(published=False).order_by("story", "name")
 
         # Set up Organizations
+        context_dict['published_organizations'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Organization").filter(
+            published=True).order_by("story", "name")
+
         context_dict['unpublished_organizations'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Organization").filter(
             published=False).order_by("story", "name")
 
         # Set up Factions
+        context_dict['published_factions'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Force").filter(
+            published=True).order_by("story", "name")
+
         context_dict['unpublished_factions'] = StoryObject.objects.filter(
-            creator=user).filter(c_type="Faction").filter(
+            creator=user).filter(c_type="Force").filter(
             published=False).order_by("story", "name")
 
         # Set up Characters
+        context_dict['published_characters'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Character").filter(
+            published=True).order_by("story", "name")
+
         context_dict['unpublished_characters'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Character").filter(
             published=False).order_by("story", "name")
 
         # Set up Creatures
+        context_dict['published_creatures'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Creature").filter(
+            published=True).order_by("story", "name")
+
         context_dict['unpublished_creatures'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Creature").filter(
             published=False).order_by("story", "name")
 
         # Set up Things
+        context_dict['published_things'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Thing").filter(
+            published=True).order_by("story", "name")
+
         context_dict['unpublished_things'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Thing").filter(
             published=False).order_by("story", "name")
@@ -910,10 +942,11 @@ def add_batch_storyobject(request, story_title_slug):
 
         formset = StoryObjectFormSet(request.POST, request.FILES, prefix="batch")
         helper = BatchFormSetHelper()
+        common_form = BatchCommonStoryObjectForm(request.POST, prefix="common")
 
         creator = request.user
 
-        if formset.is_valid():
+        if formset.is_valid() and common_form.is_valid():
             for form in formset:
                 so = StoryObject()
                 try:
@@ -924,6 +957,46 @@ def add_batch_storyobject(request, story_title_slug):
                     so.c_type = form.cleaned_data['c_type']
                     so.description = form.cleaned_data['description']
                     so.image = form.cleaned_data['image']
+
+                    if common_form.cleaned_data['gamestats_toggle']:
+                        so.gamestats_toggle = True
+                    else:
+                        so.gamestats_toggle = False
+
+                    if common_form.cleaned_data['stats_toggle']:
+                        so.stats_toggle = True
+                    else:
+                        so.stats_toggle = False
+
+                    if common_form.cleaned_data['skill_toggle']:
+                        so.skill_toggle = True
+                    else:
+                        so.skill_toggle = False
+
+                    if common_form.cleaned_data['combat_toggle']:
+                        so.combat_toggle = True
+                    else:
+                        so.combat_toggle = False
+
+                    if common_form.cleaned_data['equipment_toggle']:
+                        so.equipment_toggle = True
+                    else:
+                        so.equipment_toggle = False
+
+                    if common_form.cleaned_data['gallery_toggle']:
+                        so.gallery_toggle = True
+                    else:
+                        so.gallery_toggle = False
+
+                    if common_form.cleaned_data['social_toggle']:
+                        so.social_toggle = True
+                    else:
+                        so.social_toggle = False
+
+                    if common_form.cleaned_data['published']:
+                        so.published = True
+                    else:
+                        so.published = False
 
                     so.slug = slugify("{}-{}".format(
                         story.title, form.cleaned_data['name']))
@@ -943,9 +1016,10 @@ def add_batch_storyobject(request, story_title_slug):
         formset = StoryObjectFormSet(prefix="batch",
             queryset=Relationship.objects.none())
         helper = BatchFormSetHelper()
+        common_form = BatchCommonStoryObjectForm(prefix="common")
 
     return render(request, 'personas/add_batch_storyobject.html',
-        {'formset': formset, 'helper': helper, 'story':story})
+        {'formset': formset, 'common_form': common_form, 'helper': helper, 'story':story})
 
 
 @login_required

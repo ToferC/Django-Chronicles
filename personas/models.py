@@ -52,7 +52,7 @@ class Ability(models.Model):
 
 class Note(models.Model):
     creator = models.ForeignKey(User, default=0)
-    content = MarkdownField(blank=True)
+    content = models.TextField()
     title = models.CharField(max_length=32, blank=True, null=True)
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
@@ -90,7 +90,7 @@ class GalleryImage(models.Model):
 
 class ScratchPad(models.Model):
     creator = models.ForeignKey(User, default=0)
-    content = MarkdownField(blank=True)
+    content = models.TextField()
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
 
@@ -100,7 +100,7 @@ class ScratchPad(models.Model):
 
 class Equipment(models.Model):
     creator = models.ForeignKey(User, default=0)
-    content = MarkdownField(blank=True, default="Enter your equipment here.")
+    content = models.TextField(default="Enter your equipment here.")
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
 
@@ -297,7 +297,7 @@ class Scene(models.Model):
     title = models.CharField(max_length=128)
     scene_type = models.CharField(max_length=32, choices=SCENE_TYPE_CHOICES, default="Dramatic")
     purpose = models.CharField(max_length=128, blank=True)
-    description = MarkdownField(blank=True)
+    description = models.TextField(blank=True)
     resolution = models.CharField(
         max_length=8, choices=RESOLUTION_CHOICES, default="Neutral")
     creator = models.ForeignKey(User, blank=True, null=True)
@@ -323,7 +323,7 @@ class Scene(models.Model):
 
 class Chapter(models.Model):
     title = models.CharField(max_length=128)
-    description = MarkdownField(blank=True)
+    description = models.TextField(blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
     story = models.ForeignKey("Story")
     number = models.PositiveSmallIntegerField(default=1,
@@ -445,7 +445,7 @@ class Story(models.Model):
     setting = models.CharField(max_length=256)
     themes = models.CharField(max_length=256,
         help_text="Enter the themes for your story here.")
-    description = MarkdownField(blank=True)
+    description = models.TextField(blank=True)
     genre = models.CharField(
         max_length=128, choices=GENRE_CHOICES, default='Fantasy')
     image = models.ImageField(
