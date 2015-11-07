@@ -23,16 +23,11 @@
 {% endblock %}
 
 {% block column2 %}
-<div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+<div class="col-md-8 col-sm-8 col-lg-8" id="col1">
 <h4>Story Object Entry</h4>
 <form action="" class="uniForm"  method="post" enctype="multipart/form-data">
 
 {% crispy formset helper %}
-</div>
-<div class="col-md-4 col-sm-4 col-lg-4" id="col1">
-<h4>Common Options</h4>
-{% crispy common_form %}
-</form>
 </div>
 {% endblock %}
 
