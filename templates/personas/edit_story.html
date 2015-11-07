@@ -19,9 +19,9 @@
     {% crispy form %}
 
 <hr>
-<p>Advanced story options can be edited by selecting "Edit Story Options", below.</p>
+<p>Advanced story options can be edited by selecting "Advanced Story Options", below.</p>
 
-<a role="button" class="btn btn-primary" href="{% url 'edit_storyoptions' pk=story.pk %}"> Edit Story Options  <span class="glyphicon glyphicon-cog"></span></a>
+<a role="button" class="btn btn-primary" href="{% url 'edit_storyoptions' pk=story.pk %}"> Advanced Story Options  <span class="glyphicon glyphicon-cog"></span></a>
  <a href="{% url 'delete_story' pk=story.pk %}" class="btn btn-danger">Delete Story</a>
 <br><br>
 </div>
