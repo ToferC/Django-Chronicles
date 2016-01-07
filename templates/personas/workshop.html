@@ -68,7 +68,7 @@
                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ story }}</a>
                                 {% endfor %}
                         {% else %}
-                            <strong>No stories.</strong>
+                            <strong>No unpublished stories.</strong>
                             <br><br>
                         {% endif %}
                         <hr>
@@ -145,7 +145,7 @@
                 <div class="row">
                         <h3>Unpublished Factions:</h3>
                         {% if unpublished_factions %}
-                                {% for storyobject in unpublished_forces %}
+                                {% for storyobject in unpublished_factions %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
                                     {% thumbnail storyobject.image "30x30" crop="center" as im %}
                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject }}</a>

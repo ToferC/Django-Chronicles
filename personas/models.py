@@ -2,14 +2,8 @@ from django.db import models
 from django.db.models import F
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-from PIL import Image
 from django_markdown.models import MarkdownField
 from personas.personas_email import mail_format as mail_format
-#from django.contrib.gis.db import models as gismodels
-#from jsonfield import JSONField
-#from djgeojson.fields import PointField
-#from treasuremap.fields import LatLongField
-import collections
 
 
 class Aspect(models.Model):
@@ -221,7 +215,7 @@ class StoryObject(models.Model):
     def save(self, slug=None, creator=None, *args, **kwargs):
         self.story.object_count = F('object_count') + 1
         self.story.save()
-        slug = slugify("{}-{}".format(self.story.title, self.name))
+        self.slug = slugify("{}-{}".format(self.story.id, self.name))
         super(StoryObject, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -314,7 +308,7 @@ class Scene(models.Model):
     def save(self, *args, **kwargs):
         self.chapter.story.object_count = F('object_count') + 1
         self.chapter.story.save()
-        slug = slugify("{}-{}".format(self.chapter.story.title, self.title))
+        self.slug = slugify("{}-{}".format(self.chapter.story.id, self.title))
         super(Scene, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -336,7 +330,7 @@ class Chapter(models.Model):
     def save(self, *args, **kwargs):
         self.story.object_count = F('object_count') + 1
         self.story.save()
-        slug = slugify("{}-{}".format(self.story.title, self.title))
+        self.slug = slugify("{}-{}".format(self.story.id, self.title))
         super(Chapter, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -461,9 +455,9 @@ class Story(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        slug = slugify(self.title)
+        self.slug = slugify(self.title)
         super(Story, self).save(*args, **kwargs)
-        storyoptions = StoryOptions.objects.get_or_create(
+        self.storyoptions = StoryOptions.objects.get_or_create(
             story=self)
 
     def __str__(self):
@@ -482,7 +476,7 @@ class MainMap(models.Model):
     def save(self, *args, **kwargs):
         self.story.object_count = F('object_count') + 1
         self.story.save()
-        slug = slugify(self.name)
+        self.slug = slugify("{}-{}".format(self.story.id, self.name))
         super(MainMap, self).save(*args, **kwargs)
 
     def __str__(self):

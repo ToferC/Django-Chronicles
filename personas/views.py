@@ -67,6 +67,10 @@ def workshop(request, user):
 
     user = request.user
 
+    stories = Story.objects.filter(published=True)
+
+    context_dict['stories'] = stories
+
     try:
         context_dict['user'] = user
 
@@ -689,7 +693,7 @@ def mainmap(request, mainmap_slug):
     try:
         context_dict['map_name'] = mainmap.name
         context_dict['story'] = mainmap.story
-        context_dict['storyoptions'] = mainmap.story.storyoptions
+        context_dict['storyoptions'] = StoryOptions.objects.get(story=mainmap.story)
         context_dict['base_latitude'] = mainmap.base_latitude
         context_dict['base_longitude'] = mainmap.base_longitude
         context_dict['tile'] = mainmap.tiles
@@ -838,7 +842,7 @@ def add_storyobject(request, story_title_slug, c_type):
 
         if storyobject_form.is_valid():
             slug = slugify("{}-{}".format(
-                story.title, storyobject_form.cleaned_data['name']))
+                story.id, storyobject_form.cleaned_data['name']))
 
             storyobject_form.save(creator=creator, story=story,
                 commit=True)
@@ -879,7 +883,7 @@ def add_place(request, story_title_slug):
 
         if place_form.is_valid():
             slug = slugify("{}-{}".format(
-                story.title, place_form.cleaned_data['name']))
+                story.id, place_form.cleaned_data['name']))
 
             place_form.save(creator=creator, story=story,
                 commit=True)
@@ -926,7 +930,7 @@ def add_batch_storyobject(request, story_title_slug):
                     so.image = form.cleaned_data['image']
 
                     so.slug = slugify("{}-{}".format(
-                        story.title, form.cleaned_data['name']))
+                        story.id, form.cleaned_data['name']))
 
                     so.save()
 
@@ -1356,7 +1360,7 @@ def add_chapter(request, story_title_slug):
                 title = chapter_data.get('title')
                 number = chapter_data.get('number')
                 chapter_description = chapter_data.get('description')
-                chapter_slug = slugify("{}-{}".format(story.title,
+                chapter_slug = slugify("{}-{}".format(story.id,
                     chapter_data.get('title')))
                 chapter = Chapter(title=title, story=story, number=number,
                     description=chapter_description, slug=chapter_slug,
@@ -1393,7 +1397,7 @@ def add_scene(request, story_title_slug):
 
         if scene_form.is_valid():
             scene = scene_form.save(commit=False)
-            scene.slug = slugify("{}-{}".format(story.title, scene.title))
+            scene.slug = slugify("{}-{}".format(story.id, scene.title))
             scene.creator = request.user
             scene.save()
             scene_form.save_m2m()
@@ -1457,7 +1461,7 @@ def add_mainmap(request, story_title_slug):
             mainmap = mainmap_form.save(commit=False)
             mainmap.creator = request.user
             mainmap.story = story
-            mainmap.slug = slugify("{}-{}".format(story.title, mainmap.name))
+            mainmap.slug = slugify("{}-{}".format(story.id, mainmap.name))
             mainmap.save()
 
             return HttpResponseRedirect("/personas/mainmap/{}".format(mainmap.slug))
