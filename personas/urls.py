@@ -73,13 +73,16 @@ urlpatterns = patterns('',
     url(r'^delete_note/(?P<pk>\d+)/$', views.delete_note, name='delete_note'),
     url(r'^edit_note/(?P<pk>\d+)/$', views.edit_note, name='edit_note'),
 
+    url(r'^mainmap/(?P<main_map_slug>[\w\-]+)/$', views.main_map, name='mainmap'),
+    url(r'^delete_mainmap/(?P<pk>\d+)/$', views.delete_mainmap, name='delete_mainmap'),
+    url(r'^edit_mainmap/(?P<pk>\d+)/$', views.edit_mainmap, name='edit_mainmap'),
+
     url(r'^add_gallery_image/(?P<storyobject_slug>[\w\-]+)/$', views.add_gallery_image, name='add_gallery_image'),
 
     url(r'^register/$', views.register, name='register'),
     url(r'^collections/$', views.collections, name='collections'),
     url(r'^login/$', views.user_login, name='login'),
     url(r'^logout/$', views.user_logout, name='logout'),
-    url(r'^mainmap/(?P<mainmap_slug>[\w\-]+)/$', views.mainmap, name='mainmap'),
     url(r'^storyobject/(?P<storyobject_name_slug>[\w\-]+)/$', views.storyobject, name='storyobject'),
     url(r'^scene/(?P<scene_name_slug>[\w\-]+)/$', views.scene, name='scene'),
     url(r'^chapter/(?P<chapter_name_slug>[\w\-]+)/$', views.chapter, name='chapter'),

@@ -225,6 +225,8 @@ class StoryObject(models.Model):
 class Place(StoryObject):
     latitude = models.FloatField(default=50.0)
     longitude = models.FloatField(default=-1.0)
+    main_map = models.ForeignKey("MainMap", blank=True, null=True, verbose_name='Map',
+                                help_text="Leave this blank for the default map, or choose from the list.")
 
 
 class Relationship(models.Model):
@@ -471,6 +473,8 @@ class MainMap(models.Model):
     base_longitude = models.FloatField(blank=True)
     tiles = models.CharField(max_length=256, blank=True,
         default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+    published = models.BooleanField(default=True,
+        help_text="Elements that are NOT published will only be viewable in your Workshop.")
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):

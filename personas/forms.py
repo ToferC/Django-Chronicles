@@ -56,7 +56,16 @@ class PlaceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
 
+        try:
+            self.story = kwargs.pop('story')
+        except KeyError:
+            self.story = None
+
         super(PlaceForm, self).__init__(*args, **kwargs)
+
+        if self.story:
+            self.fields['main_map'].queryset = MainMap.objects.filter(
+                story=self.story).filter(published=True).order_by('name')
 
         self.helper = FormHelper(self)
         self.helper.layout.append(

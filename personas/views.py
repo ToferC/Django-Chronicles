@@ -202,7 +202,13 @@ def place(request, place_name_slug):
         context_dict['c_type'] = storyobject.c_type
         context_dict['description'] = storyobject.description
 
-        # Get Latitude & Longitud
+        # Get Latitude & Longitude
+        try:
+            context_dict['tiles'] = storyobject.main_map.tiles
+
+        except AttributeError:
+            context_dict['tiles'] = storyoptions.map_tile
+
         context_dict['latitude'] = storyobject.latitude
         context_dict['longitude'] = storyobject.longitude
 
@@ -441,8 +447,6 @@ def storyobject(request, storyobject_name_slug):
             Q(to_storyobject__name=storyobject.name) &
             (Q(from_storyobject__c_type="Organization") |
             Q(to_storyobject__c_type="Organization"))).order_by('-weight')
-
-        # Membership.objects.filter(storyobject=storyobject)
 
         context_dict['gamestats_toggle'] = storyoptions.gamestats_toggle
         context_dict['stats_toggle'] = storyoptions.stats_toggle
@@ -685,21 +689,22 @@ def note(request, story_slug, pk):
     return render(request, 'personas/note.html', context_dict)
 
 
-def mainmap(request, mainmap_slug):
+def main_map(request, main_map_slug):
     context_dict = {}
 
-    mainmap = MainMap.objects.get(slug=mainmap_slug)
+    main_map = MainMap.objects.get(slug=main_map_slug)
 
     try:
-        context_dict['map_name'] = mainmap.name
-        context_dict['story'] = mainmap.story
-        context_dict['storyoptions'] = StoryOptions.objects.get(story=mainmap.story)
-        context_dict['base_latitude'] = mainmap.base_latitude
-        context_dict['base_longitude'] = mainmap.base_longitude
-        context_dict['tile'] = mainmap.tiles
+        context_dict['main_map'] = main_map
+        context_dict['map_name'] = main_map.name
+        context_dict['story'] = main_map.story
+        context_dict['storyoptions'] = StoryOptions.objects.get(story=main_map.story)
+        context_dict['base_latitude'] = main_map.base_latitude
+        context_dict['base_longitude'] = main_map.base_longitude
+        context_dict['tile'] = main_map.tiles
 
         context_dict['places'] = Place.objects.filter(
-            story=mainmap.story).distinct()
+            main_map=main_map).distinct()
 
     except MainMap.DoesNotExist:
         pass
@@ -895,7 +900,7 @@ def add_place(request, story_title_slug):
 
     else:
 
-        place_form = PlaceForm()
+        place_form = PlaceForm(story=story)
 
     return render(request, 'personas/add_place.html',
         {'place_form': place_form, 'story':story, "c_type":c_type,
@@ -1282,7 +1287,7 @@ def add_gamestats(request, storyobject_name_slug):
             print (gamestats_form.errors)
 
     else:
-        form = GameStatsForm(c_type=storyobject.c_type)
+        form = GameStatsForm()
 
     return render(request, 'personas/add_gamestats.html', {
         'slug': storyobject_name_slug, 'storyobject': storyobject,
@@ -1855,3 +1860,27 @@ def edit_gamestats(request, pk, template_name='personas/edit_gamestats.html'):
             storyobject.slug))
     return render(request, template_name, {'form': form, 'object':gamestats, 'story':story,
         'storyobject': storyobject})
+
+
+@login_required
+def delete_mainmap(request, pk, template_name='personas/delete_mainmap.html'):
+    mainmap = MainMap.objects.get(pk=pk)
+    story = mainmap.story
+    if request.user == story.author:
+        if request.method=='POST':
+            mainmap.delete()
+            return HttpResponseRedirect('/personas/')
+    else:
+        return HttpResponse("You do not have permission to delete this.")
+    return render(request, template_name, {'object': mainmap})
+
+
+@login_required
+def edit_mainmap(request, pk, template_name='personas/edit_mainmap.html'):
+    mainmap = MainMap.objects.get(pk=pk)
+    user = request.user
+    form = MainMapForm(request.POST or None, request.FILES or None, instance=mainmap)
+    if form.is_valid():
+        form.save(author=mainmap.author)
+        return HttpResponseRedirect('/personas/mainmap/{}'.format(mainmap.slug))
+    return render(request, template_name, {'main_map_form': form, 'main_map':mainmap})
