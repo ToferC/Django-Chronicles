@@ -37,7 +37,7 @@
         <script type="text/javascript">
         var map = L.map('map').setView([{{ place.latitude|floatformat:6 }}, {{ place.longitude|floatformat:6 }}], 6);
 
-        L.tileLayer("{{ storyoptions.map_tile }}", {
+        L.tileLayer("{{ tiles }}", {
             maxZoom: 13,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
                 '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +

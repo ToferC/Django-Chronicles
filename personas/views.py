@@ -1691,14 +1691,25 @@ def delete_place(request, pk, template_name='personas/delete_place.html'):
 def edit_place(request, pk, template_name='personas/edit_place.html'):
     place = Place.objects.get(pk=pk)
     story = place.story
-    user = request.user
+    storyoptions = StoryOptions.objects.get(story=story)
+
+    try:
+        mainmap = MainMap.objects.filter(place=place)
+    except AttributeError:
+        mainmap = None
+
+    if mainmap:
+        tiles = mainmap.tiles
+    else:
+        tiles = storyoptions.map_tile
+
     form = PlaceForm(request.POST or None, request.FILES or None, instance=place,
         story=story)
     if form.is_valid():
         form.save(creator=place.creator, story=story)
         return HttpResponseRedirect('/personas/place/{}'.format(place.slug))
     return render(request, template_name, {'form': form, 'place':place,
-        'story':story})
+        'story':story, 'tiles': tiles})
 
 
 @login_required
