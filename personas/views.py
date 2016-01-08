@@ -1892,6 +1892,6 @@ def edit_mainmap(request, pk, template_name='personas/edit_mainmap.html'):
     user = request.user
     form = MainMapForm(request.POST or None, request.FILES or None, instance=mainmap)
     if form.is_valid():
-        form.save(author=mainmap.author)
+        form.save()
         return HttpResponseRedirect('/personas/mainmap/{}'.format(mainmap.slug))
     return render(request, template_name, {'main_map_form': form, 'main_map':mainmap})

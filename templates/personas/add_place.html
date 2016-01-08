@@ -23,7 +23,7 @@
     <div id="map" style="width: 300px; height: 300px"></div>
         
         <script type="text/javascript">
-        var map = L.map('map').setView([{{ mainmap.base_latitude|floatformat:6 }}, {{ mainmap.base_longitude|floatformat:6 }}], 6);
+        var map = L.map('map').setView([{{ mainmap.base_latitude|floatformat:6 }}, {{ mainmap.base_longitude|floatformat:6 }}], 3);
 
         L.tileLayer("{{ mainmap.tiles }}", {
             maxZoom: 18,

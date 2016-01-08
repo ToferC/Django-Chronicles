@@ -210,7 +210,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 '''LEAFLET_CONFIG = {
     #'SPACIAL_EXTENT': (5.0, 44.0, 7.5, 46),
     'DEFAULT_CENTER': (50.91, -1.37),
-    'DEFAULT_ZOOM': 6,
+    'DEFAULT_ZOOM': 3,
     'MIN_ZOOM': 3,
     'MAX_ZOOM': 20,
     'TILES': ""
