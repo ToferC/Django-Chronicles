@@ -71,6 +71,38 @@
         {% endif %}
         <hr>
 
+        <h3>Territories:</h3>
+                    {% if from_territories or to_territories %}
+                    <ul>
+                    {% if from_territories %}
+                            {% for relationship in from_territories %}
+                            <li>
+                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }}
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% endif %}
+                            </li>
+                            {% endfor %}
+
+                    {% else %}{% endif %}
+
+                    {% if to_territories %}
+                        {% for relationship in to_territories %}
+                            <li>
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% endif %}
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                    </ul>
+                {% else %}
+                {{ storyobject.name }} has no related territories.
+            {% endif %}
+                    <hr>
+
         <h3>Related Places:</h3>
             {% if from_places or to_places %}
                 <ul>
@@ -136,7 +168,7 @@
             <ul class="nav nav-pills nav-inverse" role="tablist" id="rel_tabs">
                 <li class="active">
                     <a href="#associated" role="tab" data-toggle="tab">
-                        <i class="fa fa-user"></i> Characters
+                        <i class="fa fa-user"></i> Associations
                     </a>
                 </li>
                 <li>
@@ -153,22 +185,36 @@
 
         <div class="tab-content">
         <div class="tab-pane active fade in" id="associated">
-            <h3>Associated Characters:</h3>
-                {% if associated_storyobjects %}
+            <h3>Associated Relationships:</h3>
+                {% if to_relationships %}
                         <ul>
-                            {% for relationship in associated_storyobjects %}
+                            {% for relationship in to_relationships %}
                             <li>
-                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }} 
+                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }}
                                  ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
-                                
+
                                 {% if user == storyobject.creator or user == story.author %}
                                 <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
                                 {% else %}{% endif %}
                             </li>
                             {% endfor %}
                         </ul>
+                {% else %}{% endif %}
+                {% if from_relationships %}
+                        <ul>
+                            {% for relationship in from_relationships %}
+                            <li>
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+                                {% else %}{% endif %}
+
+                            </li>
+                            {% endfor %}
+                        </ul>
                     {% else %}
-                    {{ storyobject.name }} has no associated characters.<br>
+                    {{ storyobject.name }} has no associated relationships.<br>
                     {% endif %}
         </div> <!-- Others Rels Tab Ends -->
         <div class="tab-pane fade in" id="rel_map">
@@ -295,7 +341,6 @@
 
     var w = 400;
     var h = 400;
-    var linkDistance=150;
     var minRadius = 10;
     var maxRadius = 20;
     
@@ -316,7 +361,7 @@
         .nodes(dataset.nodes)
         .links(dataset.links)
         .size([w,h])
-        .linkDistance([linkDistance])
+        .linkDistance(function(d) { return  (10 - d.weight) * 10 + 100 })
         .charge([-500])
         .theta(0.1)
         .gravity(0.05)

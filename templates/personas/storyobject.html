@@ -121,6 +121,37 @@
                     </ul>
                     {% endif %}
                     <hr>
+                    <h3>Territories:</h3>
+                    {% if from_territories or to_territories %}
+                    <ul>
+                    {% if from_territories %}
+                            {% for relationship in from_territories %}
+                            <li>
+                                <a href="/personas/storyobject/{{ relationship.from_storyobject.slug }}">{{ relationship.from_storyobject }}</a> - {{ relationship.relationship_class }} {{ relationship.to_storyobject }}
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% endif %}
+                            </li>
+                            {% endfor %}
+
+                    {% else %}{% endif %}
+
+                    {% if to_territories %}
+                        {% for relationship in to_territories %}
+                            <li>
+                                {{ relationship.relationship_class }} <a href="/personas/storyobject/{{ relationship.to_storyobject.slug }}">{{ relationship.to_storyobject }}</a>
+                                 ({{ relationship.relationship_description }}) - Weight: {{ relationship.weight }} |
+                                {% if user == storyobject.creator or user == story.author %}
+                                <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_relationship' pk=relationship.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>{% endif %}
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                    </ul>
+                {% else %}
+                {{ storyobject.name }} has no related territories.
+            {% endif %}
+                    <hr>
                     <h3>Places:</h3>
                     {% if from_places or to_places %}
                     <ul>
@@ -589,7 +620,6 @@ window.location.hash = e.target.hash;
 
     var w = 400;
     var h = 400;
-    var linkDistance=150;
     var minRadius = 10;
     var maxRadius = 20;
     
@@ -610,7 +640,7 @@ window.location.hash = e.target.hash;
         .nodes(dataset.nodes)
         .links(dataset.links)
         .size([w,h])
-        .linkDistance([linkDistance])
+        .linkDistance(function(d) { return  (10 - d.weight) * 10 + 100 })
         .charge([-500])
         .theta(0.1)
         .gravity(0.05)

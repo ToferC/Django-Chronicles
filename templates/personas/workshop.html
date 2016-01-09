@@ -123,6 +123,19 @@
 
                 <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
                 <div class="row">
+                        <h3>Unpublished territories:</h3>
+                        {% if unpublished_territories %}
+                                {% for storyobject in unpublished_territories %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ place }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished territories.</strong>
+                            <br><br>
+                        {% endif %}
+
+                        <hr>
                         <h3>Unpublished Places:</h3>
                         {% if unpublished_places %}
                                 {% for place in unpublished_places %}

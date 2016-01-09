@@ -135,6 +135,19 @@
                 <div class="tab-pane fade in" id="geography"> <!-- Start Tab Three -->
                 <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
                     <div class="row">
+                        <h3>Territories:</h3>
+                        {% if territories %}
+                                {% for storyobject in territories %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>{{ story.title }} has no Territories.</strong><br>
+                        {% endif %}
+                        <br><br>
+                        <a href="/personas/add_storyobject/{{ story.slug }}" style="color:gray">Add Territory <span class="glyphicon glyphicon-pencil"></span></a>
+                        <hr>
                         <h3>Places:</h3>
                         {% if places %}
                                 {% for storyobject in places %}

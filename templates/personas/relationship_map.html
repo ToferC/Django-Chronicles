@@ -15,10 +15,9 @@
 
     var w = 1200;
     var h = 900;
-    var linkDistance=150;
 
     var colors = d3.scale.category10()
-      .domain(['r', 'b', 'g', 'c', 'y']);
+      .domain(['r', 'b', 'g', 'c', 'y', 'v', 'o']);
 
     var dataset = {{ result|safe }};
  
@@ -33,7 +32,7 @@
         .nodes(dataset.nodes)
         .links(dataset.links)
         .size([w,h])
-        .linkDistance([linkDistance])
+        .linkDistance(function(d) { return  (10 - d.weight) * 10 + 100 })
         .charge([-500])
         .theta(0.1)
         .gravity(0.05)

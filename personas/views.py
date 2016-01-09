@@ -86,6 +86,11 @@ def workshop(request, user):
         context_dict['unpublished_scenes'] = Scene.objects.filter(
             creator=user).filter(published=False).order_by("chapter__story", "chapter", "order")
 
+        # Set up Territories
+        context_dict['unpublished_territories'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Territory").filter(
+            published=False).order_by("story", "name")
+
         # Set up Places
         context_dict['unpublished_places'] = Place.objects.filter(
             creator=user).filter(published=False).order_by("story", "name")
@@ -224,6 +229,16 @@ def place(request, place_name_slug):
                 Q(from_storyobject__c_type="Place")
             ).order_by('-weight')
 
+        to_territories = Relationship.objects.filter(
+            Q(from_storyobject__name=storyobject.name) &
+            Q(to_storyobject__c_type="Territory")
+            ).order_by('-weight')
+
+        from_territories = Relationship.objects.filter(
+            Q(to_storyobject__name=storyobject.name) &
+                Q(from_storyobject__c_type="Territory")
+            ).order_by('-weight')
+
         story_objects = {}
 
         story_objects[storyobject] = storyobject
@@ -236,8 +251,19 @@ def place(request, place_name_slug):
             story_objects[rel.to_storyobject] = rel.to_storyobject
             story_objects[rel.from_storyobject] = rel.from_storyobject
 
+        for rel in to_territories:
+            story_objects[rel.to_storyobject] = rel.to_storyobject
+            story_objects[rel.from_storyobject] = rel.from_storyobject
+
+        for rel in from_territories:
+            story_objects[rel.to_storyobject] = rel.to_storyobject
+            story_objects[rel.from_storyobject] = rel.from_storyobject
+
         context_dict['to_places'] = to_places
         context_dict['from_places'] = from_places
+        context_dict['to_territories'] = to_territories
+        context_dict['from_territories'] = from_territories
+
         context_dict['result'] = network_personas.return_json_graph(
             story_objects)
 
@@ -251,9 +277,17 @@ def place(request, place_name_slug):
         context_dict['aspects'] = Aspect.objects.filter(
             storyobject__name=storyobject.name)
 
-        context_dict['associated_storyobjects'] = Relationship.objects.filter(
+        context_dict['from_relationships'] = Relationship.objects.filter(
+            Q(from_storyobject__name=storyobject.name) &
+                (~Q(to_storyobject__c_type="Place") &
+                 (~Q(to_storyobject__c_type="Territory")) &
+                (~Q(to_storyobject__c_type="Faction")))).order_by('-weight')
+
+        context_dict['to_relationships'] = Relationship.objects.filter(
             Q(to_storyobject__name=storyobject.name) &
-                ~Q(from_storyobject__c_type="Place")).order_by('-weight')
+                (~Q(from_storyobject__c_type="Place") &
+                (~Q(from_storyobject__c_type="Territory")) &
+                (~Q(from_storyobject__c_type="Faction")))).order_by('-weight')
 
         context_dict['scenes'] = Scene.objects.filter(place=storyobject)
 
@@ -294,7 +328,7 @@ def place(request, place_name_slug):
 
             context_dict['noteform'] = NoteForm()
 
-    except storyobject.DoesNotExist:
+    except ObjectDoesNotExist:
         pass
 
     return render(request, 'personas/place.html', context_dict)
@@ -409,7 +443,7 @@ def storyobject(request, storyobject_name_slug):
             Q(to_storyobject__name=storyobject.name) &
             (~Q(from_storyobject__c_type="Organization") &
                 ~Q(from_storyobject__c_type="Place") &
-                ~Q(to_storyobject__c_type="Faction"))).order_by('-weight')
+                ~Q(from_storyobject__c_type="Faction"))).order_by('-weight')
 
         context_dict['abilities'] = Ability.objects.filter(
             storyobject__name=storyobject.name)
@@ -434,6 +468,16 @@ def storyobject(request, storyobject_name_slug):
             ).order_by('-weight')
 
         context_dict["from_places"] = Relationship.objects.filter(
+            Q(to_storyobject__name=storyobject.name) &
+                Q(from_storyobject__c_type="Place")
+            ).order_by('-weight')
+
+        context_dict["to_territory"] = Relationship.objects.filter(
+            Q(from_storyobject__name=storyobject.name) &
+            Q(to_storyobject__c_type="Place")
+            ).order_by('-weight')
+
+        context_dict["from_territory"] = Relationship.objects.filter(
             Q(to_storyobject__name=storyobject.name) &
                 Q(from_storyobject__c_type="Place")
             ).order_by('-weight')
@@ -645,6 +689,11 @@ def story(request, story_name_slug):
                 story=story).filter(
                 published=True).filter(
                 c_type="Faction").distinct().order_by('name')
+
+        context_dict['territories'] = StoryObject.objects.filter(
+                story=story).filter(
+                published=True).filter(
+                c_type="Territory").distinct().order_by('name')
 
         context_dict['places'] = Place.objects.filter(
                 story=story).filter(
@@ -1488,7 +1537,8 @@ def add_mainmap(request, story_title_slug):
 def delete_skill(request, pk, template_name='personas/delete_skill.html'):
     skill = Skill.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(skill=skill)
-    if request.user == storyobject.creator:
+    story = storyobject.story
+    if request.user == storyobject.creator or request.user == story.author:
         if request.method=='POST':
             skill.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1515,7 +1565,8 @@ def edit_skill(request, pk, template_name='personas/edit_skill.html'):
 def delete_combat_info(request, pk, template_name='personas/delete_combat_info.html'):
     combat_info = CombatInfo.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(combatinfo=combat_info)
-    if request.user == storyobject.creator:
+    story = storyobject.story
+    if request.user == storyobject.creator or request.user == story.author:
         if request.method=='POST':
             combat_info.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1542,7 +1593,8 @@ def edit_combat_info(request, pk, template_name='personas/edit_combat_info.html'
 def delete_relationship(request, pk, template_name='personas/delete_relationship.html'):
     relationship = Relationship.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(id=relationship.from_storyobject_id)
-    if request.user == storyobject.creator:
+    story = storyobject.story
+    if request.user == storyobject.creator or request.user == story.author:
         if request.method=='POST':
             relationship.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1570,7 +1622,8 @@ def edit_relationship(request, pk, template_name='personas/edit_relationship.htm
 def delete_statistic(request, pk, template_name='personas/delete_statistic.html'):
     statistic = Statistic.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(statistic=statistic)
-    if request.user == storyobject.creator:
+    story = storyobject.story
+    if request.user == storyobject.creator or request.user == story.author:
         if request.method=='POST':
             statistic.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1598,7 +1651,8 @@ def edit_statistic(request, pk, template_name='personas/edit_statistic.html'):
 def delete_ability(request, pk, template_name='personas/delete_ability.html'):
     ability = Ability.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(ability=ability)
-    if request.user == storyobject.creator:
+    story = storyobject.story
+    if request.user == storyobject.creator or request.user == story.author:
         if request.method=='POST':
             ability.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1626,7 +1680,8 @@ def edit_ability(request, pk, template_name='personas/edit_ability.html'):
 def delete_aspect(request, pk, template_name='personas/delete_aspect.html'):
     aspect = Aspect.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(aspect=aspect)
-    if request.user == storyobject.creator:
+    story = storyobject.story
+    if request.user == storyobject.creator or request.user == story.author:
         if request.method=='POST':
             aspect.delete()
             return TemplateResponse(request, 'personas/redirect_template.html',
@@ -1653,7 +1708,8 @@ def edit_aspect(request, pk, template_name='personas/edit_aspect.html'):
 @login_required
 def delete_storyobject(request, pk, template_name='personas/delete_storyobject.html'):
     storyobject = StoryObject.objects.get(pk=pk)
-    if request.user == storyobject.creator:
+    story = storyobject.story
+    if request.user == storyobject.creator or request.user == story.author:
         if request.method=='POST':
             storyobject.delete()
             return HttpResponseRedirect('/personas/')
@@ -1678,7 +1734,8 @@ def edit_storyobject(request, pk, template_name='personas/edit_storyobject.html'
 @login_required
 def delete_place(request, pk, template_name='personas/delete_place.html'):
     place = Place.objects.get(pk=pk)
-    if request.user == place.creator:
+    story = place.story
+    if request.user == place.creator or request.user == story.author:
         if request.method=='POST':
             place.delete()
             return HttpResponseRedirect('/personas/')
@@ -1776,7 +1833,7 @@ def edit_chapter(request, pk, template_name='personas/edit_chapter.html'):
 def delete_scene(request, pk, template_name='personas/delete_scene.html'):
     scene = Scene.objects.get(pk=pk)
     story = Story.objects.get(chapter__scene=scene)
-    if request.user == story.author:
+    if request.user == story.author or request.user == story.author:
         if request.method=='POST':
             scene.delete()
             return HttpResponseRedirect('/personas/story/{}'.format(story.slug))
@@ -1803,16 +1860,20 @@ def delete_note(request, pk, template_name='personas/delete_note.html'):
 
     if note.storyobject:
         target = note.storyobject
+        story = target.story
     elif note.story:
         target = note.story
+        story = target
     elif note.chapter:
         target = note.chapter
+        story = target.story
     else:
         target = note.scene
+        story = target.chapter.story
 
     pointer = return_object(target)
 
-    if request.user == note.creator:
+    if request.user == note.creator or request.user == story.author:
         if request.method=='POST':
             note.delete()
             return HttpResponseRedirect('/personas/{}/{}'.format(pointer,
@@ -1849,7 +1910,8 @@ def edit_note(request, pk, template_name='personas/edit_note.html'):
 def delete_gamestats(request, pk, template_name='personas/delete_gamestats.html'):
     gamestats = GameStats.objects.get(pk=pk)
     storyobject = StoryObject.objects.get(gamestats=gamestats)
-    if request.user == storyobject.creator:
+    story = storyobject.story
+    if request.user == storyobject.creator or request.user == story.author:
         if request.method=='POST':
             gamestats.delete()
             return HttpResponseRedirect('/personas/{}/{}'.format(return_object(storyobject),

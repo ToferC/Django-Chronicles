@@ -185,6 +185,7 @@ class StoryObject(models.Model):
     THING = "Thing"
     FACTION = "Faction"
     ORGANIZATION = "Organization"
+    TERRITORY = "Territory"
     PLACE = "Place"
 
     CHAR_CHOICES = (
@@ -193,6 +194,7 @@ class StoryObject(models.Model):
         (CREATURE, "Creature"),
         (ORGANIZATION, "Organization"),
         (PLACE, "Place"),
+        (TERRITORY, "Territory"),
         (THING, "Thing"),
     )
 

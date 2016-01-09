@@ -42,6 +42,10 @@ def find_colour(story_object):
         node_shapes[story_object.name] = '^'
         node_colors[story_object.name] = 'v'
         node_model[story_object.name] = 'place'
+    elif story_object.c_type == "Territory":
+        node_shapes[story_object.name] = 'o'
+        node_colors[story_object.name] = 'o'
+        node_model[story_object.name] = 'storyobject'
 
 
 def return_json_graph(story_objects):
