@@ -189,18 +189,26 @@
                     {% if aspects %}
                         <ul>
                             {% for aspect in aspects %}
-                            <a data-toggle="collapse" data-target="#{{ aspect.pk }}"><li>{{ aspect }}
+                            <a data-toggle="collapse" data-target="#{{ aspect.pk }}"><li style="color:dodgerblue">{{ aspect }}
+
                                 {% if user == storyobject.creator or user == story.author %}
-                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_aspect' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></li></a>
-                            {% else %}{% endif %}
+
+                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_aspect' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
+
+                                {% else %}{% endif %}</li></a>
+
                                 <p class="collapse" id="{{ aspect.pk }}">
+
                                     {{ aspect.details }}
+
                                 </p>
                             {% endfor %}
                         </ul>
                     {% endif %}
+
                     {% if user == storyobject.creator or user == story.author %}
-                    <a href="/personas/add_aspect/{{ storyobject.slug }}" style="color:lightgray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>{% else %}{% endif %}
+                    <a href="/personas/add_aspect/{{ storyobject.slug }}" style="color:lightgray">Add Aspect <span class="glyphicon glyphicon-pencil"></span></a>
+                    {% else %}{% endif %}
                     <hr>
                 </div>
             </div>
