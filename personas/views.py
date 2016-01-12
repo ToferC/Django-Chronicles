@@ -790,8 +790,8 @@ def relationship_map(request, slug, scope):
     elif scope == "Place":
         story = Story.objects.get(slug=slug)
         title = story.title
-        story_objects = StoryObject.objects.filter(story=story).filter(
-            c_type="Place")
+        story_objects = StoryObject.objects.filter(story=story).filter(Q(
+            c_type="Place") | Q(c_type="Territory"))
 
     else:
         story = Story.objects.get(slug=slug)

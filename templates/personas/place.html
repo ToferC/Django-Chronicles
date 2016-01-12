@@ -149,11 +149,13 @@
                     {% if aspects %}
                         <ul>
                             {% for aspect in aspects %}
-                                <li>{{ aspect }}
-                                    {% if user == storyobject.creator or user == story.author %}
-                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_aspect' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
-                                    {% else %}{% endif %}
-                                </li>
+                            <a data-toggle="collapse" data-target="#{{ aspect.pk }}"><li>{{ aspect }}
+                                {% if user == storyobject.creator or user == story.author %}
+                                    <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_aspect' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a></li></a>
+                            {% else %}{% endif %}
+                                <p class="collapse" id="{{ aspect.pk }}">
+                                    {{ aspect.details }}
+                                </p>
                             {% endfor %}
                         </ul>
                     {% endif %}

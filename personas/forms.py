@@ -307,7 +307,7 @@ class SkillFormSetHelper(FormHelper):
 class AspectForm(forms.ModelForm):
     class Meta:
         model = Aspect
-        fields = ['name', 'label']
+        fields = ['name', 'label', 'details']
 
     def __init__(self, *args, **kwargs):
         super(AspectForm, self).__init__(*args, **kwargs)

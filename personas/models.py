@@ -21,6 +21,7 @@ class Aspect(models.Model):
 
     label = models.CharField(max_length=12, choices=ASPECT_TYPE_CHOICES, default="CO", blank=True)
     name = models.CharField(max_length=128)
+    details = models.TextField(blank=True, null=True, help_text="Enter any additional details about your aspect here.")
     storyobject = models.ForeignKey('StoryObject')
 
     def save(self, *args, **kwargs):
