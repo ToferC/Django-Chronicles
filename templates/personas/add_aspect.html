@@ -34,6 +34,7 @@
         <a class="fancybox" data-fancybox-type="iframe" href="{% url 'edit_aspect' pk=aspect.pk %}" style="color:gray"><span class="glyphicon glyphicon-cog"></span></a>
         {% else %}{% endif %}
         </li>
+        <p>{{ aspect.details }}</p>
     </ul>
     {% endfor %}
     {% else %}

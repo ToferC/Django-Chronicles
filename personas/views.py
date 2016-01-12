@@ -1086,8 +1086,9 @@ def add_aspect(request, storyobject_name_slug):
             else:
                 name = cd.get('name')
                 label = cd.get('label')
+                details = cd.get('details')
                 aspect = Aspect(
-                    name=name, label=label,
+                    name=name, label=label, details=details,
                     storyobject=aspect_storyobject)
 
                 aspect.save()
