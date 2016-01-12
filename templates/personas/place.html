@@ -67,7 +67,7 @@
             {% endfor %}
             </ul>
         {% else %}
-        None
+        <li>{{ storyobject.name }} has no related factions.</li>
         {% endif %}
         <hr>
 
@@ -99,7 +99,7 @@
                     {% endif %}
                     </ul>
                 {% else %}
-                {{ storyobject.name }} has no related territories.
+                <li>{{ storyobject.name }} has no related territories.</li>
             {% endif %}
                     <hr>
 
@@ -132,7 +132,7 @@
                     {% endif %}
                     </ul>
                 {% else %}
-                {{ storyobject.name }} has no related places.
+                <li>{{ storyobject.name }} has no related places.</li>
             {% endif %}
                     <hr>
                         <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=story.slug scope='Place' %}"> Place Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
