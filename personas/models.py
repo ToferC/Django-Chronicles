@@ -496,6 +496,10 @@ class UserProfile(models.Model):
     image = models.ImageField(
         upload_to='user_images/%Y/%m/%d',
         default='profile_images/shadow_figure.jpeg')
+    own_notifications = models.BooleanField(default=False,
+                                            help_text="Enable this to get email notifications for your own changes.")
+    other_notifications = models.BooleanField(default=True,
+                                              help_text="Enable this to get email notifications for changes other people make.")
 
     def __str__(self):
         return self.user.username
