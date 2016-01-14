@@ -8,14 +8,14 @@ class FlatPageAdmin(admin.ModelAdmin):
 
 class StoryObjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'story', 'c_type', 'role')
+    list_display = ('name', 'creator', 'story', 'c_type', 'role')
 
 class StoryOptionsAdmin(admin.ModelAdmin):
     list_display = ('story',)
 
 class PlaceAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'story', 'role')
+    list_display = ('name', 'creator', 'story', 'role')
 
 class StoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
@@ -28,7 +28,7 @@ class SceneAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug')
 
 class AspectAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'details')
 
 class PosterAdmin(admin.ModelAdmin):
     list_display = ('title', 'publication_date')
@@ -44,7 +44,7 @@ class CommuniqueAdmin(admin.ModelAdmin):
     list_display = ('author', 'receiver', 'content', 'date', 'rating')
 
 class AbilityAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'description', 'storyobject')
 
 class GameStatsAdmin(admin.ModelAdmin):
     list_display = ('pk', 'storyobject', 'content')
