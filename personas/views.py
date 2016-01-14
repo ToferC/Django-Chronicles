@@ -14,7 +14,7 @@ from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateVi
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
 from personas.models import StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment, GameStats, Place
-from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster, StoryOptions
+from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster, StoryOptions, UserProfile
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, StatisticForm, CombatInfoForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm, StoryOptionsForm
 from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm, PlaceForm
@@ -817,14 +817,16 @@ def register(request):
 
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
-        profile_form = UserProfileForm(request.POST, request.FILES)
+        #profile_form = UserProfileForm(request.POST, request.FILES)
 
-        if user_form.is_valid() and profile_form.is_valid():
+        if user_form.is_valid():
             user = user_form.save()
 
             user.set_password(user.password)
             user.save()
 
+            profile = UserProfile(user=user)
+            profile.save()
             #profile = profile_form.save(commit=False)
             #profile.user = request.user
 
@@ -846,15 +848,14 @@ def register(request):
             return index(request)
 
         else:
-            print(user_form.errors, profile_form.errors)
+            print(user_form.errors)
 
     else:
         user_form = UserForm()
-        profile_form = UserProfileForm()
+        #profile_form = UserProfileForm()
 
     return render(request, 'personas/register.html',
-        {'user_form': user_form, 'profile_form': profile_form, 
-        'registered': registered})
+        {'user_form': user_form, 'registered': registered})
 
 
 def user_login(request):
