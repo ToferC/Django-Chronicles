@@ -484,7 +484,6 @@ def storyobject(request, storyobject_name_slug):
 
         context_dict['my_memberships'] = Relationship.objects.filter(
             Q(from_storyobject__name=storyobject.name) &
-            (Q(from_storyobject__c_type="Organization") |
             Q(to_storyobject__c_type="Organization"))).order_by('-weight')
 
         context_dict['other_memberships'] = Relationship.objects.filter(
