@@ -533,7 +533,7 @@ class SceneForm(forms.ModelForm):
 class MainMapForm(forms.ModelForm):
     class Meta:
         model = MainMap
-        fields = ["name", "base_latitude", "base_longitude", "tiles"]
+        fields = ["name", "base_latitude", "base_longitude", "zoom", "tiles"]
 
     def __init__(self, *args, **kwargs):
         try:

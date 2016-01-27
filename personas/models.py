@@ -228,6 +228,7 @@ class StoryObject(models.Model):
 class Place(StoryObject):
     latitude = models.FloatField(default=50.0)
     longitude = models.FloatField(default=-1.0)
+    zoom = models.IntegerField(default=6, help_text="Sets the default zoom for your place")
     main_map = models.ForeignKey("MainMap", blank=True, null=True, verbose_name='Map',
                                 help_text="Leave this blank for the default map, or choose from the list.")
 
@@ -358,6 +359,9 @@ class StoryOptions(models.Model):
         help_text='''This field is used for Leaflet maps in the engine.
         The default tile set is openstreetmap.
         You probably shouldn't touch this unless you have another tileset in mind.''')
+    base_latitude = models.FloatField(blank=True, default=50.0000)
+    base_longitude = models.FloatField(blank=True, default=-1.3000)
+    zoom = models.IntegerField(default=6, help_text="Sets the default zoom for your map")
     skill_type_name_1 = models.CharField(
         max_length=24, default="General", blank=True,
         help_text='''This field and the skill fields below set the name for different skill types in a game.
@@ -474,6 +478,7 @@ class MainMap(models.Model):
     story = models.ForeignKey(Story)
     base_latitude = models.FloatField(blank=True)
     base_longitude = models.FloatField(blank=True)
+    zoom = models.IntegerField(default=6, help_text="Sets the default zoom for your map")
     tiles = models.CharField(max_length=256, blank=True,
         default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
     published = models.BooleanField(default=True,

@@ -49,7 +49,7 @@
 {% endblock %}
 
 <script type="text/javascript">
-        var map = L.map('map').setView([{{ base_latitude|floatformat:6 }}, {{ base_longitude|floatformat:6 }}], 6);
+        var map = L.map('map').setView([{{ base_latitude|floatformat:6 }}, {{ base_longitude|floatformat:6 }}], {{ zoom }});
 
         L.tileLayer("{{ tile }}", {
             maxZoom: 18,
@@ -60,7 +60,7 @@
         }).addTo(map);
 
         {% for place in places %}
-        L.marker([{{ place.latitude|floatformat:6 }}, {{ place.longitude|floatformat:6 }}], 6).addTo(map)
+        L.marker([{{ place.latitude|floatformat:6 }}, {{ place.longitude|floatformat:6 }}], {{ zoom }}).addTo(map)
         .bindPopup( "{{place.name}}" ).openPopup();
         {% endfor %}
 

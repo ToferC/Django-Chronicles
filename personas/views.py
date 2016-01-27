@@ -216,6 +216,7 @@ def place(request, place_name_slug):
 
         context_dict['latitude'] = storyobject.latitude
         context_dict['longitude'] = storyobject.longitude
+        context_dict['zoom'] = storyobject.zoom
 
         # Return JSON object for relationship map
 
@@ -750,6 +751,7 @@ def main_map(request, main_map_slug):
         context_dict['storyoptions'] = StoryOptions.objects.get(story=main_map.story)
         context_dict['base_latitude'] = main_map.base_latitude
         context_dict['base_longitude'] = main_map.base_longitude
+        context_dict['zoom'] = main_map.zoom
         context_dict['tile'] = main_map.tiles
 
         context_dict['places'] = Place.objects.filter(
@@ -925,15 +927,15 @@ def add_storyobject(request, story_title_slug, c_type):
 def add_place(request, story_title_slug):
 
     story = Story.objects.get(slug=story_title_slug)
+    storyoptions = StoryOptions.objects.get(story=story)
 
     mainmap = MainMap.objects.filter(story=story).first()
 
     if mainmap:
         pass
     else:
-        mainmap = MainMap(base_latitude=50.000, base_longitude=-1.3,
-            story=story,
-            tiles="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+        mainmap = MainMap(base_latitude=storyoptions.base_latitude, base_longitude=storyoptions.base_longitude,
+            story=story, zoom=storyoptions.zoom, tiles=storyoptions.map_tile)
 
     c_type = 'Place'
 

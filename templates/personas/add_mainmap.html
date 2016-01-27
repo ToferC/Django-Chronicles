@@ -42,7 +42,8 @@
 </div>
 
 <script type="text/javascript">
-        var map = L.map('map').setView([53, -1], 6);
+        var map = L.map('map').setView([ {{ storyoptions.base_latitude }}, {{ storyoptions.base_longitude }}],
+        {{ storyoptions.zoom }});
 
         L.tileLayer("{{ storyoptions.map_tile }}", {
             maxZoom: 18,
@@ -57,7 +58,7 @@
         function onMapClick(e) {
             popup
                 .setLatLng(e.latlng)
-                .setContent("You clicked the map at " + e.latlng.toString())
+                .setContent("You clicked the map at " + e.latlng.toString() + " Zoom: " + map.getZoom())
                 .openOn(map);
         }
 
