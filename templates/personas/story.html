@@ -89,7 +89,24 @@
                             <br><br>
                         {% endif %}
                         <a href="/personas/add_chapter/{{ story.slug }}" style="color:gray">Add Chapter <span class="glyphicon glyphicon-pencil"></span></a>
+                </div>
+                    <hr>
+                    <div class="row">
+                        <h3>Events:</h3>
+                        {% if events %}
+                                {% for storyobject in events %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>{{ story.title }} has no Events.</strong><br>
+                        {% endif %}
+                        <br><br>
+                        <a href="/personas/add_storyobject/{{ story.slug }}/Event" style="color:gray">Add Event <span class="glyphicon glyphicon-pencil"></span></a>
                         <hr>
+                        <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=story.slug scope='Event' %}"> Events Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
+                    <hr>
                     </div>
                     </div>
                     </div>

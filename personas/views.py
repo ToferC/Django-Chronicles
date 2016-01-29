@@ -100,6 +100,11 @@ def workshop(request, user):
             creator=user).filter(c_type="Organization").filter(
             published=False).order_by("story", "name")
 
+        # Set up Events
+        context_dict['unpublished_events'] = StoryObject.objects.filter(
+            creator=user).filter(c_type="Event").filter(
+            published=False).order_by("story", "name")
+
         # Set up Factions
         context_dict['unpublished_factions'] = StoryObject.objects.filter(
             creator=user).filter(c_type="Faction").filter(
@@ -696,6 +701,11 @@ def story(request, story_name_slug):
                 published=True).filter(
                 c_type="Territory").distinct().order_by('name')
 
+        context_dict['events'] = StoryObject.objects.filter(
+                story=story).filter(
+                published=True).filter(
+                c_type="Event").distinct().order_by('name')
+
         context_dict['places'] = Place.objects.filter(
                 story=story).filter(
                 published=True).distinct().order_by('name')
@@ -789,6 +799,12 @@ def relationship_map(request, slug, scope):
         story_objects = StoryObject.objects.filter(story=story).filter(
             Q(c_type="Faction") | Q(c_type="Organization"))
 
+    elif scope == "Event":
+        story = Story.objects.get(slug=slug)
+        title = story.title
+        story_objects = StoryObject.objects.filter(story=story).filter(
+            c_type="Event")
+
     elif scope == "Place":
         story = Story.objects.get(slug=slug)
         title = story.title
@@ -799,7 +815,7 @@ def relationship_map(request, slug, scope):
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(Q(
-            c_type="Character") | Q(c_type="Creature") | Q(c_type="Thing"))
+            c_type="Character") | Q(c_type="Creature") | Q(c_type="Thing") | Q(c_type="Event"))
 
     else:
         story = Story.objects.get(slug=slug)
@@ -917,7 +933,7 @@ def add_storyobject(request, story_title_slug, c_type):
 
     else:
 
-        storyobject_form = StoryObjectForm()
+        storyobject_form = StoryObjectForm(initial={'c_type': c_type})
 
     return render(request, 'personas/add_storyobject.html',
         {'storyobject_form': storyobject_form, 'story':story, "c_type":c_type})

@@ -188,6 +188,7 @@ class StoryObject(models.Model):
     ORGANIZATION = "Organization"
     TERRITORY = "Territory"
     PLACE = "Place"
+    EVENT = "Event"
 
     CHAR_CHOICES = (
         (FACTION, "Faction"),
@@ -197,6 +198,7 @@ class StoryObject(models.Model):
         (PLACE, "Place"),
         (TERRITORY, "Territory"),
         (THING, "Thing"),
+        (EVENT, "Event"),
     )
 
     creator = models.ForeignKey(User, unique=False, blank=True)

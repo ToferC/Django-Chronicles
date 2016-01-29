@@ -396,6 +396,17 @@
       .on("mouseover", fade(.1))
       .on("mouseout", fade(1));
 
+    var nodeimages = svg.selectAll(".nodeimage")
+      .data(dataset.nodes)
+      .enter()
+      .append("image")
+      .attr({"x":function(d){return d.x + 12;},
+              "y":function(d){return d.y + 12;},
+              "class":"nodeimage"})
+      .attr("width", "50px")
+      .attr("height", "50px")
+      .attr("xlink:href", function(d) { return d.image; });
+
     var linkedByIndex = {};
     dataset.links.forEach(function(d) {
         linkedByIndex[d.source.index + "," + d.target.index] = 1;
@@ -405,7 +416,7 @@
         return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
     }
 
-    var nodelabels = svg.selectAll(".nodelabel") 
+    var nodelabels = svg.selectAll(".nodelabel")
        .data(dataset.nodes)
        .enter()
        .append("text")
@@ -461,7 +472,7 @@
             .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
             .attr('fill', '#ccc')
             .attr('stroke','#ccc');
-     
+
 
     force.on("tick", function(){
 
@@ -475,7 +486,10 @@
                     "cy":function(d){return d.y;}
         });
 
-        nodelabels.attr("x", function(d) { return d.x; }) 
+        nodelabels.attr("x", function(d) { return d.x; })
+                  .attr("y", function(d) { return d.y; });
+
+        nodeimages.attr("x", function(d) { return d.x; })
                   .attr("y", function(d) { return d.y; });
 
         edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;

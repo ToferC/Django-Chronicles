@@ -636,7 +636,7 @@ window.location.hash = e.target.hash;
     var scale = d3.scale.linear().range([minRadius,maxRadius]);
 
     var colors = d3.scale.category10()
-      .domain(['r', 'b', 'g', 'c', 'y']);
+      .domain(['r', 'b', 'g', 'c', 'y', 'o', 'w']);
 
     var dataset = {{ result|safe }};
  
@@ -645,6 +645,7 @@ window.location.hash = e.target.hash;
         .attr("preverveAspectRation", "xMinYMin meet")
         .attr("viewBox", "0 0 400 400")
         .classed("svg-content-responsive", true);
+
 
     var force = d3.layout.force()
         .nodes(dataset.nodes)
@@ -675,6 +676,17 @@ window.location.hash = e.target.hash;
       .call(force.drag)
       .on("mouseover", fade(.1))
       .on("mouseout", fade(1));
+
+    var nodeimages = svg.selectAll(".nodeimage")
+      .data(dataset.nodes)
+      .enter()
+      .append("image")
+      .attr({"x":function(d){return d.x + 12;},
+              "y":function(d){return d.y + 12;},
+              "class":"nodeimage"})
+      .attr("width", "50px")
+      .attr("height", "50px")
+      .attr("xlink:href", function(d) { return d.image; });
 
     var linkedByIndex = {};
     dataset.links.forEach(function(d) {
@@ -756,6 +768,9 @@ window.location.hash = e.target.hash;
         });
 
         nodelabels.attr("x", function(d) { return d.x; }) 
+                  .attr("y", function(d) { return d.y; });
+
+        nodeimages.attr("x", function(d) { return d.x; })
                   .attr("y", function(d) { return d.y; });
 
         edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;

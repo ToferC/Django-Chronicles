@@ -97,6 +97,21 @@
 
                         <hr>
                     </div>
+
+                    <div class="row">
+                        <h3>Events:</h3>
+                        {% if unpublished_events %}
+                                {% for storyobject in unpublished_events %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>No unpublished Events.</strong><br>
+                        {% endif %}
+                        <hr>
+                    </div>
+
                 </div>
 
                 <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
