@@ -137,7 +137,7 @@
                     <hr>
                         <a role="button" class="btn btn-primary" href="{% url 'relationship_map' slug=story.slug scope='Place' %}"> Place Relationship Map   <span class="glyphicon glyphicon-fullscreen"></span></a>
                     <hr>
-        <hr><br>
+        <br>
 </div>
 
 <div class="tab-content">
@@ -255,6 +255,7 @@
                 <a role="button" class="btn btn-primary" href="{% url 'edit_place' pk=storyobject.pk %}">Edit {{ storyobject.c_type }}  <span class="glyphicon glyphicon-cog"></span></a>
                 
                 {% else %}{% endif %}
+            <hr>
 </div> <!-- Container Ends -->
 </div> <!-- Tab content ends -->
 </div> <!-- End of details tab -->
