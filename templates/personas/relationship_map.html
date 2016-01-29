@@ -58,17 +58,6 @@
       .on("mouseover", fade(.1))
       .on("mouseout", fade(1));
 
-    var nodeimages = svg.selectAll(".nodeimage")
-      .data(dataset.nodes)
-      .enter()
-      .append("image")
-      .attr({"x":function(d){return d.x + 12;},
-              "y":function(d){return d.y + 12;},
-              "class":"nodeimage"})
-      .attr("width", "50px")
-      .attr("height", "50px")
-      .attr("xlink:href", function(d) { return d.image; });
-
     var linkedByIndex = {};
     dataset.links.forEach(function(d) {
         linkedByIndex[d.source.index + "," + d.target.index] = 1;
@@ -151,8 +140,6 @@
         nodelabels.attr("x", function(d) { return d.x; })
                   .attr("y", function(d) { return d.y; });
 
-        nodeimages.attr("x", function(d) { return d.x; })
-                  .attr("y", function(d) { return d.y; });
 
         edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
                                            //console.log(d)
