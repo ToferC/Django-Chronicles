@@ -1,6 +1,7 @@
 from django.contrib import admin
 from personas.models import StoryObject, Relationship, Story, MainMap, Chapter, Scene, Ability, Aspect, Skill, Note, Communique, UserProfile, Statistic, CombatInfo, GalleryImage, ScratchPad, Equipment, Poster, GameStats, Place, StoryOptions
 from personas.forms import RelationshipForm
+from imagekit.admin import AdminThumbnail
 #from leaflet.admin import LeafletGeoAdmin
 
 class FlatPageAdmin(admin.ModelAdmin):
@@ -8,7 +9,8 @@ class FlatPageAdmin(admin.ModelAdmin):
 
 class StoryObjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'creator', 'story', 'c_type', 'role')
+    list_display = ('name', 'admin_thumbnail', 'creator', 'story', 'c_type', 'role')
+    admin_thumbnail = AdminThumbnail(image_field='thumbnail')
 
 class StoryOptionsAdmin(admin.ModelAdmin):
     list_display = ('story',)

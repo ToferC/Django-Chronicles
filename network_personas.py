@@ -61,7 +61,7 @@ def return_json_graph(story_objects):
         G.add_node(so.name, name=so.name, role=so.role,
             url="http://story-chronicles.herokuapp.com/personas/{}/{}".format(node_model[so.name], so.slug),
             node_color=node_colors[so.name], node_shape=node_shapes[so.name],
-            image=so.image.url)
+            image=so.thumbnail.url)
 
         links = Relationship.objects.filter(
                 Q(from_storyobject__name=so.name))

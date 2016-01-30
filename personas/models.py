@@ -4,6 +4,8 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django_markdown.models import MarkdownField
 from personas.personas_email import mail_format as mail_format
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 
 class Aspect(models.Model):
@@ -212,6 +214,11 @@ class StoryObject(models.Model):
 
     image = models.ImageField(
         upload_to='profile_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')
+    thumbnail = ImageSpecField(source='image',
+        processors=[ResizeToFill(50, 50)],
+        format='JPEG',
+        options={'quality': 60}
+        )
     slug = models.SlugField(unique=True)
 
     published = models.BooleanField(default=True,
