@@ -9,8 +9,8 @@ class FlatPageAdmin(admin.ModelAdmin):
 
 class StoryObjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'admin_thumbnail', 'creator', 'story', 'c_type', 'role')
-    admin_thumbnail = AdminThumbnail(image_field='thumbnail')
+    list_display = ('name', 'creator', 'story', 'c_type', 'role')
+    #admin_thumbnail = AdminThumbnail(image_field='thumbnail')
 
 class StoryOptionsAdmin(admin.ModelAdmin):
     list_display = ('story',)
