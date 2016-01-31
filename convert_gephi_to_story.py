@@ -45,7 +45,7 @@ def parse_nodes_and_edges(story_name):
 
             print("StoryObjects converted: {}".format(nodes[node]['name']))
 
-        except psycopg2.IntegrityError:
+        except django.db.utils.IntegrityError:
             print("StoryObjects {} already exists".format(nodes[node]['name']))
             pass
 
