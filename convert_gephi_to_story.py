@@ -35,14 +35,19 @@ def parse_nodes_and_edges(story_name):
             edges.append([source, target, relationship_class])
 
     for node in nodes:
-        s = StoryObject.objects.get_or_create(
-            name=nodes[node]['name'],
-            role=nodes[node]['role'],
-            description=nodes[node]['description'],
-            story=Story.objects.get(title="The Fog"),
-            creator=User.objects.get(username="christopherallison"))
+        try:
+            s = StoryObject.objects.get_or_create(
+                name=nodes[node]['name'],
+                role=nodes[node]['role'],
+                description=nodes[node]['description'],
+                story=Story.objects.get(title="The Fog"),
+                creator=User.objects.get(username="christopherallison"))
 
-        print("StoryObjects converted: {}".format(nodes[node]['name']))
+            print("StoryObjects converted: {}".format(nodes[node]['name']))
+
+        except psycopg2.IntegrityError:
+            print("StoryObjects {} already exists".format(nodes[node]['name']))
+            pass
 
     for edge in edges:
         source, target, relationship_class = edge
