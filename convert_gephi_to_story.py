@@ -41,7 +41,8 @@ def parse_nodes_and_edges(story_name):
                 role=nodes[node]['role'],
                 description=nodes[node]['description'],
                 story=Story.objects.get(title="The Fog"),
-                creator=User.objects.get(username="christopherallison"))
+                creator=User.objects.get(username="christopherallison"),
+                slug=slugify("{}-{}m".format(42, nodes[node]['name'])))
 
             print("StoryObjects converted: {}".format(nodes[node]['name']))
 
