@@ -16,6 +16,9 @@ nodes = {}
 edges = []
 
 def parse_nodes_and_edges(story_name):
+
+    story=Story.objects.get(title="London Fog")
+
     with open(story_name + '_nodes.csv', 'r') as f:
         data = csv.DictReader(f)
 
@@ -41,7 +44,7 @@ def parse_nodes_and_edges(story_name):
                 name=nodes[node]['name'],
                 role=nodes[node]['role'],
                 description=nodes[node]['description'],
-                story=Story.objects.get(title="London Fog"),
+                story=story,
                 creator=User.objects.get(username="christopherallison"))
 
             print("StoryObjects converted: {}".format(nodes[node]['name']))
@@ -54,9 +57,9 @@ def parse_nodes_and_edges(story_name):
         source, target, relationship_class = edge
         r = Relationship.objects.get_or_create(
             from_storyobject = StoryObject.objects.get(
-            name=nodes[source]['name']),
+            name=nodes[source]['name'], story=story),
             to_storyobject = StoryObject.objects.get(
-            name=nodes[target]['name']),
+            name=nodes[target]['name'], story=story),
             relationship_class = relationship_class[:32],
             weight=5, relationship_description="To be added")
 
