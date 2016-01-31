@@ -28,7 +28,8 @@ class ChapterAdmin(admin.ModelAdmin):
 
 class SceneAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
-    list_display = ('title', 'scene_type', 'purpose', 'resolution')
+    list_display = ('title', 'chapter', 'order',
+        'scene_type', 'purpose', 'resolution')
 
 class AspectAdmin(admin.ModelAdmin):
     list_display = ('name', 'details')

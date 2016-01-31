@@ -51,7 +51,7 @@ else:
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
+        'DIRS': [TEMPLATE_PATH,
             # insert your TEMPLATE_DIRS here
         ],
         'APP_DIRS': True,
@@ -67,7 +67,9 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
+                #'account.context_processors.account',
             ],
+            'debug': DEBUG,
         },
     },
 ]
@@ -107,6 +109,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'imagekit',
+    #'account',
 )
 
 SITE_ID = 1
@@ -124,6 +127,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'account.middleware.LocaleMiddleware',
+    #'account.middleware.TimezoneMiddleware',
 )
 
 ROOT_URLCONF = 'persona2.urls'
@@ -203,8 +208,6 @@ DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 STATICFILES_DIRS = (STATIC_PATH,)
-
-TEMPLATE_DIRS = [TEMPLATE_PATH,]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 

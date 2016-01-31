@@ -20,3 +20,9 @@ class PersonasConfig(AppConfig):
         watson.register(Scene.objects.filter(published=True))
         Place = self.get_model("Place")
         watson.register(Place.objects.all())
+
+'''
+class PinaxAccountConfig(AppConfig):
+    name = 'account'
+    label = 'pinax-account'
+'''
