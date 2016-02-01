@@ -164,7 +164,7 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Story
         fields = ("title", "setting", "themes", "description", "genre", "url",
-            "chapters", "storyobjects", "nations")
+            "chapters", "storyobjects")
 
 
 class StoryViewSet(viewsets.ModelViewSet):

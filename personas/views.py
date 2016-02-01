@@ -950,7 +950,8 @@ def add_place(request, story_title_slug):
     if mainmap:
         pass
     else:
-        mainmap = MainMap(base_latitude=storyoptions.base_latitude, base_longitude=storyoptions.base_longitude,
+        mainmap = MainMap(title="Default Map", base_latitude=storyoptions.base_latitude,
+            base_longitude=storyoptions.base_longitude,
             story=story, zoom=storyoptions.zoom, tiles=storyoptions.map_tile)
 
     c_type = 'Place'
@@ -974,7 +975,11 @@ def add_place(request, story_title_slug):
 
     else:
 
-        place_form = PlaceForm(story=story)
+        place_form = PlaceForm(story=story, initial={
+            'latitude': storyoptions.base_latitude,
+            'longitude': storyoptions.base_longitude,
+            'zoom': storyoptions.zoom,
+            'main_map': mainmap})
 
     return render(request, 'personas/add_place.html',
         {'place_form': place_form, 'story':story, "c_type":c_type,

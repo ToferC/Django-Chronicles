@@ -197,7 +197,6 @@ class StoryObject(models.Model):
         (CHARACTER, "Character"),
         (CREATURE, "Creature"),
         (ORGANIZATION, "Organization"),
-        (PLACE, "Place"),
         (TERRITORY, "Territory"),
         (THING, "Thing"),
         (EVENT, "Event"),
@@ -219,7 +218,7 @@ class StoryObject(models.Model):
         format='JPEG',
         options={'quality': 60}
         )
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, max_length=255)
 
     published = models.BooleanField(default=True,
         help_text="Elements that are NOT published will only be viewable in your Workshop.")
@@ -477,6 +476,9 @@ class Story(models.Model):
         super(Story, self).save(*args, **kwargs)
         self.storyoptions = StoryOptions.objects.get_or_create(
             story=self)
+        self.mainmap = MainMap.objects.get_or_create(
+            name="{} Map".format(self.title),
+            story=self)
 
     def __str__(self):
         return self.title
@@ -485,8 +487,8 @@ class Story(models.Model):
 class MainMap(models.Model):
     name = models.CharField(max_length=64)
     story = models.ForeignKey(Story)
-    base_latitude = models.FloatField(blank=True)
-    base_longitude = models.FloatField(blank=True)
+    base_latitude = models.FloatField(blank=True, default=50.000)
+    base_longitude = models.FloatField(blank=True, default=-0.15)
     zoom = models.IntegerField(default=6, help_text="Sets the default zoom for your map")
     tiles = models.CharField(max_length=256, blank=True,
         default="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
@@ -495,8 +497,6 @@ class MainMap(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        self.story.object_count = F('object_count') + 1
-        self.story.save()
         self.slug = slugify("{}-{}".format(self.story.id, self.name))
         super(MainMap, self).save(*args, **kwargs)
 
