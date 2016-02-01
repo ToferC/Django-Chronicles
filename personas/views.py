@@ -17,7 +17,7 @@ from personas.models import StoryObject, Relationship, Aspect, Ability, Story, M
 from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster, StoryOptions, UserProfile
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, StatisticForm, CombatInfoForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm, StoryOptionsForm
-from personas.forms import BatchCommonStoryObjectForm, BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm, PlaceForm
+from personas.forms import BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm, PlaceForm
 
 from datetime import datetime
 import network_personas

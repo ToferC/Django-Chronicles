@@ -16,6 +16,17 @@ from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions, Inl
 
 import datetime
 
+# Choice fields for storyobjects
+
+CHARACTER = "Character"
+CREATURE = "Creature"
+THING = "Thing"
+FACTION = "Faction"
+ORGANIZATION = "Organization"
+TERRITORY = "Territory"
+PLACE = "Place"
+EVENT = "Event"
+
 
 class StoryObjectForm(forms.ModelForm):
     class Meta:
@@ -29,6 +40,16 @@ class StoryObjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
 
         super(StoryObjectForm, self).__init__(*args, **kwargs)
+
+        self.fields['c_type'].choices = (
+        (FACTION, "Faction"),
+        (CHARACTER, "Character"),
+        (CREATURE, "Creature"),
+        (ORGANIZATION, "Organization"),
+        (TERRITORY, "Territory"),
+        (THING, "Thing"),
+        (EVENT, "Event"),
+    )
 
         self.helper = FormHelper(self)
         self.helper.layout.append(
@@ -92,55 +113,16 @@ class BatchStoryObjectForm(forms.ModelForm):
         model = StoryObject
         fields = ["name", "role", "c_type", "description", "image"]
 
-
 class BatchFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
         super(BatchFormSetHelper, self).__init__(*args, **kwargs)
+
         self.form_method = 'post'
         self.form_tag = False
         self.layout = Layout('name','role','c_type', 'description', 'image'
             )
         self.render_required_fields = True
         self.add_input(Submit("submit", "Save"))
-
-
-class BatchCommonStoryObjectForm(forms.Form):
-
-    gamestats_toggle = forms.BooleanField(
-     help_text="Check to enable simple game stats for this story object.",
-        label="Enable Game Stats?", required = False, initial=True)
-    stats_toggle = forms.BooleanField(
-     help_text="Check to enable detailed statistics for this story object.",
-        label="Enable Statistics?", required = False)
-    skill_toggle = forms.BooleanField(
-     help_text="Check to enable skills for this story object.",
-        label="Enable Skills?", required = False)
-    combat_toggle = forms.BooleanField(
-     help_text="Check to enable combat info for this story object.",
-        label="Enable Combat Info?", required = False)
-    equipment_toggle = forms.BooleanField(
-     help_text="Check to enable equipment for this story object.",
-        label="Enable Equipment?", required = False)
-    gallery_toggle = forms.BooleanField(
-     help_text="Check to enable gallery images for this story object.",
-        label="Enable Gallery Images?", required = False)
-    social_toggle = forms.BooleanField(
-     help_text="Check to enable social functionality for this story object.",
-        label="Enable Social Functions?", required = False)
-    published = forms.BooleanField(
-        help_text="Elements that are NOT published will only be viewable in your Workshop.", required = False,
-        initial=True)
-
-
-    def __init__(self, *args, **kwargs):
-        super(BatchCommonStoryObjectForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.form_tag = False
-        self.helper.layout.append(
-            FormActions(
-                HTML("""<a role="button" class="btn btn-default" enctype="multipart/form-data"
-                        href="/personas/storyobject/{{ storyobject.slug }}/#combat">Cancel</a>"""),
-                Submit('save', 'Submit'),))
 
 
 class SkillForm(forms.ModelForm):

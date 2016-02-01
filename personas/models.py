@@ -197,6 +197,7 @@ class StoryObject(models.Model):
         (CHARACTER, "Character"),
         (CREATURE, "Creature"),
         (ORGANIZATION, "Organization"),
+        (PLACE, "Place"),
         (TERRITORY, "Territory"),
         (THING, "Thing"),
         (EVENT, "Event"),
