@@ -71,9 +71,7 @@ class PlaceForm(forms.ModelForm):
     class Meta:
         model = Place
         fields = "__all__"
-        exclude = ['slug', 'creator', 'story', 'c_type',
-        'stats_toggle', 'combat_toggle', 'skill_toggle', 'equipment_toggle',
-        'social_toggle']
+        exclude = ['slug', 'creator', 'story', 'c_type']
 
     def __init__(self, *args, **kwargs):
 

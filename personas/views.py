@@ -1782,7 +1782,7 @@ def edit_place(request, pk, template_name='personas/edit_place.html'):
     storyoptions = StoryOptions.objects.get(story=story)
 
     try:
-        mainmap = MainMap.objects.filter(place=place)
+        mainmap = place.main_map
     except AttributeError:
         mainmap = None
 
