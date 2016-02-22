@@ -46,7 +46,7 @@
 </div>
 
 <script type="text/javascript">
-        var map = L.map('map').setView([53, -1], 6);
+        var map = L.map('map').setView([{{ main_map.base_latitude|floatformat:6 }}, {{ main_map.base_longitude|floatformat:6 }}], {{ main_map.zoom }});
 
         L.tileLayer("{{ main_map.tiles }}", {
             maxZoom: 18,
@@ -61,7 +61,7 @@
         function onMapClick(e) {
             popup
                 .setLatLng(e.latlng)
-                .setContent("You clicked the map at " + e.latlng.toString() + " Zoom: " + map.getZoom())
+                .setContent("Coordinates set at " + e.latlng.toString() + " Zoom: " + map.getZoom())
                 .openOn(map);
 
                 document.getElementById("id_base_latitude").value= e.latlng.lat;
