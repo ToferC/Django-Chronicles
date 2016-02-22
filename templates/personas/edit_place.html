@@ -39,7 +39,7 @@
         {{ place.zoom }});
 
         L.tileLayer("{{ tiles }}", {
-            maxZoom: 13,
+            maxZoom: 18,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
                 '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                 'Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -55,7 +55,7 @@
         function onMapClick(e) {
             popup
                 .setLatLng(e.latlng)
-                .setContent("You clicked the map at " + e.latlng.toString() + " Zoom: " + map.getZoom())
+                .setContent("Coordinates set to " + e.latlng.toString() + " Zoom: " + map.getZoom())
                 .openOn(map);
                 document.getElementById("id_latitude").value= e.latlng.lat;
                 document.getElementById("id_longitude").value= e.latlng.lng;
