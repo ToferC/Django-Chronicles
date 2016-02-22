@@ -21,7 +21,7 @@
     <h3>Edit Map</h3>
     <p>Edit and specify your base coordinates and any templates that you want to use for the map.</p>
 
-    <div id="map" style="width: 500px; height: 400px"></div>
+    <div id="map" style="width: 100%; height: 400px"></div>
 
     </div>
 {% endblock %}
@@ -63,6 +63,10 @@
                 .setLatLng(e.latlng)
                 .setContent("You clicked the map at " + e.latlng.toString() + " Zoom: " + map.getZoom())
                 .openOn(map);
+
+                document.getElementById("id_base_latitude").value= e.latlng.lat;
+                document.getElementById("id_base_longitude").value= e.latlng.lng;
+                document.getElementById("id_zoom").value= map.getZoom();
         }
 
         map.on('click', onMapClick);
