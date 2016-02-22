@@ -785,8 +785,7 @@ def relationship_map(request, slug, scope):
 
         neighbours = Relationship.objects.filter(
                     Q(from_storyobject__name=storyobject.name) |
-                    Q(to_storyobject__name=storyobject.name)).filter(
-            published=True)
+                    Q(to_storyobject__name=storyobject.name))
 
         story_objects[storyobject] = storyobject
 
@@ -831,7 +830,7 @@ def relationship_map(request, slug, scope):
     result = network_personas.return_json_graph(story_objects)
 
     return render(request, 'personas/relationship_map.html', {
-        'slug': slug, 'title': title, 'story':story, 'result':result})
+        'slug': slug, 'title': title, 'story':story, 'result':result}){}
 
 
 # Admin Views
