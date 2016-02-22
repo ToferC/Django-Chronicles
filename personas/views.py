@@ -785,7 +785,8 @@ def relationship_map(request, slug, scope):
 
         neighbours = Relationship.objects.filter(
                     Q(from_storyobject__name=storyobject.name) |
-                    Q(to_storyobject__name=storyobject.name))
+                    Q(to_storyobject__name=storyobject.name)).filter(
+            published=True)
 
         story_objects[storyobject] = storyobject
 
@@ -797,30 +798,35 @@ def relationship_map(request, slug, scope):
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(
-            Q(c_type="Faction") | Q(c_type="Organization"))
+            Q(c_type="Faction") | Q(c_type="Organization")).filter(
+            published=True)
 
     elif scope == "Event":
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(
-            c_type="Event")
+            c_type="Event").filter(
+            published=True)
 
     elif scope == "Place":
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(Q(
-            c_type="Place") | Q(c_type="Territory"))
+            c_type="Place") | Q(c_type="Territory")).filter(
+            published=True)
 
     elif scope == "StoryObjects":
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(Q(
-            c_type="Character") | Q(c_type="Creature") | Q(c_type="Thing") | Q(c_type="Event"))
+            c_type="Character") | Q(c_type="Creature") | Q(c_type="Thing") | Q(c_type="Event")).filter(
+            published=True)
 
     else:
         story = Story.objects.get(slug=slug)
         title = story.title
-        story_objects = StoryObject.objects.filter(story=story)
+        story_objects = StoryObject.objects.filter(story=story).filter(
+            published=True)
 
     result = network_personas.return_json_graph(story_objects)
 
