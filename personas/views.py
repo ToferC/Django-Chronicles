@@ -797,40 +797,35 @@ def relationship_map(request, slug, scope):
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(
-            Q(c_type="Faction") | Q(c_type="Organization")).filter(
-            published=True)
+            Q(c_type="Faction") | Q(c_type="Organization")).filter(published=True)
 
     elif scope == "Event":
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(
-            c_type="Event").filter(
-            published=True)
+            c_type="Event").filter(published=True)
 
     elif scope == "Place":
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(Q(
-            c_type="Place") | Q(c_type="Territory")).filter(
-            published=True)
+            c_type="Place") | Q(c_type="Territory")).filter(published=True)
 
     elif scope == "StoryObjects":
         story = Story.objects.get(slug=slug)
         title = story.title
         story_objects = StoryObject.objects.filter(story=story).filter(Q(
-            c_type="Character") | Q(c_type="Creature") | Q(c_type="Thing") | Q(c_type="Event")).filter(
-            published=True)
+            c_type="Character") | Q(c_type="Creature") | Q(c_type="Thing") | Q(c_type="Event")).filter(published=True)
 
     else:
         story = Story.objects.get(slug=slug)
         title = story.title
-        story_objects = StoryObject.objects.filter(story=story).filter(
-            published=True)
+        story_objects = StoryObject.objects.filter(story=story).filter(published=True)
 
     result = network_personas.return_json_graph(story_objects)
 
     return render(request, 'personas/relationship_map.html', {
-        'slug': slug, 'title': title, 'story':story, 'result':result}){}
+        'slug': slug, 'title': title, 'story':story, 'result':result})
 
 
 # Admin Views
