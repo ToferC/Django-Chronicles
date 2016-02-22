@@ -1,0 +1,271 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"function",
+				"Functions"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "Package Control Messages\n========================\n\nEmmet\n-----\n\n  Thank you for installing Emmet -- a toolkit that can greatly improve your workflow. Note that this plugin automatically downloads and installs PyV8 binary (see status bar message). \n  \n  ******************************\n  Please restart editor \n  to finish installation process \n  after PyV8 was downloaded.\n  ******************************\n  \n  Tab key handler\n  ==========================\n  \n  By default, Emmet allows you to expand abbreviations with Tab key in HTML, XML, HAML and CSS/SASS/LESS/Stylus documents. As a side effect, you can’t use some of your ST2 snippets.\n  \n  Please read https://github.com/sergeche/emmet-sublime#tab-key-handler about how Tab handler works and how to tweak its behavior to match your needs.\n  \n  Enter key\n  ==========================\n  \n  In HTML and XML documents, Emmet overrides Enter key to insert formatted line breaks between opening and closing tags. In some cases it will break character input (for example, in Japanese language).\n  \n  To disable Enter key handler, simply add the following option in your user's Preferences file:\n  \n  \"disable_formatted_linebreak\": true\n  \n  Actions shortcuts\n  ==========================\n  \n  Emmet has a number of actions with keyboard shortcuts that may override ones you're using commonly (for example, Ctrl-E or Ctrl-Down). Please read the project main page to get list of available actions and keyboard shortcuts and how to disable them:\n  https://github.com/sergeche/emmet-sublime\n  \n  Documentation and examples:\n  http://emmet.io\n  \n  ------------------------------\n  Follow me on Twitter: @emmetio\n  ------------------------------\n\n\nMarkdown Preview\n----------------\n\n  Sublime Text 2/3 Markdown Preview\n  =================================\n  \n  Preview and build your markdown files quickly in your web browser from sublime text 2/3. \n  \n  You can use builtin [python-markdown][10] parser or use the [github markdown API][5] for the conversion.\n  \n  **NOTE:** If you choose the GitHub API for conversion (set parser: github in your settings), your code will be sent through https to github for live conversion. You'll have [Github flavored markdown][6], syntax highlighting and EMOJI support for free :heart: :octocat: :gift:. If you make more than 60 calls a day, be sure to set your GitHub API key in the settings :). You can also get most of this in the default Markdown parser with by enabling certain extensions; see \"[Parsing Github Flavored Markdown](#parsing-github-flavored-markdown-)\"\" below for more information.\n  \n  **LINUX users:** If you want to use GitHub API for conversion, you'll need to have a custom Python install that includes python-ssl as its not built in the Sublime Text 2 Linux package. see [@dusteye comment][8]. If you use a custom window manager, also be sure to set a `BROWSER` environment variable. see [@PPvG comments][9]\n  \n  ## Features :\n  \n   - Markdown preview using the [Python-markdown][10] or the Github API just choose select the build commands.\n   - Syntax highlighting via Pygments. See \"[Configuring Pygments](#configuring-pygments)\" for more info.\n   - Build markdown file using Sublime Text build system. The build parser are config via the `\"parser\"` config.\n   - Browser preview auto reload on save if you have the [ST2 LiveReload plugin][7] installed.\n   - Builtin parser : supports `abbr`, `attr_list`, `def_list`, `fenced_code`, `footnotes`, `tables`, `smart_strong`, `smarty`,  `wikilinks`, `meta`, `sane_lists`, `codehilite`, `nl2br`, and `toc` markdown extensions.\n   - CSS search path for local and build-in CSS files (always enabled) and/or CSS overriding if you need\n   - YAML support thanks to @tommi\n   - Clipboard selection and copy to clipboard thanks to @hexatrope\n   - MathJax support : \\\\\\\\(\\frac{\\pi}{2}\\\\\\\\) thanks to @bps10\n   - HTML template customisation thanks to @hozaka\n   - Embed images as base64 (see [settings][settings] file for more info)\n   - Strip out multimarkdown critic marks from either Githubs or Python Markdown input source (see [settings][settings] file for more info)\n   - 3rd party extensions for the Python Markdown parser:\n  \n      | Extension | Documentation |\n      |-----------|---------------|\n      | magiclink | Find and convert HTML links and email address to links ([MagicLink Documentation](http://facelessuser.github.io/pymdown-extensions/extensions/magiclink/)). |\n      | delete | Surround inline text with `~~strike through~~` to get del tags ~~strike through~~. |\n      | insert | Surround inline text with `^^underlined^^` to get ins tags <ins>underlined</ins>. |\n      | tasklist | Github Flavored Markdown tasklists ([Tasklist Documentation](http://facelessuser.github.io/pymdown-extensions/extensions/tasklist/)). |\n      | githubemoji | Support for Github Flavored Markdown emojis ([GithubEmoji Documentation](http://facelessuser.github.io/pymdown-extensions/extensions/githubemoji/)). |\n      | headeranchor | Github Flavored Markdown style header anchors ([HeaderAnchor Documentation](http://facelessuser.github.io/pymdown-extensions/extensions/headeranchor/)). |\n      | github | A convenience extension to add: `magiclink`, `delete`, `tasklist`, `githubemoji`, `headeranchor`, `superfences`, and `nl2br` to parse and display Markdown in a github-ish way.  It is recommed to pair `github` with `extra` and `codehilite` (with language guessing off) to parse close to github's way.  Be aware of what extensions `github` loads, because you should not load extensions more than once. |\n      | progressbar | Create progress bars ([ProgressBar Documentation](http://facelessuser.github.io/pymdown-extensions/extensions/progressbar/)). |\n      | superfences | Allow fenced blocks to be nested under lists, blockquotes, etc. and add special UML diagram blocks ([SuperFences Documentation](http://facelessuser.github.io/pymdown-extensions/extensions/superfences/)). |\n  \n  ## Installation :\n  \n  ### Using [Package Control][3] (*Recommended*)\n  \n  For all Sublime Text 2/3 users we recommend install via [Package Control][3].\n  \n  1. [Install][11] Package Control if you haven't yet.\n  2. Use <kbd>cmd</kbd>+<kbd>shift</kbd>+<kbd>P</kbd> then `Package Control: Install Package`\n  3. Look for `Markdown Preview` and install it.\n  \n  ### Manual Install\n  \n  1. Click the `Preferences > Browse Packages…` menu\n  2. Browse up a folder and then into the `Installed Packages/` folder\n  3. Download [zip package][12] rename it to `Markdown Preview.sublime-package` and copy it into the `Installed Packages/` directory\n  4. Restart Sublime Text\n  \n  ## Usage :\n  \n  ### To preview :\n  \n   - optionally select some of your markdown for conversion\n   - use <kbd>cmd</kbd>+<kbd>shift</kbd>+<kbd>P</kbd> then `Markdown Preview` to show the follow commands (you will be prompted to select which parser you prefer):\n  	- Markdown Preview: Preview in Browser\n  	- Markdown Preview: Export HTML in Sublime Text\n  	- Markdown Preview: Copy to Clipboard\n  	- Markdown Preview: Open Markdown Cheat sheet\n   - or bind some key in your user key binding, using a line like this one:\n     `{ \"keys\": [\"alt+m\"], \"command\": \"markdown_preview\", \"args\": {\"target\": \"browser\", \"parser\":\"markdown\"} },` for a specific parser and target or `{ \"keys\": [\"alt+m\"], \"command\": \"markdown_preview_select\", \"args\": {\"target\": \"browser\"} },` to bring up the quick panel to select enabled parsers for a given target.\n   - once converted a first time, the output HTML will be updated on each file save (with LiveReload plugin)\n  \n  ### Enabling Other External Markdown Parsers :\n  \n  External parser commands and arguments should first be mapped to a name.  The path to the binary should be first, followed by flags etc.\n  \n  ```js\n      \"markdown_binary_map\": {\n          \"multimarkdown\": [\"/usr/local/bin/multimarkdown\"]\n      },\n  ```\n  \n  Then the name can be placed in `enabled_parsers` to enable use of the new parser.\n  \n  ```js\n      \"enabled_parsers\": [\"markdown\", \"github\", \"multimarkdown\"],\n  ```\n  \n  ### To build :\n  \n   - Just use <kbd>ctrl</kbd>+<kbd>B</kbd> (Windows/Linux) or <kbd>cmd</kbd>+<kbd>B</kbd> (Mac) to build current file.\n  \n  ### To config :\n  \n  Using Sublime Text menu: `Preferences`->`Package Settings`->`Markdown Preview`\n  \n  - `Settings - User` is where you change your settings for Markdown Preview.\n  - `Settings - Default` is a good reference with detailed descriptions for each setting.\n  \n  ### Configuring Pygments\n  If you add the codehilite extension manually in the enabled extensions, you can override some of the default settings.\n  \n  * Turn language guessing *on* or *off* (*on* will highlight fenced blocks even if you don't specify a language)  `codehilite(guess_lang=False)` (True|False).\n  * Show line numbers: `codehilite(linenums=True)` (True|False).\n  * Change the higlight theme: `codehilite(pygments_style=emacs)`.\n  * Inline the CSS: `codehilite(noclasses=True)` (True|False).\n  * Use multiple: `codehilite(linenums=True, pygments_style-emacs)`.\n  \n  See [codehilte page](https://pythonhosted.org/Markdown/extensions/code_hilite.html) for more info.\n  \n  ### Meta Data Support\n  When the `meta` extension is enabled (https://pythonhosted.org/Markdown/extensions/meta_data.html), the results will be written to the HTML head in the form `<meta name=\"key\" content=\"value1,value2\">`.  `title` is the one exception, and its content will be written to the title tag in the HTML head.\n  \n  ### YAML Frontmatter Support\n  YAML frontmatter can be stripped out and read when `strip_yaml_front_matter` is set to  `true` in the settings file.  In general the, the fronmatter is handled the same as [meta data](#meta-data-support), but if both exist in a file, the YAML keys will override the `meta` extension keys.  There are a few special keys names that won't be handled as html meta data.\n  \n  #### Special YAML Key Names\n  Yaml frontmatter has a few special key names that are used that will not be handled as meta data:\n  \n  - **basepath**: An absolute path to configure the relative paths for images etc. (for when the markdown is supposed to reference images in a different location.)\n  - **references**: Can take a file path or an array of file paths for separate markdown files containing references, footnotes, etc.  Can be an absolute path or relative path.  Relative paths first use the source file's directory, and if the file cannot be found, it will use the `basepath` setting.\n  - **destination**: This is an absolute file path or relative file path for when the markdown is saved to html via the build command or the `Save to HTML` command.  Relative paths first use the source file's directory, and if the file cannot be found, it will use the `basepath` setting.\n  - **settings**: This is a dictionary where you can override settings that are in the settings file.\n  \n  #### Example\n  ```yaml\n  ---\n      # Builtin values\n      references:\n          - references.md\n          - abbreviations.md\n          - footnotes.md\n  \n      destination: destination.html\n  \n      # Meta Data\n      title: Test Page\n      author:\n          - John Doe\n          - Jane Doe\n  \n      # Settings overrides\n      settings:\n          enabled_extensions:\n          - extra\n          - github\n          - toc\n          - headerid\n          - smarty(smart_quotes=False) # smart quotes interferes with attr_list\n          - meta\n          - wikilinks\n          - admonition\n          - codehilite(guess_lang=False,pygments_style=github)\n  ---\n  ```\n  \n  ### Parsing Github Flavored Markdown :\n  Github Flavored Mardown (GFM) is a very popular markdown.  Markdown Preview can actually handle them in a couple of ways: online and offline.\n  \n  #### Online :\n  Parsing GFM using the online method requires using the Github API as the parser.  It may also require setting `github_mode` to `gfm` to get things like tasklists to render properly.\n  \n  #### Offline :\n  By default almost all extensions are enabled to help with the github feel, but there are some tweaks needed to get the full experience.\n  \n  GFM does not auto guess language in fenced blocks, but Markdown Preview does this by default.  You can fix this in one of two ways:\n  \n  1. Disable auto language guessing in the settings file `\"guess_language\": false,`\n  2. Or if you are manually defining extensions: `\"enabled_extensions\": [\"codehilite(guess_lang=False,pygments_style=github)\"]`\n  \n  \n  As mentioned earlier, almost all extensions are enabled by default, but as a reference, the minimum extensions that should be enabled are listed below:\n  \n  ```javascript\n  	\"enabled_extensions\": [\n  		\"extra\",\n  		\"github\",\n  		\"codehilite(guess_lang=False,pygments_style=github)\"\n  	]\n  ```\n  \n  This may be further enhanced in the future.\n  \n  \n  ## Support :\n  \n  - Any bugs about Markdown Preview please feel free to report [here][issue].\n  - And you are welcome to fork and submit pullrequests.\n  \n  \n  ## License :\n  \n  The code is available at github [project][home] under [MIT licence][4].\n  \n   [home]: https://github.com/revolunet/sublimetext-markdown-preview\n   [3]: https://packagecontrol.io/\n   [4]: http://revolunet.mit-license.org\n   [5]: https://developer.github.com/v3/markdown/\n   [6]: https://help.github.com/articles/github-flavored-markdown/\n   [7]: https://github.com/dz0ny/LiveReload-sublimetext2\n   [8]: https://github.com/revolunet/sublimetext-markdown-preview/issues/27#issuecomment-11772098\n   [9]: https://github.com/revolunet/sublimetext-markdown-preview/issues/78#issuecomment-15644727\n   [10]: https://github.com/waylan/Python-Markdown\n   [11]: https://packagecontrol.io/installation\n   [12]: https://github.com/revolunet/sublimetext-markdown-preview/archive/master.zip\n   [issue]: https://github.com/revolunet/sublimetext-markdown-preview/issues\n   [settings]: https://github.com/revolunet/sublimetext-markdown-preview/blob/master/MarkdownPreview.sublime-settings\n",
+			"settings":
+			{
+				"buffer_size": 13922,
+				"line_ending": "Windows",
+				"name": "Package Control Messages",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"contents": "from django.db import models\nfrom django.db.models import F\nfrom django.template.defaultfilters import slugify\nfrom django.contrib.auth.models import User\nfrom django_markdown.models import MarkdownField\nfrom personas.personas_email import mail_format as mail_format\nfrom imagekit.models import ImageSpecField\nfrom imagekit.processors import ResizeToFill\n\n\nclass Aspect(models.Model):\n    CORE = \"CO\"\n    VALUES = \"VA\"\n    BACKGROUND = \"BA\"\n    FLAW = \"FL\"\n\n    ASPECT_TYPE_CHOICES = (\n        (CORE, \"Core\"),\n        (VALUES, \"Values\"),\n        (BACKGROUND, \"Background\"),\n        (FLAW, \"Flaw\")\n        )\n\n    label = models.CharField(max_length=12, choices=ASPECT_TYPE_CHOICES, default=\"CO\", blank=True)\n    name = models.CharField(max_length=128)\n    details = models.TextField(blank=True, null=True, help_text=\"Enter any additional details about your aspect here.\")\n    storyobject = models.ForeignKey('StoryObject')\n\n    def save(self, *args, **kwargs):\n        super(Aspect, self).save(*args, **kwargs)\n\n\n    def __str__(self):\n        return self.name\n\n\nclass Ability(models.Model):\n    name = models.CharField(max_length=64)\n    description = models.TextField(blank=True)\n    storyobject = models.ForeignKey('StoryObject', null=True, blank=True)\n\n    def save(self, *args, **kwargs):\n        super(Ability, self).save(*args, **kwargs)\n\n\n    def __str__(self):\n        return \"{}: {}\".format(self.name, self.description)\n\n\nclass Note(models.Model):\n    creator = models.ForeignKey(User, default=0)\n    content = MarkdownField(blank=True)\n    title = models.CharField(max_length=32, blank=True, null=True)\n    date = models.DateTimeField(auto_now=True)\n    storyobject = models.ForeignKey(\"StoryObject\", blank=True, null=True)\n    place = models.ForeignKey(\"Place\", blank=True, null=True, related_name=\"loc2note\")\n    scene = models.ForeignKey(\"Scene\", blank=True, null=True)\n    chapter = models.ForeignKey(\"Chapter\", blank=True, null=True)\n    story = models.ForeignKey(\"Story\", blank=True, null=True)\n    rating = models.PositiveSmallIntegerField(default=0)\n\n    def save(self, *args, **kwargs):\n        super(Note, self).save(*args, **kwargs)\n\n    def __str__(self):\n        return self.content\n\n\nclass GalleryImage(models.Model):\n    creator = models.ForeignKey(User)\n    image = models.ImageField(upload_to='content_images/%Y/%m/%d/%H_%M_%S', default='content_images/nothing.jpg')\n    title = models.CharField(max_length=64)\n    date = models.DateTimeField(auto_now=True)\n    storyobject = models.ForeignKey(\"StoryObject\", blank=True, null=True)\n    place = models.ForeignKey(\"Place\", blank=True, null=True, related_name=\"loc2image\")\n    scene = models.ForeignKey(\"Scene\", blank=True, null=True)\n    chapter = models.ForeignKey(\"Chapter\", blank=True, null=True)\n    story = models.ForeignKey(\"Story\", blank=True, null=True)\n    rating = models.PositiveSmallIntegerField(default=0)\n\n    def save(self, *args, **kwargs):\n        super(GalleryImage, self).save(*args, **kwargs)\n\n    def __str__(self):\n        return self.title\n\n\nclass ScratchPad(models.Model):\n    creator = models.ForeignKey(User, default=0)\n    content = MarkdownField(blank=True)\n    date = models.DateTimeField(auto_now=True)\n    storyobject = models.ForeignKey(\"StoryObject\", blank=True, null=True)\n\n    def __str__(self):\n        return self.content\n\n\nclass Equipment(models.Model):\n    creator = models.ForeignKey(User, default=0)\n    content = MarkdownField(blank=True, default=\"Enter your equipment here.\")\n    date = models.DateTimeField(auto_now=True)\n    storyobject = models.ForeignKey(\"StoryObject\", blank=True, null=True)\n\n    def __str__(self):\n        return self.content\n\n\nclass Communique(models.Model):\n    author = models.ForeignKey(\"StoryObject\", related_name=\"Author\")\n    receiver = models.ForeignKey(\"StoryObject\", related_name=\"Receiver\")\n    date = models.DateTimeField(auto_now=True)\n    content = models.CharField(max_length=140)\n    rating = models.PositiveSmallIntegerField(default=0)\n\n    def save(self, author, *args, **kwargs):\n        self.author = author\n        super(Communique, self).save(*args, **kwargs)\n\n    def __str__(self):\n        return \"{} -- {} to {}\".format(self.content, self.author, self.receiver,)\n\n\nclass Skill(models.Model):\n    TYPE_1 = \"Type_1\"\n    TYPE_2 = \"Type_2\"\n    TYPE_3 = \"Type_3\"\n    TYPE_4 = \"Type_4\"\n\n    SKILL_TYPES = (\n        (TYPE_1, \"Type_1\"),\n        (TYPE_2, \"Type_2\"),\n        (TYPE_3, \"Type_3\"),\n        (TYPE_4, \"Type_4\"))\n\n    name = models.CharField(max_length=32)\n    value = models.CharField(max_length=32, default=0)\n    s_type = models.CharField(max_length=32, choices=SKILL_TYPES, verbose_name=\"Skill Type\", default=\"Type_1\")\n    storyobject = models.ForeignKey('StoryObject')\n    description = models.TextField(blank=True)\n\n    def __str__(self):\n        return \"{}: {}\".format(self.name, self.value)\n\n\nclass GameStats(models.Model):\n    # Generic field for entering game information\n    storyobject = models.ForeignKey('StoryObject')\n    content = MarkdownField(blank=True)\n\n\nclass Statistic(models.Model):\n    TYPE_1 = \"Type_1\"\n    TYPE_2 = \"Type_2\"\n    TYPE_3 = \"Type_3\"\n    TYPE_4 = \"Type_4\"\n\n    STAT_TYPES = (\n        (TYPE_1, \"Type_1\"),\n        (TYPE_2, \"Type_2\"),\n        (TYPE_3, \"Type_3\"),\n        (TYPE_4, \"Type_4\"))\n\n    name = models.CharField(max_length=32)\n    value = models.CharField(max_length=32, default=0)\n    stat_type = models.CharField(\n        max_length=32, choices=STAT_TYPES, verbose_name=\"Statistic Type\",\n         default=\"Type_1\")\n    storyobject = models.ForeignKey('StoryObject')\n    description = models.TextField(blank=True)\n\n    def __str__(self):\n        return \"{}: {}\".format(self.name, self.value)\n\n\nclass CombatInfo(models.Model):\n    title = models.CharField(max_length=32)\n    data = models.CharField(max_length=128, default=0)\n    storyobject = models.ForeignKey('StoryObject')\n\n    def __str__(self):\n        return \"{}: {}\".format(self.title, self.data)\n\n\nclass StoryObject(models.Model):\n\n    CHARACTER = \"Character\"\n    CREATURE = \"Creature\"\n    THING = \"Thing\"\n    FACTION = \"Faction\"\n    ORGANIZATION = \"Organization\"\n    TERRITORY = \"Territory\"\n    PLACE = \"Place\"\n    EVENT = \"Event\"\n\n    CHAR_CHOICES = (\n        (FACTION, \"Faction\"),\n        (CHARACTER, \"Character\"),\n        (CREATURE, \"Creature\"),\n        (ORGANIZATION, \"Organization\"),\n        (PLACE, \"Place\"),\n        (TERRITORY, \"Territory\"),\n        (THING, \"Thing\"),\n        (EVENT, \"Event\"),\n    )\n\n    creator = models.ForeignKey(User, unique=False, blank=True)\n    name = models.CharField(max_length=128, unique=False)\n    story = models.ForeignKey('Story', default=1)\n    c_type = models.CharField(choices=CHAR_CHOICES, \n        max_length=32, default=\"Character\", verbose_name=\"Story Object Type\",\n        help_text=\"Select a story object category.\")\n    role = models.CharField(max_length=256)\n    description = MarkdownField(blank=True)\n\n    image = models.ImageField(\n        upload_to='profile_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')\n    thumbnail = ImageSpecField(source='image',\n        processors=[ResizeToFill(50, 50)],\n        format='JPEG',\n        options={'quality': 60}\n        )\n    slug = models.SlugField(unique=True, max_length=255)\n\n    published = models.BooleanField(default=True,\n        help_text=\"Elements that are NOT published will only be viewable in your Workshop.\")\n\n    def save(self, slug=None, creator=None, *args, **kwargs):\n        self.story.object_count = F('object_count') + 1\n        self.story.save()\n        self.slug = slugify(\"{}-{}\".format(self.story.id, self.name))\n        super(StoryObject, self).save(*args, **kwargs)\n\n    def __str__(self):\n        return self.name\n\n\nclass Place(StoryObject):\n    latitude = models.FloatField(default=50.0)\n    longitude = models.FloatField(default=-1.0)\n    zoom = models.IntegerField(default=6, help_text=\"Sets the default zoom for your place\")\n    main_map = models.ForeignKey(\"MainMap\", blank=True, null=True, verbose_name='Map',\n                                help_text=\"Leave this blank for the default map, or choose from the list.\")\n\n\nclass Relationship(models.Model):\n\n    from_storyobject = models.ForeignKey(StoryObject, related_name=\"from_storyobject\",\n        verbose_name=\"Source of Relationship\")\n    to_storyobject = models.ForeignKey(StoryObject, related_name=\"to_storyobject\",\n        verbose_name=\"Object of Relationship\",\n        help_text=\"Enter the character or story object subject of the relationship here.\")\n\n    relationship_class = models.CharField(max_length=32,\n        default='Ally',\n        verbose_name=\"Relationship Description\",\n        help_text=\"Enter the type of relationship here. E.g.: Ally, Friend, Lover, etc.\")\n\n    weight = models.CharField(default=\"5\", max_length=64,\n        verbose_name=\"Numerical Rating\",\n        help_text=\"If your story uses it, enter a numerical rating for the relationship here.\")\n\n    relationship_description = models.CharField(max_length=128, unique=False,\n        verbose_name=\"Details\",\n        help_text=\"Enter any additional details here.\")\n\n    def __str__(self):\n        return '{} > {} >> {} ({}) - weight: {})'.format(\n            self.from_storyobject, self.relationship_class,\n            self.to_storyobject, self.relationship_description, self.weight)\n\n    def save(self, *args, **kwargs):\n        mail_format(self.to_storyobject,\n            self.to_storyobject.name,\n            self.from_storyobject.creator, 'New Relationship', self,\n            noun=\"relationship\", verb=\"added\")\n        super(Relationship, self).save(*args, **kwargs)\n\n\n\nclass Scene(models.Model):\n\n    PROCEDURAL = \"Prodecural\"\n    ACTION = \"Action\"\n    SUSPENSE = \"Suspense\"\n    QUESTION = \"Question\"\n    REVEAL = \"Reveal\"\n    DRAMATIC = \"Dramatic\"\n\n    SCENE_TYPE_CHOICES = (\n        (DRAMATIC, \"Dramatic\"),\n        (ACTION, \"Action\"),\n        (SUSPENSE, \"Suspense\"),\n        (QUESTION, \"Question\"),\n        (REVEAL, \"Reveal\"),\n        (PROCEDURAL, \"Procedural\"))\n\n    UP = \"Up\"\n    DOWN = \"Down\"\n    NEUTRAL = \"Neutral\"\n\n    RESOLUTION_CHOICES = (\n        (UP, \"Up\"),\n        (DOWN, \"Down\"),\n        (NEUTRAL, \"Neutral\"))\n\n    title = models.CharField(max_length=128)\n    scene_type = models.CharField(max_length=32, choices=SCENE_TYPE_CHOICES, default=\"Dramatic\")\n    purpose = models.CharField(max_length=128, blank=True)\n    description = MarkdownField(blank=True)\n    resolution = models.CharField(\n        max_length=8, choices=RESOLUTION_CHOICES, default=\"Neutral\")\n    creator = models.ForeignKey(User, blank=True, null=True)\n    place = models.ForeignKey(Place, blank=True, null=True, related_name=\"loc2scene\")\n    publication_date = models.DateTimeField(auto_now=True)\n    order = models.PositiveSmallIntegerField(default=1)\n    storyobjects = models.ManyToManyField(StoryObject, blank=True)\n    chapter = models.ForeignKey(\"Chapter\")\n    published = models.BooleanField(default=True,\n        help_text=\"Elements that are NOT published will only be viewable in your Workshop.\")\n\n    slug = models.SlugField(unique=True, blank=True)\n\n    def save(self, *args, **kwargs):\n        self.chapter.story.object_count = F('object_count') + 1\n        self.chapter.story.save()\n        self.slug = slugify(\"{}-{}\".format(self.chapter.story.id, self.title))\n        super(Scene, self).save(*args, **kwargs)\n\n    def __str__(self):\n        return self.title\n\n\nclass Chapter(models.Model):\n    title = models.CharField(max_length=128)\n    description = MarkdownField(blank=True)\n    creator = models.ForeignKey(User, blank=True, null=True)\n    story = models.ForeignKey(\"Story\")\n    number = models.PositiveSmallIntegerField(default=1,\n        verbose_name=\"Chapter Number\")\n    published = models.BooleanField(default=True,\n        help_text=\"Elements that are NOT published will only be viewable in your Workshop.\")\n\n    slug = models.SlugField(unique=True)\n\n    def save(self, *args, **kwargs):\n        self.story.object_count = F('object_count') + 1\n        self.story.save()\n        self.slug = slugify(\"{}-{}\".format(self.story.id, self.title))\n        super(Chapter, self).save(*args, **kwargs)\n\n    def __str__(self):\n        return \"{} - {}\".format(self.number, self.title)\n\n\nclass StoryOptions(models.Model):\n\n    story = models.ForeignKey(\"Story\")\n\n    LIGHT = \"Light\"\n    DARK = \"Dark\"\n\n    THEME_CHOICES = (\n        (LIGHT, 'Light'),\n        (DARK, 'Dark'))\n\n    map_tile = models.CharField(\n        max_length=128, default=\"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\",\n        help_text='''This field is used for Leaflet maps in the engine.\n        The default tile set is openstreetmap.\n        You probably shouldn't touch this unless you have another tileset in mind.''')\n    base_latitude = models.FloatField(blank=True, default=50.0000)\n    base_longitude = models.FloatField(blank=True, default=-1.3000)\n    zoom = models.IntegerField(default=6, help_text=\"Sets the default zoom for your map\")\n    skill_type_name_1 = models.CharField(\n        max_length=24, default=\"General\", blank=True,\n        help_text='''This field and the skill fields below set the name for different skill types in a game.\n        They are optional, but if you are using skills of some kind, the first value should be set.''')\n    skill_type_name_2 = models.CharField(\n        max_length=24, default=\"Investigative\", blank=True)\n    skill_type_name_3 = models.CharField(\n        max_length=24, default=\"Combat\", blank=True)\n    skill_type_name_4 = models.CharField(\n        max_length=24, default=\"Knowledge\", blank=True)\n\n    statistic_type_name_1 = models.CharField(\n        max_length=24, default=\"Physical\", blank=True,\n        help_text='''This field and the statistic fields below set the name for different stat types in a game.\n        They are optional, but if you are using statistics of some kind, the first value should be set.''')\n    statistic_type_name_2 = models.CharField(\n        max_length=24, default=\"Mental\", blank=True)\n    statistic_type_name_3 = models.CharField(\n        max_length=24, default=\"Social\", blank=True)\n    statistic_type_name_4 = models.CharField(\n        max_length=24, default=\"Magic\", blank=True)\n\n    gamestats_toggle = models.BooleanField(default=True,\n     help_text='''Check to enable a markdown field for entering game statistics.\n        This is the default option, but you can choose specific tabbed fields below if you prefer.''',\n        verbose_name=\"Enable Game Stats field?\")\n    stats_toggle = models.BooleanField(default=False,\n     help_text=\"Check to enable statistics for this story object.\",\n        verbose_name=\"Enable Statistics?\")\n    skill_toggle = models.BooleanField(default=False,\n     help_text=\"Check to enable skills for this story object.\",\n        verbose_name=\"Enable Skills?\")\n    combat_toggle = models.BooleanField(default=False,\n     help_text=\"Check to enable combat info for this story object.\",\n        verbose_name=\"Enable Combat Info?\")\n    equipment_toggle = models.BooleanField(default=False,\n     help_text=\"Check to enable equipment for this story object.\",\n        verbose_name=\"Enable Equipment?\")\n    gallery_toggle = models.BooleanField(default=False,\n     help_text=\"Check to enable gallery images for this story object.\",\n        verbose_name=\"Enable Gallery Images?\")\n    social_toggle = models.BooleanField(default=False,\n     help_text=\"Check to enable social functionality for this story object.\",\n        verbose_name=\"Enable Social Functions?\")\n\n\nclass Story(models.Model):\n    SUPERS = 'Supers'\n    FANTASY = 'Fantasy'\n    HORROR = 'Horror'\n    HISTORICAL = 'Historical'\n    SCI_FI = 'Science-Fiction'\n    WESTERN = 'Western'\n    DRAMA = 'Drama'\n    COMEDY = 'Comedy'\n    CRIME = 'Crime'\n    FABLE = 'Fable'\n    MYSTERY = 'Mystery'\n\n    GENRE_CHOICES = (\n        (SUPERS, 'Supers'),\n        (FANTASY, 'Fantasy'),\n        (HORROR, 'Horror'),\n        (HISTORICAL, 'Historical'),\n        (SCI_FI, \"Science Fiction\"),\n        (WESTERN, 'Western'),\n        (DRAMA, 'Drama'),\n        (COMEDY, 'Comedy'),\n        (CRIME, 'Crime'),\n        (FABLE, 'Fable'),\n        (MYSTERY, 'Mystery'),\n    )\n\n    LIGHT = \"Light\"\n    DARK = \"Dark\"\n\n    THEME_CHOICES = (\n        (LIGHT, 'Light'),\n        (DARK, 'Dark'))\n\n    title = models.CharField(max_length=128)\n    author = models.ForeignKey(User)\n    publication_date = models.DateField(auto_now=True)\n    setting = models.CharField(max_length=256)\n    themes = models.CharField(max_length=256,\n        help_text=\"Enter the themes for your story here.\")\n    description = MarkdownField(blank=True)\n    genre = models.CharField(\n        max_length=128, choices=GENRE_CHOICES, default='Fantasy')\n    image = models.ImageField(\n        upload_to='story_images/%Y/%m/%d/%H_%M_%S',\n        default='profile_images/shadow_figure.jpeg')\n    colour_theme = models.CharField(\n        max_length=12, choices=THEME_CHOICES, default='Dark',\n        help_text=\"Please note that the LIGHT field is not yet optimized.\")\n    published = models.BooleanField(default=True,\n        help_text=\"Elements that are NOT published will only be viewable in your Workshop.\")\n    object_count = models.PositiveSmallIntegerField(default=0)\n\n    slug = models.SlugField(unique=True)\n\n    def save(self, *args, **kwargs):\n        self.slug = slugify(self.title)\n        super(Story, self).save(*args, **kwargs)\n        self.storyoptions = StoryOptions.objects.get_or_create(\n            story=self)\n        self.mainmap = MainMap.objects.get_or_create(\n            name=\"{} Map\".format(self.title),\n            story=self)\n\n    def __str__(self):\n        return self.title\n\n\nclass MainMap(models.Model):\n    name = models.CharField(max_length=64)\n    story = models.ForeignKey(Story)\n    base_latitude = models.FloatField(blank=True, default=50.000)\n    base_longitude = models.FloatField(blank=True, default=-0.15)\n    zoom = models.IntegerField(default=6, help_text=\"Sets the default zoom for your map\")\n    tiles = models.CharField(max_length=256, blank=True,\n        default=\"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\")\n    published = models.BooleanField(default=True,\n        help_text=\"Elements that are NOT published will only be viewable in your Workshop.\")\n    slug = models.SlugField(unique=True)\n\n    def save(self, *args, **kwargs):\n        self.slug = slugify(\"{}-{}\".format(self.story.id, self.name))\n        super(MainMap, self).save(*args, **kwargs)\n\n    def __str__(self):\n        return self.name\n\n\nclass UserProfile(models.Model):\n    user = models.OneToOneField(User)\n    website = models.URLField(blank=True)\n    image = models.ImageField(\n        upload_to='user_images/%Y/%m/%d',\n        default='profile_images/shadow_figure.jpeg')\n    own_notifications = models.BooleanField(default=False,\n                                            help_text=\"Enable this to get email notifications for your own changes.\")\n    other_notifications = models.BooleanField(default=True,\n                                              help_text=\"Enable this to get email notifications for changes other people make.\")\n\n    def __str__(self):\n        return self.user.username\n\n\nclass Poster(models.Model):\n    author = models.ForeignKey(User, blank=True, null=True)\n    title = models.CharField(max_length=128)\n    content = MarkdownField(blank=True)\n    publication_date = models.DateField(auto_now=True)\n\n    def __str__(self):\n        return self.content\n\n",
+			"file": "models.py",
+			"file_size": 19963,
+			"file_write_time": 130992050262665895,
+			"settings":
+			{
+				"buffer_size": 19432,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 561.0,
+		"last_filter": "pack",
+		"selected_items":
+		[
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Preferences: Settings - Default"
+			]
+		],
+		"width": 552.0
+	},
+	"console":
+	{
+		"height": 186.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/csa77/OneDrive/Documents/GitHub/Django-Chronicles",
+		"/C/Users/csa77/OneDrive/Documents/GitHub/Django-Chronicles/personas",
+		"/C/Users/csa77/OneDrive/Documents/GitHub/Django-Chronicles/personas/templatetags"
+	],
+	"file_history":
+	[
+		"/C/Users/csa77/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/csa77/AppData/Roaming/Sublime Text 3/Packages/User/Python.sublime-settings",
+		"/C/Users/csa77/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/csa77/AppData/Roaming/Sublime Text 3/Packages/User/AdvancedNewFile.sublime-settings",
+		"/C/Users/csa77/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13922,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1145,
+								1145
+							]
+						],
+						"settings":
+						{
+							"auto_indent": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_width": 2,
+							"word_wrap": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "models.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19432,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								356,
+								356
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "personas.sublime-project",
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 225.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

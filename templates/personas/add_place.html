@@ -40,6 +40,9 @@
                 .setLatLng(e.latlng)
                 .setContent("You clicked the map at " + e.latlng.toString() + " Zoom: " + map.getZoom())
                 .openOn(map);
+                document.getElementById("id_latitude").value= e.latlng.lat;
+                document.getElementById("id_longitude").value= e.latlng.lon;
+                document.getElementById("id_zoom").value= map.getZoom();
         }
 
         map.on('click', onMapClick);
