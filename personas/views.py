@@ -618,7 +618,7 @@ def chapter(request, chapter_name_slug):
         for scene in scenes:
             places.append(scene.place)
 
-        context_dict['places'] = places
+        context_dict['places'] = set(places)
 
         context_dict['notes'] = Note.objects.filter(
             chapter__title=chapter.title)[0:10]
