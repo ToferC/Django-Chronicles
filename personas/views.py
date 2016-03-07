@@ -612,9 +612,13 @@ def chapter(request, chapter_name_slug):
         context_dict['storyobjects'] = StoryObject.objects.filter(
             scene__chapter__title=chapter.title).filter(published=True).exclude(
             c_type="Place").distinct()
-        context_dict['places'] = Place.objects.filter(
-            scene__chapter__title=chapter.title).filter(published=True).distinct()
 
+        # Pull places from scene list
+        places = []
+        for scene in scenes:
+            places.append(scene.place)
+
+        context_dict['places'] = places
 
         context_dict['notes'] = Note.objects.filter(
             chapter__title=chapter.title)[0:10]
