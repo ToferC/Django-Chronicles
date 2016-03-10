@@ -29,6 +29,11 @@
     </ul>
 
     <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
+        <br>
+        {% thumbnail place.image "400" crop="center" as im %}
+        <img class="img-responsive" src="{{ im.url }}" width="100%" align="middle">
+        {% empty %}
+        {% endthumbnail %}
 
     <div class="row">
         <h3>Scene Information:</h3>
