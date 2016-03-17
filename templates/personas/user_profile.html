@@ -1,0 +1,43 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load account %}
+
+{% block title %}
+<header>
+    <h1>{{ user }} Profile</h1>
+</header>
+{% endblock %}
+
+<div class="row">
+
+{% block l_content %}
+    <div class="col-md-2 col-sm-0 col-lg-2">
+    </div>
+{% endblock %}
+
+{% block column1 %}
+<div class="col-md-8 col-sm-8 col-lg-8">
+	{%	if user %}
+	{% user_display user %}
+		<h3>Options</h3>
+			<ul>
+			<a href="/accounts/password/change"><h4>Change Password</h4></a>
+			<a href="/accounts/password/reset"><h4>Reset Password</h4></a>
+			<a href="/accounts/accounts/email"><h4>Change Password</h4></a>
+			<a href="/accounts/accounts/social/connections"><h4>Change Password</h4></a>
+			<a href="/accounts/accounts/logout"><h4>Log Out</h4></a>
+			<a href="/"><h4>Delete Account</h4></a>
+			</ul>		
+	{% else %}
+		<h4>You are not logged in.</h4>
+	{% endif %}
+
+</div>
+{% endblock %}
+
+{% block r_content %}
+<div class="col-md-2 col-sm-0 col-lg-2">
+</div>
+{% endblock %}
+
+</div>
