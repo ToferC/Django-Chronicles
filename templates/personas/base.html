@@ -136,12 +136,18 @@
                             </form>
                             <div class="nav navbar-right">
                             {% if user.is_authenticated %}
-                                    <a class="btn btn-inverse" style="font-size:70%; margin-top:12px; background-color:darkslategray" href="/personas/logout" role="button">Logged in as {{ user.username }}</a>
+                                    <a class="btn btn-inverse" style="font-size:70%; margin-top:12px; background-color:darkslategray" href="/user_profile" role="button">Logged in as {{ user.username }}</a>
                                 {% else %}
+                                    <p class="btn" style="font-size:70%; margin-top:12px">
+                                    Login with: </p>
                                     <a class="btn btn-inverse" style="font-size:70%; margin-top:12px; background-color:darkslategray " href="/accounts/google/login/?process=login">
-                                    Google Connect</a>
+                                    Google</a>
+                                    <a class="btn btn-inverse" style="font-size:70%; margin-top:12px; background-color:darkslategray " href="/accounts/twitter/login/?process=login">
+                                    Twitter</a>
+                                    <a class="btn btn-inverse" style="font-size:70%; margin-top:12px; background-color:darkslategray " href="/accounts/facebook/login/?process=login">
+                                    Facebook</a>
+                                    <a class="btn btn-inverse" style="font-size:70%; margin-top:12px; background-color:darkslategray" href="/personas/login" role="button">Email</a>
                                     <a class="btn btn-inverse" style="font-size:70%; margin-top:12px; background-color:darkslategray" href="/personas/register" role="button">Register</a>
-                                    <a class="btn btn-inverse" style="font-size:70%; margin-top:12px; background-color:darkslategray" href="/personas/login" role="button">Log In</a>
                                 {% endif %}
                             </div>
                         </div>
