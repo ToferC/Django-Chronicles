@@ -45,7 +45,7 @@
         {% thumbnail storyobject.image "400" crop="center" as im %}
         <img class="img-responsive" src="{{ im.url }}" width="100%" align="middle">
         {% empty %}
-    {% endthumbnail %}
+        {% endthumbnail %}
     <p>
         Created by {{ creator }}
     </p>

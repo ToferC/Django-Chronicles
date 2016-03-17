@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% extends "personas/base.html" %}
 {% load crispy_forms_tags %}
+{% load thumbnail %}
 {% load django_markdown %}
 
 {% block title %}
@@ -40,7 +41,7 @@
             </ul>
         {% else %}
             <strong>{{ chapter.title }} has no scenes.</strong>
-            <br />
+            <br>
             {% endif %}
         <a href="/personas/add_scene/{{ story.slug }}" style="color:gray">Add Scene <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
@@ -49,15 +50,16 @@
     <div class="row">
         <h3>Places:</h3>
         {% if places %}
-            <ul>
                 {% for place in places %}
-                    <li><a href="/personas/place/{{ place.slug }}">{{ place }}</a></li>
+                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/place/{{ place.slug }}">
+                        {% thumbnail place.image "30x30" crop="center" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ place.name }}</a>
                 {% endfor %}
-            </ul>
         {% else %}
             <strong>{{ chapter_title }} has no places.</strong>
-            <br />
+            <br>
         {% endif %}
+        <br><br>
         <a href="/personas/add_place/{{ story.slug }}" style="color:gray">Add Place <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
     </div>
@@ -65,15 +67,15 @@
     <div class="row">
         <h3>Characters:</h3>
         {% if storyobjects %}
-            <ul>
-                {% for character in storyobjects %}
-                    <li><a href="/personas/storyobject/{{ character.slug }}">{{ character }}</a></li>
+                {% for storyobject in storyobjects %}
+                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                        {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                 {% endfor %}
-            </ul>
         {% else %}
             <strong>{{ chapter.title }} has no Characters.</strong>
         {% endif %}
-        <br>
+        <br><br>
         <a href="/personas/add_storyobject/{{ story.slug }}/Character" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
         <hr>
         {% if user == chapter.creator or user == story.author %}
