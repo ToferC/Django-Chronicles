@@ -14,7 +14,7 @@ from django.views.generic.edit import DeleteView, UpdateView, FormView, CreateVi
 from crispy_forms.layout import Submit, HTML
 from crispy_forms.helper import FormHelper
 from personas.models import StoryObject, Relationship, Aspect, Ability, Story, MainMap, Chapter, Scene, Skill, Note, Communique, Equipment, GameStats, Place
-from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster, StoryOptions, UserProfile, User
+from personas.models import Statistic, CombatInfo, GalleryImage, ScratchPad, Poster, StoryOptions, UserProfile
 from personas.forms import StoryObjectForm, NoteForm, CommuniqueForm, UserForm, UserProfileForm, SkillForm, AspectForm, AspectFormSetHelper, SkillFormSetHelper, AbilityForm, RelationshipForm
 from personas.forms import StoryForm, ChapterForm, SceneForm, StatisticForm, CombatInfoForm, ScratchPadForm, GalleryImageForm, MainMapForm, EquipmentForm, StoryOptionsForm
 from personas.forms import BatchStoryObjectForm, BatchFormSetHelper, create_relationship_form, RelationshipFormSetHelper, GameStatsForm, PlaceForm
@@ -909,13 +909,6 @@ def user_logout(request):
     logout(request)
 
     return HttpResponseRedirect('/personas/')
-
-
-def user_profile(request):
-    user = request.user
-
-    return render(request, 'personas/user_profile.html',
-        {'user': user})
 
 
 # Add content Views

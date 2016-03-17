@@ -108,9 +108,8 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.twitter',
-    'allauth.socialaccount.providers.facebook',
     'imagekit',
+    #'account',
 )
 
 SITE_ID = 1
@@ -152,11 +151,11 @@ else:
     DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'Bansh331',
+        'NAME': 'chronicles',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '',
         }
     }
 

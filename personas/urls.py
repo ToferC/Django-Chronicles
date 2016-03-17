@@ -80,7 +80,6 @@ urlpatterns = patterns('',
     url(r'^add_gallery_image/(?P<storyobject_slug>[\w\-]+)/$', views.add_gallery_image, name='add_gallery_image'),
 
     url(r'^register/$', views.register, name='register'),
-    url(r'^user_profile/$', views.user_profile, name='user_profile'),
     url(r'^collections/$', views.collections, name='collections'),
     url(r'^login/$', views.user_login, name='login'),
     url(r'^logout/$', views.user_logout, name='logout'),
