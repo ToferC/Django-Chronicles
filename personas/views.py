@@ -904,6 +904,13 @@ def user_login(request):
         return render(request, 'personas/login.html', {})
 
 
+def user_profile(request):
+    user = request.user
+
+    return render(request, 'personas/user_profile.html',
+        {'user': user})
+
+
 @login_required
 def user_logout(request):
     logout(request)
