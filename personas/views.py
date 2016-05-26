@@ -904,6 +904,7 @@ def user_login(request):
         return render(request, 'personas/login.html', {})
 
 
+@login_required
 def user_profile(request):
     user = request.user
 
