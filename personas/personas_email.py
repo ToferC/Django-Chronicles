@@ -58,4 +58,9 @@ def mail_format(s_object, s_object_name, note_creator, title, content,
         message = get_template('personas/email.html').render(Context(ctx))
         msg = EmailMessage(subject, message, to=[to_email], from_email=from_email)
         msg.content_subtype = 'html'
-        msg.send()
+        try:
+            msg.send()
+        except Exception as e:
+            msg = EmailMessage(
+                "Error in sending email", str("{}\n\n{}".format(e, message)),
+                to=['personas.story@gmail.com'], from_email=from_email)
