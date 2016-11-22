@@ -442,6 +442,7 @@ def storyobject(request, storyobject_name_slug):
         context_dict['my_relationships'] = Relationship.objects.filter(
             Q(from_storyobject__name=storyobject.name) &
             (~Q(to_storyobject__c_type="Organization") &
+                ~Q(to_storyobject__c_type="Territory") &
                 ~Q(to_storyobject__c_type="Place") &
                 ~Q(to_storyobject__c_type="Faction"))).order_by('-weight')
 
@@ -449,6 +450,7 @@ def storyobject(request, storyobject_name_slug):
             Q(to_storyobject__name=storyobject.name) &
             (~Q(to_storyobject__c_type="Organization") &
                 ~Q(from_storyobject__c_type="Organization") &
+                ~Q(to_storyobject__c_type="Territory") &
                 ~Q(from_storyobject__c_type="Place") &
                 ~Q(from_storyobject__c_type="Faction"))).order_by('-weight')
 
@@ -479,14 +481,14 @@ def storyobject(request, storyobject_name_slug):
                 Q(from_storyobject__c_type="Place")
             ).order_by('-weight')
 
-        context_dict["to_territory"] = Relationship.objects.filter(
+        context_dict["to_territories"] = Relationship.objects.filter(
             Q(from_storyobject__name=storyobject.name) &
-            Q(to_storyobject__c_type="Place")
+            Q(to_storyobject__c_type="Territory")
             ).order_by('-weight')
 
-        context_dict["from_territory"] = Relationship.objects.filter(
+        context_dict["from_territories"] = Relationship.objects.filter(
             Q(to_storyobject__name=storyobject.name) &
-                Q(from_storyobject__c_type="Place")
+                Q(from_storyobject__c_type="Territory")
             ).order_by('-weight')
 
         context_dict['my_memberships'] = Relationship.objects.filter(
