@@ -1,16 +1,3 @@
-{% extends "personas/base.html" %}
-{% load staticfiles %}
-{% load crispy_forms_tags %}
-{% block title %}
-    <header>
-        <h1>Relationship Map for {{ title }}</h1>
-    </header>
-{% endblock %}
-
-{% block content %}
-
-<div id="graph_frame" class="svg-continer" style="background-color:white"></div>
-
 <script>
 var w = window.innerWidth;
 var h = window.innerHeight;
@@ -25,7 +12,7 @@ var outline = false;
 var min_score = 0;
 var max_score = 1;
 
-var color = d3.scale.category10()
+var color = d3.scale.linear()
   .domain(['r', 'b', 'g', 'c', 'y', 'v', 'o', 'w']);
 
 var highlight_color = "blue";
@@ -45,19 +32,18 @@ var default_node_color = "#ccc";
 var default_link_color = "#888";
 var nominal_base_node_size = 8;
 var nominal_text_size = 10;
-var nominal_image_size = 30;
 var max_text_size = 24;
 var nominal_stroke = 1.5;
 var max_stroke = 4.5;
 var max_base_node_size = 36;
 var min_zoom = 0.1;
 var max_zoom = 7;
-var svg = d3.select("#graph_frame").append("svg");
+var svg = d3.select("body").append("svg");
 var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
 var g = svg.append("g");
 svg.style("cursor","move");
 
-var graph = {{ result|safe }};
+d3.json("graph.json", function(error, graph) {
 
 var linkedByIndex = {};
     graph.links.forEach(function(d) {
@@ -94,8 +80,6 @@ var linkedByIndex = {};
   var node = g.selectAll(".node")
     .data(graph.nodes)
     .enter().append("g")
-    .append("svg:a")
-    .attr("xlink:href", function(d){return d.url;})
     .attr("class", "node")
 	
     .call(force.drag)
@@ -120,17 +104,7 @@ var linkedByIndex = {};
 		towhite = "fill"
 	}
 		
-  var nodeimages = svg.selectAll(".nodeimage")
-      .data(graph.nodes)
-      .enter()
-      .append("g")
-      .append("image")
-      .attr({"x":function(d){return d.x;},
-              "y":function(d){return d.y;},
-              "class":"nodeimage"})
-      .attr("width", nominal_image_size + "px")
-      .attr("height", nominal_image_size + "px")
-      .attr("xlink:href", function(d) { return d.image; });
+	
 	
   var circle = node.append("path")
   
@@ -140,8 +114,8 @@ var linkedByIndex = {};
         .type(function(d) { return d.type; }))
   
 	.style(tocolor, function(d) { 
-	return color(d.node_color); })
-
+	if (isNumber(d.score) && d.score>=0) return color(d.score);
+	else return default_node_color; })
     //.attr("r", function(d) { return size(d.size)||nominal_base_node_size; })
 	.style("stroke-width", nominal_stroke)
 	.style(towhite, "white");
@@ -250,14 +224,12 @@ function set_highlight(d)
     if (nominal_stroke*zoom.scale()>max_stroke) stroke = max_stroke/zoom.scale();
     link.style("stroke-width",stroke);
     circle.style("stroke-width",stroke);
-    nodeimages.style("stroke-width", stroke);
 	   
 	var base_radius = nominal_base_node_size;
     if (nominal_base_node_size*zoom.scale()>max_base_node_size) base_radius = max_base_node_size/zoom.scale();
         circle.attr("d", d3.svg.symbol()
         .size(function(d) { return Math.PI*Math.pow(size(d.size)*base_radius/nominal_base_node_size||base_radius,2); })
         .type(function(d) { return d.type; }))
-
 		
 	//circle.attr("r", function(d) { return (size(d.size)*base_radius/nominal_base_node_size||base_radius); })
 	if (!text_center) text.attr("dx", function(d) { return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
@@ -265,14 +237,6 @@ function set_highlight(d)
 	var text_size = nominal_text_size;
     if (nominal_text_size*zoom.scale()>max_text_size) text_size = max_text_size/zoom.scale();
     text.style("font-size",text_size + "px");
-
-    nodeimages.attr("width", (function(d) {
-       return nominal_image_size * zoom.scale();
-        	}));
-    nodeimages.attr("height", (function(d) {
-       return nominal_image_size * zoom.scale();
-        	}));
-
 
 	g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 	});
@@ -295,9 +259,6 @@ function set_highlight(d)
 		
     node.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
-
-    nodeimages.attr("x", function(d) { return d.x + 5; })
-      .attr("y", function(d) { return d.y + 5; });
 	});
   
   function resize() {
@@ -349,6 +310,8 @@ function set_highlight(d)
 
 }	
 }
+ 
+});
 
 function vis_by_type(type)
 {
@@ -390,4 +353,3 @@ function isNumber(n) {
 
 
 </script>
-{% endblock %}

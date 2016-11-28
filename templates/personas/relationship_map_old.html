@@ -1,0 +1,263 @@
+{% extends "personas/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <header>
+        <h1>Relationship Map for {{ title }}</h1>
+    </header>
+{% endblock %}
+
+{% block content %}
+
+<div id="graph_frame" class="svg-continer" style="background-color:white"></div>
+
+<script type="text/javascript">
+
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+
+    var text_center = false;
+
+    var default_node_color = "#ccc";
+    //var default_node_color = "rgb(3,190,100)";
+    var default_link_color = "#888";
+    var nominal_base_node_size = 8;
+    var nominal_text_size = 10;
+    var max_text_size = 50;
+    var nominal_stroke = 1.5;
+    var nominal_image_size = 50
+    var max_stroke = 4.5;
+    var max_base_node_size = 36;
+    var min_zoom = 0.1;
+    var max_zoom = 7;
+    var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
+
+    var size = d3.scale.pow().exponent(1)
+      .domain([1,100])
+      .range([8,24]);
+
+    var colors = d3.scale.category10()
+      .domain(['r', 'b', 'g', 'c', 'y', 'v', 'o', 'w']);
+
+    var dataset = {{ result|safe }};
+ 
+    var svg = d3.select("#graph_frame")
+        .append("svg")
+        .attr("preverveAspectRation", "xMinYMin meet")
+        .attr("viewBox", "0 0 1200 900")
+        .classed("svg-content-responsive", true);
+
+    var g = svg.append("g");
+    //svg.style("cursor","move");
+        //.attr({"width":w,"height":h});
+
+    var force = d3.layout.force()
+        .nodes(dataset.nodes)
+        .links(dataset.links)
+        .size([w,h])
+        .linkDistance(function(d) { return  (10 - d.weight) * 10 + 100 })
+        .charge([-500])
+        .theta(0.1)
+        .gravity(0.05)
+        .start();
+
+    var edges = svg.selectAll("line")
+      .data(dataset.links)
+      .enter()
+      .append("line")
+      .attr("id",function(d,i) {return 'edge'+i})
+      .attr('marker-end','url(#arrowhead)')
+      .style("stroke","#ccc")
+      .style("pointer-events", "none");
+    
+    var nodes = svg.selectAll(".node")
+      .data(dataset.nodes)
+      .enter().append("svg:a")
+      .attr("xlink:href", function(d){return d.url;})
+      .append("circle")
+      .attr({"r":10})
+      .style("fill",function(d,i){return colors(d.node_color);})
+      .call(force.drag)
+      .on("mouseover", fade(.1))
+      .on("mouseout", fade(1));
+
+    var nodeimages = svg.selectAll(".nodeimage")
+      .data(dataset.nodes)
+      .enter()
+      .append("image")
+      .attr({"x":function(d){return d.x + 5;},
+              "y":function(d){return d.y + 5;},
+              "class":"nodeimage"})
+      .attr("width", nominal_image_size + "px")
+      .attr("height", nominal_image_size + "px")
+      .attr("xlink:href", function(d) { return d.image; });
+
+    var linkedByIndex = {};
+    dataset.links.forEach(function(d) {
+        linkedByIndex[d.source.index + "," + d.target.index] = 1;
+    });
+
+    function isConnected(a, b) {
+        return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
+    }
+
+    var nodelabels = svg.selectAll(".nodelabel")
+       .data(dataset.nodes)
+       .enter()
+       .append("text")
+       .attr({"x":function(d){return d.x;},
+              "y":function(d){return d.y;},
+              "class":"nodelabel",
+              "stroke":"black"})
+       .style("font-size", nominal_text_size + "px")
+       .text(function(d){return d.id;});
+
+    var edgepaths = svg.selectAll(".edgepath")
+        .data(dataset.links)
+        .enter()
+        .append('path')
+        .attr({'d': function(d) {return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y},
+               'class':'edgepath',
+               'fill-opacity':0,
+               'stroke-opacity':0,
+               'fill':'blue',
+               'stroke':'red',
+               'id':function(d,i) {return 'edgepath'+i}})
+        .style("pointer-events", "none");
+
+    var edgelabels = svg.selectAll(".edgelabel")
+        .data(dataset.links)
+        .enter()
+        .append('text')
+        .style("pointer-events", "none")
+        .attr({'class':'edgelabel',
+               'id':function(d,i){return 'edgelabel'+i},
+               'dx':40,
+               'dy':-5,
+               'font-size':nominal_text_size,
+               'opacity':1,
+               'fill':'#aaa'});
+
+    edgelabels.append('textPath')
+        .attr('xlink:href',function(d,i) {return '#edgepath'+i})
+        .style("pointer-events", "none")
+        .text(function(d){return d.label});
+
+
+    svg.append('defs').append('marker')
+        .attr({'id':'arrowhead',
+               'viewBox':'-0 -5 10 10',
+               'refX':25,
+               'refY':0,
+               //'markerUnits':'strokeWidth',
+               'orient':'auto',
+               'markerWidth':10,
+               'markerHeight':10,
+               'xoverflow':'visible'})
+        .append('svg:path')
+            .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+            .attr('fill', '#ccc')
+            .attr('stroke','#ccc');
+
+    zoom.on("zoom", function() {
+  
+      var stroke = nominal_stroke;
+      if (nominal_stroke*zoom.scale()>max_stroke) stroke = max_stroke/zoom.scale();
+      edges.style("stroke-width",stroke);
+      nodes.style("stroke-width",stroke);
+       
+    var base_radius = nominal_base_node_size;
+      if (nominal_base_node_size*zoom.scale()>max_base_node_size) base_radius = max_base_node_size/zoom.scale();
+          nodes.attr("d", d3.svg.symbol()
+            .size(function(d) { return Math.PI*Math.pow(size(d.size)*base_radius/nominal_base_node_size||base_radius,2); })
+            .type(function(d) { return d.type; }))
+
+    
+      if (!text_center) nodelabels.attr("dx", function(d) { return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
+      
+      var text_size = nominal_text_size;
+        if (nominal_text_size*zoom.scale()>max_text_size) text_size = max_text_size/zoom.scale();
+        nodelabels.style("font-size",text_size + "px");
+        edgelabels.style("font-size",text_size + "px");
+
+      g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    });
+
+    svg.call(zoom);   
+  
+    resize();
+    d3.select(window).on("resize", resize)
+
+    force.on("tick", function(){
+
+        edges.attr({"x1": function(d){return d.source.x;},
+                    "y1": function(d){return d.source.y;},
+                    "x2": function(d){return d.target.x;},
+                    "y2": function(d){return d.target.y;}
+        });
+
+        nodes.attr({"cx":function(d){return d.x;},
+                    "cy":function(d){return d.y;}
+        });
+
+        nodelabels.attr("x", function(d) { return d.x; })
+                  .attr("y", function(d) { return d.y; });
+
+        nodeimages.attr("x", function(d) { return d.x + 5; })
+                  .attr("y", function(d) { return d.y + 5; });
+
+        edgepaths.attr('d', function(d) { var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
+                                           //console.log(d)
+                                           return path});       
+
+        edgelabels.attr('transform',function(d,i){
+            if (d.target.x<d.source.x){
+                bbox = this.getBBox();
+                rx = bbox.x+bbox.width/2;
+                ry = bbox.y+bbox.height/2;
+                return 'rotate(180 '+rx+' '+ry+')';
+                }
+            else {
+                return 'rotate(0)';
+                }
+        });
+
+    });
+
+function resize() {
+    var width = window.innerWidth, height = window.innerHeight;
+    svg.attr("width", width).attr("height", height);
+      
+    force.size([force.size()[0]+(width-w)/zoom.scale(),force.size()[1]+(height-h)/zoom.scale()]).resume();
+      w = width;
+    h = height;
+    }
+
+
+
+function fade(opacity) {
+        return function(d) {
+            nodes.style("stroke-opacity", function(o) {
+                thisOpacity = isConnected(d, o) ? 1 : opacity;
+                this.setAttribute('fill-opacity', thisOpacity);
+                return thisOpacity;
+            });
+
+            nodelabels.style("stroke-opacity", function(o) {
+                thisOpacity = isConnected(d, o) ? 1 : opacity;
+                this.setAttribute('fill-opacity', thisOpacity);
+                return thisOpacity;
+            });
+
+            edges.style("stroke-opacity", function(o) {
+                return o.source === d || o.target === d ? 1 : opacity;
+            });
+
+            edgelabels.style("opacity", function(o) {
+                return o.source === d || o.target === d ? 1 : opacity;
+            });
+        };
+      };
+
+</script>
+{% endblock %}

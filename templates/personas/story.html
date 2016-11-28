@@ -65,7 +65,7 @@
                     </div>
                     <div class="row">
                         <h3>Description:</h3>
-                        {{ description }}
+                        {{ description|markdown }}
                         <hr>
                     </div>
                     {% if user == story.author %}

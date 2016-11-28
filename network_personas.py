@@ -19,31 +19,31 @@ node_model = {}
 
 def find_colour(story_object):
     if story_object.c_type == "Character":
-        node_shapes[story_object.name] = 'o'
+        node_shapes[story_object.name] = 'square' # o
         node_colors[story_object.name] = 'r'
         node_model[story_object.name] = 'storyobject'
     elif story_object.c_type == "Organization":
-        node_shapes[story_object.name] = 'h'
+        node_shapes[story_object.name] = 'circle'
         node_colors[story_object.name] = 'b'
         node_model[story_object.name] = 'storyobject'
     elif story_object.c_type == "Creature":
-        node_shapes[story_object.name] = '^'
+        node_shapes[story_object.name] = 'triangle-up' #^
         node_colors[story_object.name] = 'g'
         node_model[story_object.name] = 'storyobject'
     elif story_object.c_type == "Faction":
-        node_shapes[story_object.name] = 'v'
+        node_shapes[story_object.name] = 'circle' #v
         node_colors[story_object.name] = 'c'
         node_model[story_object.name] = 'storyobject'
     elif story_object.c_type == "Thing":
-        node_shapes[story_object.name] = 's'
+        node_shapes[story_object.name] = 'triangle-down' #s
         node_colors[story_object.name] = 'y'
         node_model[story_object.name] = 'storyobject'
     elif story_object.c_type == "Place":
-        node_shapes[story_object.name] = '^'
+        node_shapes[story_object.name] = 'diamond' #^
         node_colors[story_object.name] = 'v'
         node_model[story_object.name] = 'place'
     elif story_object.c_type == "Territory":
-        node_shapes[story_object.name] = 'o'
+        node_shapes[story_object.name] = 'cross' #o
         node_colors[story_object.name] = 'o'
         node_model[story_object.name] = 'storyobject'
     elif story_object.c_type == "Event":
@@ -57,14 +57,22 @@ def return_json_graph(story_objects):
     G = nx.MultiDiGraph()
 
     for so in story_objects:
-        find_colour(so)
-        G.add_node(so.name, name=so.name, role=so.role,
-            url="http://story-chronicles.herokuapp.com/personas/{}/{}".format(node_model[so.name], so.slug),
-            node_color=node_colors[so.name], node_shape=node_shapes[so.name],
-            image=so.thumbnail.url)
 
         links = Relationship.objects.filter(
                 Q(from_storyobject__name=so.name))
+
+        size = 0
+
+        for i in links:
+            if so == i.to_storyobject:
+                size += 10
+
+        find_colour(so)
+        G.add_node(so.name, id=so.name, role=so.role,
+            url="http://story-chronicles.herokuapp.com/personas/{}/{}".format(node_model[so.name], so.slug),
+            node_color=node_colors[so.name], type=node_shapes[so.name],
+            image=so.thumbnail.url,
+            size=size)
 
         for i in links:
             if i.to_storyobject in story_objects:
