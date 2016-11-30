@@ -106,31 +106,19 @@ var linkedByIndex = {};
 	var dcy = (window.innerHeight/2-d.y*zoom.scale());
 	zoom.translate([dcx,dcy]);
 	 g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
-	 
-	 
 	});
-	
 
+	node.append("title")
+	  .text(function(d){return d.role; });
 
-	
+		
 	var tocolor = "fill";
 	var towhite = "stroke";
 	if (outline) {
 		tocolor = "stroke"
 		towhite = "fill"
 	}
-		
-  var nodeimages = svg.selectAll(".nodeimage")
-      .data(graph.nodes)
-      .enter()
-      .append("g")
-      .append("image")
-      .attr({"x":function(d){return d.x;},
-              "y":function(d){return d.y;},
-              "class":"nodeimage"})
-      .attr("width", nominal_image_size + "px")
-      .attr("height", nominal_image_size + "px")
-      .attr("xlink:href", function(d) { return d.image; });
+	 
 	
   var circle = node.append("path")
   
@@ -250,7 +238,7 @@ function set_highlight(d)
     if (nominal_stroke*zoom.scale()>max_stroke) stroke = max_stroke/zoom.scale();
     link.style("stroke-width",stroke);
     circle.style("stroke-width",stroke);
-    nodeimages.style("stroke-width", stroke);
+
 	   
 	var base_radius = nominal_base_node_size;
     if (nominal_base_node_size*zoom.scale()>max_base_node_size) base_radius = max_base_node_size/zoom.scale();
@@ -265,13 +253,6 @@ function set_highlight(d)
 	var text_size = nominal_text_size;
     if (nominal_text_size*zoom.scale()>max_text_size) text_size = max_text_size/zoom.scale();
     text.style("font-size",text_size + "px");
-
-    nodeimages.attr("width", (function(d) {
-       return nominal_image_size * zoom.scale();
-        	}));
-    nodeimages.attr("height", (function(d) {
-       return nominal_image_size * zoom.scale();
-        	}));
 
 
 	g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -296,8 +277,6 @@ function set_highlight(d)
     node.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
 
-    nodeimages.attr("x", function(d) { return d.x + 5; })
-      .attr("y", function(d) { return d.y + 5; });
 	});
   
   function resize() {
@@ -332,7 +311,7 @@ function set_highlight(d)
   link.style("display", function(d) {
 				var flag  = vis_by_type(d.source.type)&&vis_by_type(d.target.type)&&vis_by_node_score(d.source.score)&&vis_by_node_score(d.target.score)&&vis_by_link_score(d.score);
 				linkedByIndex[d.source.index + "," + d.target.index] = flag;
-              return flag?"inline":"none";});
+              return flag?"inline":d.label;});
   node.style("display", function(d) {
 				return (key0||hasConnections(d))&&vis_by_type(d.type)&&vis_by_node_score(d.score)?"inline":"none";});
   text.style("display", function(d) {
