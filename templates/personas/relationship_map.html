@@ -26,7 +26,8 @@ var min_score = 0;
 var max_score = 1;
 
 var color = d3.scale.category10()
-  .domain(['r', 'b', 'g', 'c', 'y', 'v', 'o', 'w']);
+  .domain(['Character', 'Organization', 'Creature',
+  	'Faction', 'Thing', 'Place', 'Territory', 'Event']);
 
 var highlight_color = "blue";
 var highlight_trans = 0.1;
@@ -59,6 +60,25 @@ svg.style("cursor","move");
 
 var graph = {{ result|safe }};
 
+var legend = svg.selectAll(".legend")
+    .data(color.domain())
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+legend.append("rect")
+    .attr("x", w - 36)
+    .attr("width", 36)
+    .attr("height", 18)
+    .style("fill", color);
+
+legend.append("text")
+    .attr("x", w - 42)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .text(function(d) { return d; });
+
 var linkedByIndex = {};
     graph.links.forEach(function(d) {
 	linkedByIndex[d.source + "," + d.target] = true;
@@ -89,7 +109,6 @@ var linkedByIndex = {};
 	.style("stroke", function(d) { 
 	if (isNumber(d.score) && d.score>=0) return color(d.score);
 	else return default_link_color; })
-
 
   var node = g.selectAll(".node")
     .data(graph.nodes)
@@ -313,7 +332,7 @@ function set_highlight(d)
 				linkedByIndex[d.source.index + "," + d.target.index] = flag;
               return flag?"inline":d.label;});
   node.style("display", function(d) {
-				return (key0||hasConnections(d))&&vis_by_type(d.type)&&vis_by_node_score(d.score)?"inline":"none";});
+				return (key0||hasConnections(d))&&vis_by_type(d.node_type)&&vis_by_node_score(d.score)?"inline":"none";});
   text.style("display", function(d) {
                 return (key0||hasConnections(d))&&vis_by_type(d.type)&&vis_by_node_score(d.score)?"inline":"none";});
 				
