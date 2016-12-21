@@ -37,7 +37,7 @@ var size = d3.scale.pow().exponent(1)
   .range([8,24]);
 	
 var force = d3.layout.force()
-  .linkDistance(100)
+  .linkDistance(150)
   .charge(-300)
   .size([w,h]);
 
@@ -109,6 +109,18 @@ var linkedByIndex = {};
 	.style("stroke", function(d) { 
 	if (isNumber(d.score) && d.score>=0) return color(d.score);
 	else return default_link_color; })
+
+   var linktext = g.selectAll(".linktext")
+    .data(graph.links)
+    .enter().append("text")
+    .attr({"dy": ".35em",
+    	'class':'edgelabel',
+               'dx':10,
+               'dy':10,
+           		'fill':'#aaa'})
+	.style("font-size", nominal_text_size + "px")
+    .text(function(d) { return '\u2002'+d.label; });
+
 
   var node = g.selectAll(".node")
     .data(graph.nodes)
@@ -191,6 +203,7 @@ var linkedByIndex = {};
 		circle.style("opacity", 1);
 	  text.style("opacity", 1);
 	  link.style("opacity", 1);
+	  linktext.style("opacity", 1);
 	}
 		}
 	
@@ -208,6 +221,7 @@ function exit_highlight()
   	  circle.style(towhite, "white");
 	  text.style("font-weight", "normal");
 	  link.style("stroke", function(o) {return (isNumber(o.score) && o.score>=0)?color(o.score):default_link_color});
+	  linktext.style("font-weight", "normal")
  }
 			
 	}
@@ -226,7 +240,11 @@ if (highlight_trans<1)  {
 			
             link.style("opacity", function(o) {
                 return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
-            });		
+            });
+
+            linktext.style("opacity", function(o) {
+                return isConnected(d, o) ? 1 : highlight_trans;
+            });	
 	}
 }
 
@@ -245,6 +263,8 @@ function set_highlight(d)
                 return isConnected(d, o) ? "bold" : "normal";});
             link.style("stroke", function(o) {
 		      return o.source.index == d.index || o.target.index == d.index ? highlight_color : ((isNumber(o.score) && o.score>=0)?color(o.score):default_link_color);
+		    linktext.style("font-weight", function(o) {
+                return isConnected(d, o) ? "bold" : "normal";});
 
             });
 	}
@@ -292,6 +312,13 @@ function set_highlight(d)
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
+
+    linktext.attr("x", function(d){
+    	return ((d.source.x + d.target.x)/2);
+      })
+      .attr("y", function(d){
+    	return ((d.source.y + d.target.y)/2);
+      });
 		
     node.attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
