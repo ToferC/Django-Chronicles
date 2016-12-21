@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9de9c953-6fde-4a5a-9b88-3c17fa5c37da" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persona2/settings.py" afterPath="$PROJECT_DIR$/persona2/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persona2/urls.py" afterPath="$PROJECT_DIR$/persona2/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/personas/apps.py" afterPath="$PROJECT_DIR$/personas/apps.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/personas/models.py" afterPath="$PROJECT_DIR$/personas/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/personas/urls.py" afterPath="$PROJECT_DIR$/personas/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/personas/base.html" afterPath="$PROJECT_DIR$/templates/personas/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/personas/storyobject.html" afterPath="$PROJECT_DIR$/templates/personas/storyobject.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -94,12 +87,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="story.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="story.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/personas/story.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="36" column="12" lean-forward="true" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="12" />
+            <state relative-caret-position="450">
+              <caret line="49" column="42" lean-forward="true" selection-start-line="49" selection-start-column="42" selection-end-line="49" selection-end-column="42" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="apps.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/personas/apps.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#33#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -766,9 +771,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/personas/story.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="36" column="12" lean-forward="true" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="12" />
+        <state relative-caret-position="450">
+          <caret line="49" column="42" lean-forward="true" selection-start-line="49" selection-start-column="42" selection-end-line="49" selection-end-column="42" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/personas/apps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
