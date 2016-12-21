@@ -1,4 +1,5 @@
 from django.db import models
+from sorl.thumbnail import ImageField
 from django.db.models import F
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
@@ -68,7 +69,7 @@ class Note(models.Model):
 
 class GalleryImage(models.Model):
     creator = models.ForeignKey(User)
-    image = models.ImageField(upload_to='content_images/%Y/%m/%d/%H_%M_%S', default='content_images/nothing.jpg')
+    image = ImageField(upload_to='content_images/%Y/%m/%d/%H_%M_%S', default='content_images/nothing.jpg')
     title = models.CharField(max_length=64)
     date = models.DateTimeField(auto_now=True)
     storyobject = models.ForeignKey("StoryObject", blank=True, null=True)
@@ -212,7 +213,7 @@ class StoryObject(models.Model):
     role = models.CharField(max_length=256)
     description = MarkdownField(blank=True)
 
-    image = models.ImageField(
+    image = ImageField(
         upload_to='profile_images/%Y/%m/%d/%H_%M_%S', default='profile_images/shadow_figure.jpeg')
     thumbnail = ImageSpecField(source='image',
         processors=[ResizeToFill(50, 50)],
@@ -460,7 +461,7 @@ class Story(models.Model):
     description = MarkdownField(blank=True)
     genre = models.CharField(
         max_length=128, choices=GENRE_CHOICES, default='Fantasy')
-    image = models.ImageField(
+    image = ImageField(
         upload_to='story_images/%Y/%m/%d/%H_%M_%S',
         default='profile_images/shadow_figure.jpeg')
     colour_theme = models.CharField(
@@ -508,7 +509,7 @@ class MainMap(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     website = models.URLField(blank=True)
-    image = models.ImageField(
+    image = ImageField(
         upload_to='user_images/%Y/%m/%d',
         default='profile_images/shadow_figure.jpeg')
     own_notifications = models.BooleanField(default=False,

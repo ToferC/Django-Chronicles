@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 import os
-import watson
+from watson import search as watson
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 

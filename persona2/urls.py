@@ -1,5 +1,7 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.contrib.staticfiles import views
 from django.conf import settings
 from personas.models import StoryObject, Story, Skill, Chapter, Scene, Ability, Statistic, Relationship, Place
 from rest_framework import serializers, viewsets, routers, generics, pagination
@@ -180,7 +182,7 @@ router.register(r'storyobjects', StoryObjectViewSet)
 router.register(r'scenes', SceneViewSet)
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Examples:
     # url(r'^$', 'persona2.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
@@ -195,13 +197,9 @@ urlpatterns = patterns('',
     url(r"^search/", include("watson.urls", namespace="watson")),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^docs/', include('rest_framework_swagger.urls')),
     #url(r'^about/', include('personas.urls')),
-)
+]
 
 if settings.DEBUG:
-    urlpatterns += patterns(
-        'django.views.static',
-        (r'^media/(?P<path>.*)',
-            'serve',
-            {'document_root': settings.MEDIA_ROOT}),)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

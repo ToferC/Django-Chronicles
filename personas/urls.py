@@ -1,10 +1,10 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.views.generic import TemplateView
 from personas import views
 #from djgeojson.views import GeoJSONLayerView
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^about', views.about, name='about'),
     url(r'^workshop/(?P<user>[\w\-]+)/$', views.workshop, name="workshop"),
@@ -89,4 +89,4 @@ urlpatterns = patterns('',
     url(r'^chapter/(?P<chapter_name_slug>[\w\-]+)/$', views.chapter, name='chapter'),
     url(r'^story/(?P<story_name_slug>[\w\-]+)/$', views.story, name='story'),
 #url(r'^data.geojson$', GeoJSONLayerView.as_view(model=MushroomSpot), name='data'),
-    )
+    ]
