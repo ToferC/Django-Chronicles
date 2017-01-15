@@ -25,7 +25,7 @@ else:
 
 DEBUG = not ON_PAAS
 DEBUG = DEBUG or 'DEBUG' in os.environ
-TEMPLATE_DEBUG = DEBUG
+
 if ON_PAAS and DEBUG:
     print("*** Warning - Debug mode is on ***")
 
@@ -154,7 +154,7 @@ else:
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'Kaataanaa',
+        'PASSWORD': 'Bansh331',
         'HOST': 'localhost',
         'PORT': '',
         }

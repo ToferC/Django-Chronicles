@@ -1138,7 +1138,7 @@ def add_aspect(request, storyobject_name_slug):
                 aspect.save()
                 form = AspectForm()
 
-            return HttpResponseRedirect("")
+            return HttpResponseRedirect("/personas/add_aspect/{slug}".format(slug=storyobject.slug))
 
         else:
             print (form.errors)

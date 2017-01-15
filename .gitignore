@@ -5,3 +5,4 @@ keys.py
 *.pyc
 rootkey.csv.txt
 *.boto
+.idea/

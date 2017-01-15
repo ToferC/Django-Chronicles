@@ -6,11 +6,10 @@ import re
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'persona2.settings')
 import django
 django.setup()
-from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
+
 from django.db.models import F, Q
 
-from personas.models import StoryObject, Statistic, Skill, Ability, Aspect, CombatInfo, Relationship
+from personas.models import StoryObject, Relationship
 
 node_shapes = {}
 node_colors = {}
@@ -71,7 +70,7 @@ def return_json_graph(story_objects):
         G.add_node(so.name, id=so.name, role=so.role,
             url="http://story-chronicles.herokuapp.com/personas/{}/{}".format(node_model[so.name], so.slug),
             node_color=so.c_type, type=node_shapes[so.name],
-            image=so.thumbnail.url,
+            # image=so.thumbnail.url,
             size=size)
 
         for i in links:
