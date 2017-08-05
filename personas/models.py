@@ -211,6 +211,11 @@ class StoryObject(models.Model):
         max_length=32, default="Character", verbose_name="Story Object Type",
         help_text="Select a story object category.")
     role = models.CharField(max_length=256)
+    core_role = models.BooleanField(default=False,
+        help_text='''Select if this is a player character, a major protagonist 
+        or otherwise a critical element to your story. These elements will show up first
+        in lists and have a graphic distinction.
+        ''')
     description = MarkdownField(blank=True)
 
     image = ImageField(
@@ -470,8 +475,13 @@ class Story(models.Model):
     published = models.BooleanField(default=True,
         help_text="Elements that are NOT published will only be viewable in your Workshop.")
     object_count = models.PositiveSmallIntegerField(default=0)
+    last_update = models.DateField(null=True, blank=True,
+        auto_now=True)
 
     slug = models.SlugField(unique=True)
+
+    class Meta:
+        ordering = "-last_update"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -512,10 +522,10 @@ class UserProfile(models.Model):
     image = ImageField(
         upload_to='user_images/%Y/%m/%d',
         default='profile_images/shadow_figure.jpeg')
-    own_notifications = models.BooleanField(default=False,
-                                            help_text="Enable this to get email notifications for your own changes.")
-    other_notifications = models.BooleanField(default=True,
-                                              help_text="Enable this to get email notifications for changes other people make.")
+    own_notifications = models.BooleanField(
+        default=False, help_text="Enable this to get email notifications for your own changes.")
+    other_notifications = models.BooleanField(
+        default=True, help_text="Enable this to get email notifications for changes other people make.")
 
     def __str__(self):
         return self.user.username
@@ -529,4 +539,3 @@ class Poster(models.Model):
 
     def __str__(self):
         return self.content
-

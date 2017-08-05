@@ -682,9 +682,14 @@ def story(request, story_name_slug):
 
         context_dict['scenes'] = scenes
 
+        context_dict['core_characters'] = StoryObject.objects.filter(
+                story=story).filter(
+                published=True).filter(core_role=True).filter(
+                c_type="Character").distinct().order_by('name')
+
         context_dict['characters'] = StoryObject.objects.filter(
                 story=story).filter(
-                published=True).filter(
+                published=True).filter(core_role=False).filter(
                 c_type="Character").distinct().order_by('name')
 
         context_dict['artifacts'] = StoryObject.objects.filter(

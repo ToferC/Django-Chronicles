@@ -664,3 +664,17 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('website', 'image')
+
+
+class SignupForm(forms.Form):
+    # additional fields for the Google social auth
+    own_notifications = forms.BooleanField(help_text="Enable this to get email notifications for your own changes.")
+    other_notifications = forms.BooleanField(help_text="Enable this to get email notifications for changes other people make.")
+
+    def signup(self, request, user):
+        # saving the new fields to the UserProfile
+        userprofile = UserProfile(user=user)
+        userprofile.own_notifications = self.cleaned_data['own_notifications']
+        userprofile.other_notifications = self.cleaned_data['other_notifications']
+        user.save()
+        userprofile.save()

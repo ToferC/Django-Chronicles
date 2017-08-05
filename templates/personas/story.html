@@ -14,7 +14,7 @@
         
         <!-- Nav tabs -->
         <ul class="nav nav-pills nav-inverse" role="tablist" id="char_tabs">
-            <li class="active">
+            <li>
                 <a href="#chapters" role="tab" data-toggle="tab">
                 <i class="fa fa-user"></i> Chapters
             </a>
@@ -29,7 +29,7 @@
                 <i class="fa fa-cog"></i> Organizations
             </a>
         </li>
-        <li>
+        <li class="active">
             <a href="#story_objects" role="tab" data-toggle="tab">
                 <i class="fa fa-cog"></i> Characters
             </a>
@@ -74,7 +74,7 @@
     </div>
 <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane fade active in" id="chapters"> <!-- Start Tab One -->
+            <div class="tab-pane fade in" id="chapters"> <!-- Start Tab One -->
                 <div class="col-md-8 col-sm-8 col-lg-8" id="col1">
                 <div class="row">
                         <h3>Chapters:</h3>
@@ -198,10 +198,23 @@
                     </div>
                     </div>
                     </div> <!-- End Tab Three -->
-                <div class="tab-pane fade in" id="story_objects"> <!-- Start Tab Four -->
+                <div class="tab-pane fade active in" id="story_objects"> <!-- Start Tab Four -->
                 <div class="col-md-4 col-sm-4 col-lg-4" id="col1">
                     <div class="row">
-                        <h3>Characters:</h3>
+                        <h3>Primary Characters:</h3>
+                        {% if core_characters %}
+                                {% for storyobject in core_characters %}
+                                    <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
+                                    {% thumbnail storyobject.image "30x30" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
+                                {% endfor %}
+                        {% else %}
+                            <strong>{{ story.title }} has no primary characters.</strong>
+                        {% endif %}
+                        <br><br>
+                        
+                        <hr>
+                        <h3>Supporting Characters:</h3>
                         {% if characters %}
                                 {% for storyobject in characters %}
                                     <a class="btn btn-success btn-sm" style="background:black" href="/personas/storyobject/{{ storyobject.slug }}">
@@ -209,7 +222,7 @@
                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">{% endthumbnail %}   {{ storyobject.name }}</a>
                                 {% endfor %}
                         {% else %}
-                            <strong>{{ story.title }} has no Characters.</strong><br><br>
+                            <strong>{{ story.title }} has no supporting characters.</strong><br><br>
                         {% endif %}
                         <br><br>
                         <a href="/personas/add_storyobject/{{ story.slug }}/Character" style="color:gray">Add Character <span class="glyphicon glyphicon-pencil"></span></a>
