@@ -480,9 +480,6 @@ class Story(models.Model):
 
     slug = models.SlugField(unique=True)
 
-    class Meta:
-        ordering = "-last_update"
-
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super(Story, self).save(*args, **kwargs)
